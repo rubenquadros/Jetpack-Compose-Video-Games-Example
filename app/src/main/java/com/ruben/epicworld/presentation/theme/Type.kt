@@ -1,4 +1,4 @@
-package com.ruben.epicworld.ui.theme
+package com.ruben.epicworld.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
@@ -7,6 +7,10 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.ruben.epicworld.R
+
+/**
+ * Created by Ruben Quadros on 31/07/21
+ **/
 
 // Set of Material typography styles to start with
 
@@ -29,8 +33,13 @@ val Typography = Typography(
     ),
     h3 = TextStyle(
         fontFamily = PlayFair,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp
+    ),
+    h4 = TextStyle(
+      fontFamily = PlayFair,
+      fontWeight = FontWeight.Normal,
+      fontSize = 18.sp
     ),
     body1 = TextStyle(
         fontFamily = PlayFair,

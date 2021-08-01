@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">EpicWorld</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="home_app_bar_search_description">Search</string>
+    <string name="home_app_bar_filter_description">Filter Results</string>
+    <string name="home_app_bar_title">Epic World</string>
+    <string name="home_screen_game_image_description">Game Image</string>
 </resources>

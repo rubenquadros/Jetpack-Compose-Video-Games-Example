@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ruben.epicworld">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:name=".presentation.base.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_app_logo"
         android:label="@string/app_name"
@@ -10,7 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EpicWorld">
         <activity
-            android:name=".SplashActivity"
+            android:name=".presentation.home.HomeActivity"
+            android:exported="true"
+            android:label="@string/title_activity_home"
+            android:theme="@style/Theme.EpicWorld.NoActionBar" />
+        <activity
+            android:name=".presentation.SplashActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.EpicWorld.SplashTheme">
