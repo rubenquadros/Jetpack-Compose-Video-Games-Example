@@ -25,7 +25,7 @@ class HomeActivity : BaseActivity() {
         setContent {
             EpicWorldTheme {
                 HomeScreen(
-                    homeViewModel = homeViewModel,
+                    uiState = homeViewModel.state,
                     searchClick = { handleSearchClick() },
                     filterClick = { handleFilterClick() },
                     gameClick = { handleGameClick() }

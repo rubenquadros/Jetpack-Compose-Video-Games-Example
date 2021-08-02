@@ -31,6 +31,7 @@ import com.ruben.epicworld.presentation.commonui.HomeAppBar
 import com.ruben.epicworld.presentation.commonui.LoadingItem
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.*
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -39,7 +40,7 @@ import com.ruben.epicworld.presentation.theme.*
 @ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
+    uiState: StateFlow<HomeState>,
     searchClick: () -> Unit,
     filterClick: () -> Unit,
     gameClick: () -> Unit
@@ -51,16 +52,16 @@ fun HomeScreen(
             filterClick = filterClick
         )
     },
-        content = { GameListing(homeViewModel = homeViewModel, gameClick = gameClick) }
+        content = { GameListing(uiState = uiState, gameClick = gameClick) }
     )
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun GameListing(homeViewModel: HomeViewModel, gameClick: () -> Unit) {
+fun GameListing(uiState: StateFlow<HomeState>, gameClick: () -> Unit) {
 
-    val uiState = homeViewModel.state.collectAsState()
-    when (uiState.value) {
+    val state = uiState.collectAsState()
+    when (state.value) {
         is HomeState.InitialState -> {
             //do nothing
         }
@@ -68,7 +69,7 @@ fun GameListing(homeViewModel: HomeViewModel, gameClick: () -> Unit) {
             //do nothing
         }
         is HomeState.AllGamesData -> {
-            val lazyGameItems = (uiState.value as HomeState.AllGamesData).games.collectAsLazyPagingItems()
+            val lazyGameItems = (state.value as HomeState.AllGamesData).games.collectAsLazyPagingItems()
             LazyVerticalGrid(cells = GridCells.Fixed(2), content = {
                 items(lazyGameItems.itemCount) { index ->
                     lazyGameItems[index]?.let {
