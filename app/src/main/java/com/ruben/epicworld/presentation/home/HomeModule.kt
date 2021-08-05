@@ -5,13 +5,13 @@ import com.ruben.epicworld.domain.repository.GamesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
 @Module
-@InstallIn(ActivityComponent::class)
+@InstallIn(ViewModelComponent::class)
 object HomeModule {
 
     @Provides

@@ -48,7 +48,13 @@ val Typography = Typography(
     ),
     body2 = TextStyle(
         fontFamily = PlayFair,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp,
+        color = Black
+    ),
+    button = TextStyle(
+        fontFamily = PlayFair,
+        fontWeight = FontWeight.Bold,
+        fontSize = 18.sp
     )
 )

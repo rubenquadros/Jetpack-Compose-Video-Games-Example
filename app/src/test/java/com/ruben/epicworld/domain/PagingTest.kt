@@ -1,6 +1,7 @@
 package com.ruben.epicworld.domain
 
 import androidx.paging.PagingSource
+import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.domain.repository.GamesRepository
@@ -42,5 +43,19 @@ class PagingTest {
                 )
             )
         )
+    }
+
+    @Test
+    fun `should get error if server gives error response`() = runBlocking {
+        every { runBlocking { mockRepository.getAllGames(any()) } } returns Record(null, ErrorRecord.GenericError)
+        val pagingSource = GamesSource(mockRepository)
+        val result = pagingSource.load(
+            PagingSource.LoadParams.Refresh(
+                key = null,
+                loadSize = 2,
+                placeholdersEnabled = false
+            )
+        )
+        Assert.assertTrue(result is PagingSource.LoadResult.Error)
     }
 }

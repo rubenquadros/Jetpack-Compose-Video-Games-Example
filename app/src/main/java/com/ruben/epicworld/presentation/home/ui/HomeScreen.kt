@@ -3,23 +3,34 @@ package com.ruben.epicworld.presentation.home.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
@@ -27,11 +38,17 @@ import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.AddedByStatusEntity
 import com.ruben.epicworld.domain.entity.games.EsrbRatingEntity
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.HomeAppBar
 import com.ruben.epicworld.presentation.commonui.LoadingItem
+import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
-import com.ruben.epicworld.presentation.theme.*
-import kotlinx.coroutines.flow.StateFlow
+import com.ruben.epicworld.presentation.theme.AmberA400
+import com.ruben.epicworld.presentation.theme.Black
+import com.ruben.epicworld.presentation.theme.PinkA400
+import com.ruben.epicworld.presentation.theme.Typography
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -40,69 +57,74 @@ import kotlinx.coroutines.flow.StateFlow
 @ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
-    uiState: StateFlow<HomeState>,
-    searchClick: () -> Unit,
-    filterClick: () -> Unit,
-    gameClick: () -> Unit
+    openSearch: () -> Unit,
+    openFilters: () -> Unit,
+    openGameDetails: (Int) -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val scaffoldState = rememberScaffoldState()
+    HandleSideEffect(homeViewModel.uiSideEffect(), scaffoldState)
     Scaffold(topBar = {
         HomeAppBar(
             title = stringResource(id = R.string.home_app_bar_title),
-            searchClick = searchClick,
-            filterClick = filterClick
+            searchClick = openSearch,
+            filterClick = openFilters
         )
     },
-        content = { GameListing(uiState = uiState, gameClick = gameClick) }
+        scaffoldState = scaffoldState,
+        content = { GameListing(openGameDetails = openGameDetails, homeViewModel = homeViewModel) }
     )
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun GameListing(uiState: StateFlow<HomeState>, gameClick: () -> Unit) {
-
-    val state = uiState.collectAsState()
-    when (state.value) {
-        is HomeState.InitialState -> {
+fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+    val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
+    val action: String = stringResource(id = R.string.all_ok)
+    val state = homeViewModel.uiState().collectAsState()
+    when (state.value.screenState) {
+        is ScreenState.Loading -> {
             //do nothing
         }
-        is HomeState.LoadingState -> {
-            //do nothing
+        is ScreenState.Error -> {
+            ErrorItem { homeViewModel.initData() }
         }
-        is HomeState.AllGamesData -> {
-            val lazyGameItems = (state.value as HomeState.AllGamesData).games.collectAsLazyPagingItems()
-            LazyVerticalGrid(cells = GridCells.Fixed(2), content = {
-                items(lazyGameItems.itemCount) { index ->
-                    lazyGameItems[index]?.let {
-                        GameItem(game = it, gameClick = gameClick)
-                    }
-                }
-
-                lazyGameItems.apply {
-                    when {
-                        loadState.refresh is LoadState.Loading -> {
-                            item { LoadingItem() }
-                            item { LoadingItem() }
-                        }
-                        loadState.append is LoadState.Loading -> {
-                            item { LoadingItem() }
-                            item { LoadingItem() }
-                        }
-                        loadState.refresh is LoadState.Error -> {
-
-                        }
-                        loadState.append is LoadState.Error -> {
-
+        is ScreenState.Success -> {
+            val lazyGameItems = state.value.games?.collectAsLazyPagingItems()
+            lazyGameItems?.let { gameItems ->
+                LazyVerticalGrid(cells = GridCells.Fixed(2), content = {
+                    items(gameItems.itemCount) { index ->
+                        gameItems[index]?.let {
+                            GameItem(game = it, gameClick = openGameDetails)
                         }
                     }
-                }
-            })
 
+                    gameItems.apply {
+                        when {
+                            loadState.refresh is LoadState.Loading -> {
+                                item { LoadingItem() }
+                                item { LoadingItem() }
+                            }
+                            loadState.append is LoadState.Loading -> {
+                                item { LoadingItem() }
+                                item { LoadingItem() }
+                            }
+                            loadState.refresh is LoadState.Error -> {
+                                homeViewModel.handlePaginationDataError()
+                            }
+                            loadState.append is LoadState.Error -> {
+                                homeViewModel.handlePaginationAppendError(errorMessage, action)
+                            }
+                        }
+                    }
+                })
+            }
         }
     }
 }
 
 @Composable
-fun GameItem(game: GameResultsEntity, gameClick: () -> Unit) {
+fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
     Card(
         elevation = 20.dp,
         backgroundColor = Black,
@@ -111,7 +133,7 @@ fun GameItem(game: GameResultsEntity, gameClick: () -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .height(250.dp)
             .fillMaxWidth()
-            .clickable(enabled = true, onClick = gameClick)
+            .clickable(enabled = true, onClick = { gameClick(game.id) })
     ) {
         ConstraintLayout {
             val (image, title, rating) = createRefs()
@@ -174,42 +196,70 @@ fun GameItem(game: GameResultsEntity, gameClick: () -> Unit) {
     }
 }
 
-@Preview
+@Composable
+fun ErrorItem(buttonClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier.padding(8.dp),
+            text = stringResource(id = R.string.home_screen_error_message),
+            textAlign = TextAlign.Center,
+            color = Black,
+            style = Typography.h4
+        )
+        Button(
+            modifier = Modifier.padding(16.dp),
+            onClick = buttonClick
+        ) {
+            Text(
+                text = stringResource(id = R.string.home_screen_retry),
+                style = Typography.button
+            )
+        }
+    }
+}
+
+@Composable
+fun HandleSideEffect(uiSideEffectFlow: Flow<HomeSideEffect>, scaffoldState: ScaffoldState) {
+    LaunchedEffect(uiSideEffectFlow) {
+        val messageHost = SnackbarView(this)
+        uiSideEffectFlow.collect { uiSideEffect ->
+            when (uiSideEffect) {
+                is HomeSideEffect.ShowSnackBar -> {
+                    messageHost.showSnackBar(
+                        snackbarHostState = scaffoldState.snackbarHostState,
+                        message = uiSideEffect.message
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun GameItemPreview() {
     GameItem(
-        game = GameResultsEntity(
-            123,
-            "abc",
-            "Max Payne",
-            "2013-09-17",
-            false,
-            "https://media.rawg.io/media/games/84d/84da2ac3fdfc6507807a1808595afb12.jpg",
-            4.48,
-            5,
-            4908,
-            arrayListOf(),
-            33,
-            15375,
+        game = GameResultsEntity(123, "", "Max Payne", "", false, "",
+            4.48, 5, 4908, arrayListOf(), 33, 15375,
             AddedByStatusEntity(1, 2, 3, 4, 5, 6),
-            97,
-            79,
-            410,
-            "2021-03-03T20:31:29",
-            "",
-            4963,
-            "",
-            "",
-            arrayListOf(),
-            arrayListOf(),
-            arrayListOf(),
-            arrayListOf(),
-            "",
-            arrayListOf(),
-            EsrbRatingEntity(1, "", ""),
-            arrayListOf()
+            97, 79, 410, "", "", 4963,
+            "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(),
+            "", arrayListOf(), EsrbRatingEntity(1, "", ""), arrayListOf()
         )
     ) {
+        //do nothing
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ErrorItemPreview() {
+    ErrorItem {
         //do nothing
     }
 }

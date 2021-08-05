@@ -1,27 +1,30 @@
 package com.ruben.epicworld.presentation.base
 
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.viewmodel.container
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
-abstract class BaseViewModel<INTENT: ViewIntent, ACTION: ViewAction, STATE: ViewState>: ViewModel() {
+abstract class BaseViewModel<STATE: Any, SIDE_EFFECT: Any>: ContainerHost<STATE, SIDE_EFFECT>, ViewModel() {
 
-    private val _state: MutableStateFlow<STATE> by lazy { MutableStateFlow(createInitialState()) }
-    val state = _state.asStateFlow()
-
-    fun dispatchIntent(intent: INTENT) {
-        handleAction(mapIntentToAction(intent = intent))
+    override val container: Container<STATE, SIDE_EFFECT> by lazy {
+        container(createInitialState()) {
+            initData()
+        }
     }
 
-    fun setState(state: STATE) {
-        _state.value = state
-    }
+    open fun initData() = intent {  }
+
+    fun uiState(): StateFlow<STATE> = container.stateFlow
+
+    fun uiSideEffect(): Flow<SIDE_EFFECT> = container.sideEffectFlow
 
     abstract fun createInitialState(): STATE
-    abstract fun mapIntentToAction(intent: INTENT): ACTION
-    abstract fun handleAction(action: ACTION)
 
 }
