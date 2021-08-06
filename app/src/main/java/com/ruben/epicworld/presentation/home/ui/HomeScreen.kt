@@ -35,9 +35,8 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
-import com.ruben.epicworld.domain.entity.games.AddedByStatusEntity
-import com.ruben.epicworld.domain.entity.games.EsrbRatingEntity
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.domain.entity.games.toStringArray
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.HomeAppBar
 import com.ruben.epicworld.presentation.commonui.LoadingItem
@@ -59,7 +58,7 @@ import kotlinx.coroutines.flow.collect
 fun HomeScreen(
     openSearch: () -> Unit,
     openFilters: () -> Unit,
-    openGameDetails: (Int) -> Unit,
+    openGameDetails: (Int, Array<String>) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val scaffoldState = rememberScaffoldState()
@@ -78,7 +77,7 @@ fun HomeScreen(
 
 @ExperimentalFoundationApi
 @Composable
-fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+fun GameListing(openGameDetails: (Int, Array<String>) -> Unit, homeViewModel: HomeViewModel) {
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
     val action: String = stringResource(id = R.string.all_ok)
     val state = homeViewModel.uiState().collectAsState()
@@ -124,7 +123,7 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
+fun GameItem(game: GameResultsEntity, gameClick: (Int, Array<String>) -> Unit) {
     Card(
         elevation = 20.dp,
         backgroundColor = Black,
@@ -133,7 +132,7 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .height(250.dp)
             .fillMaxWidth()
-            .clickable(enabled = true, onClick = { gameClick(game.id) })
+            .clickable(enabled = true, onClick = { gameClick(game.id, game.shortScreenshots.toStringArray().toTypedArray()) })
     ) {
         ConstraintLayout {
             val (image, title, rating) = createRefs()
@@ -244,16 +243,9 @@ fun HandleSideEffect(uiSideEffectFlow: Flow<HomeSideEffect>, scaffoldState: Scaf
 @Composable
 fun GameItemPreview() {
     GameItem(
-        game = GameResultsEntity(123, "", "Max Payne", "", false, "",
-            4.48, 5, 4908, arrayListOf(), 33, 15375,
-            AddedByStatusEntity(1, 2, 3, 4, 5, 6),
-            97, 79, 410, "", "", 4963,
-            "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(),
-            "", arrayListOf(), EsrbRatingEntity(1, "", ""), arrayListOf()
-        )
-    ) {
-        //do nothing
-    }
+        game = GameResultsEntity(123, "Max Payne", "", 4.5, arrayListOf()),
+        gameClick = { _, _ ->  }
+    )
 }
 
 @Preview(showBackground = true)

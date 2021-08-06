@@ -22,10 +22,29 @@ class GameRepositoryTest {
     }
 
     @Test
-    fun `should get error entity when server gives fail response`() = runBlocking {
+    fun `should get error entity when server gives fail all games response`() = runBlocking {
         val repository: GamesRepository = GamesRepositoryImpl(FakeFailDataSource())
         val result = repository.getAllGames(1)
         Assert.assertTrue(result.data == null)
         Assert.assertTrue(result.error != null)
+        Assert.assertTrue(result.error.toString() == "There was some error")
+    }
+
+    @Test
+    fun `should get game details entity when server gives success response`() = runBlocking {
+        val repository: GamesRepository = GamesRepositoryImpl(FakeSuccessDataSource())
+        val result = repository.getGameDetails(2)
+        Assert.assertTrue(result.error == null)
+        Assert.assertTrue(result.data != null)
+        Assert.assertTrue(result.data?.name == "Max Payne")
+    }
+
+    @Test
+    fun `should get error entity when server gives fail game details response`() = runBlocking {
+        val repository: GamesRepository = GamesRepositoryImpl(FakeFailDataSource())
+        val result = repository.getGameDetails(2)
+        Assert.assertTrue(result.data == null)
+        Assert.assertTrue(result.error != null)
+        Assert.assertTrue(result.error.toString() == "Error from server")
     }
 }

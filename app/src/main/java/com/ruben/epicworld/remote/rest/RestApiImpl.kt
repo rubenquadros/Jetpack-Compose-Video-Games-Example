@@ -2,6 +2,8 @@ package com.ruben.epicworld.remote.rest
 
 import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
+import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
+import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.retrofit.RetrofitApi
 import javax.inject.Inject
 
@@ -12,6 +14,10 @@ class RestApiImpl @Inject constructor(private val retrofitApi: RetrofitApi): Res
 
     override suspend fun getAllGames(getAllGamesRequest: GetAllGamesRequest): GetAllGamesResponse {
         return retrofitApi.getAllGames(getAllGamesRequest.nextPage, getAllGamesRequest.pageSize)
+    }
+
+    override suspend fun getGameDetails(getGameDetailsRequest: GetGameDetailsRequest): GetGameDetailsResponse {
+        return retrofitApi.getGameDetails(getGameDetailsRequest.gameId)
     }
 
 }
