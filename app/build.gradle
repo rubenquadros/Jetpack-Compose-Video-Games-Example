@@ -1,9 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
 }
 
+apply from: './gradleScript/dependencies.gradle'
+
 android {
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
     compileSdk 31
 
     defaultConfig {
@@ -17,6 +24,9 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        buildConfigField 'String', 'BASE_URL', "\"https://api.rawg.io/\""
+        buildConfigField 'String', 'API_KEY', "\"" + localProperties['api.key'] + "\""
     }
 
     buildTypes {
@@ -37,29 +47,21 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerExtensionVersion '1.0.0'
         kotlinCompilerVersion '1.5.10'
+    }
+    testOptions {
+        unitTests {
+            returnDefaultValues = true
+            includeAndroidResources = true
+        }
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
+            excludes += '**/attach_hotspot_windows.dll'
+            excludes += 'META-INF/licenses/**'
+            excludes += 'META-INF/AL2.0'
         }
     }
-}
-
-dependencies {
-
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation "androidx.compose.ui:ui:$compose_version"
-    implementation "androidx.compose.material:material:$compose_version"
-    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    implementation 'androidx.activity:activity-compose:1.3.0'
-    testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 }
