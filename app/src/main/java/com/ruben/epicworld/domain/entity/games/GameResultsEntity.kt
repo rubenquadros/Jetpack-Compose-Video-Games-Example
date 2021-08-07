@@ -8,5 +8,4 @@ data class GameResultsEntity(
     val name: String,
     val backgroundImage: String,
     val rating: Double,
-    val shortScreenshots : List<ShortScreenshotsEntity>
 )

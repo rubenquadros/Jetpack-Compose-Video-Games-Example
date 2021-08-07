@@ -16,14 +16,12 @@ object FakeData {
             "Max Payne",
             "",
             4.5,
-            arrayListOf()
         ))
         gameResults.add(GameResultsEntity(
             2,
             "GTA V",
             "",
             4.8,
-            arrayListOf()
         ))
         return gameResults
     }

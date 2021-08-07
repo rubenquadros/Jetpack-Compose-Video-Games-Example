@@ -4,6 +4,7 @@
     <string name="all_ok">OK</string>
     <string name="all_back_button">Back Button</string>
     <string name="all_generic_error">There was an error. Please try again later</string>
+    <string name="all_star_rating">Star Rating</string>
     <string name="home_app_bar_search_description">Search</string>
     <string name="home_app_bar_filter_description">Filter Results</string>
     <string name="home_app_bar_title">Epic World</string>
@@ -13,4 +14,15 @@
     <string name="home_screen_retry">Retry</string>
     <string name="game_details_invalid_game_id">Sorry cannot get details of this game</string>
     <string name="game_details_screenshots">Game Screenshots</string>
+    <string name="game_details_play_trailer">Play Trailer</string>
+    <string name="game_details_released">Released</string>
+    <string name="game_details_rating">Rating</string>
+    <string name="game_details_calendar_date">Calendar Date</string>
+    <string name="game_details_about">About</string>
+    <string name="game_details_about_show_more">Show More</string>
+    <string name="game_details_about_show_less">Show Less</string>
+    <string name="game_details_platforms">Platforms</string>
+    <string name="game_details_stores">Stores</string>
+    <string name="game_details_developer">Developer</string>
+    <string name="game_details_publisher">Publisher</string>
 </resources>

@@ -1,7 +1,7 @@
-package com.ruben.epicworld.remote.model.response
+package com.ruben.epicworld.remote.model.response.allgames
 
 import com.google.gson.annotations.SerializedName
-import com.ruben.epicworld.remote.model.response.allgames.Results
+import com.ruben.epicworld.remote.model.response.Filters
 
 /**
  * Created by Ruben Quadros on 01/08/21

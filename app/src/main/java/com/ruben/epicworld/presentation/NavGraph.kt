@@ -1,10 +1,8 @@
 package com.ruben.epicworld.presentation
 
-import android.os.Bundle
 import androidx.navigation.NavHostController
 import com.ruben.epicworld.presentation.Destinations.Filters
 import com.ruben.epicworld.presentation.Destinations.GameDetails
-import com.ruben.epicworld.presentation.Destinations.GameDetailsArgs.GameScreenShots
 import com.ruben.epicworld.presentation.Destinations.Search
 
 /**
@@ -31,14 +29,11 @@ class Actions(navHostController: NavHostController) {
         navHostController.navigate(Filters)
     }
 
-    val openGameDetails: (Int, Array<String>) -> Unit = { gameId, gameScreenShots ->
-        navHostController.currentBackStackEntry?.arguments = Bundle().apply {
-            putStringArray(GameScreenShots, gameScreenShots)
-        }
+    val openGameDetails: (Int) -> Unit = { gameId ->
         navHostController.navigate("$GameDetails/$gameId")
     }
 
     val navigateBack: () -> Unit = {
-        navHostController.popBackStack()
+        navHostController.navigateUp()
     }
 }

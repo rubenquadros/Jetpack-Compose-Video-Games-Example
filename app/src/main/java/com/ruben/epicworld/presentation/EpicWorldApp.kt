@@ -10,7 +10,6 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.ruben.epicworld.presentation.Destinations.GameDetails
 import com.ruben.epicworld.presentation.Destinations.GameDetailsArgs.GameId
-import com.ruben.epicworld.presentation.Destinations.GameDetailsArgs.GameScreenShots
 import com.ruben.epicworld.presentation.Destinations.Home
 import com.ruben.epicworld.presentation.details.ui.GameDetailsScreen
 import com.ruben.epicworld.presentation.home.ui.HomeScreen
@@ -34,14 +33,13 @@ fun EpicWorldApp() {
         composable(
             "$GameDetails/{$GameId}",
             arguments = listOf(
-                navArgument(GameId) { type = NavType.IntType },
-                navArgument(GameScreenShots) { type = NavType.StringArrayType }
+                navArgument(GameId) { type = NavType.IntType }
             )
         ) {
             GameDetailsScreen(
                 gameId = it.arguments?.getInt(GameId) ?: 0,
-                gameScreenShots = navController.previousBackStackEntry?.arguments?.getStringArray(GameScreenShots)?.toList() ?: arrayListOf(),
-                navigateBack = actions.navigateBack
+                navigateBack = actions.navigateBack,
+                openGameTrailer = {  }
             )
         }
     }

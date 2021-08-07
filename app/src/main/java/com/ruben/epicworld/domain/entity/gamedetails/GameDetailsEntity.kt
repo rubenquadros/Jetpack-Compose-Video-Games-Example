@@ -10,11 +10,12 @@ data class GameDetailsEntity(
     val rating: Double,
     val released: String,
     val backgroundImage: String,
-    val parentPlatformsEntities: List<ParentPlatformsEntity>,
-    val storesEntities: List<StoresEntity>,
-    val developersEntities: List<DevelopersEntity>,
-    val genresEntities: List<GenresEntity>,
-    val publishersEntities: List<PublishersEntity>
+    val parentPlatformsEntity: List<ParentPlatformsEntity>,
+    val platformsEntity: List<PlatformsEntity>,
+    val storesEntity: List<StoresEntity>,
+    val developersEntity: List<DevelopersEntity>,
+    val genresEntity: List<GenresEntity>,
+    val publishersEntity: List<PublishersEntity>
 ) {
-    constructor(): this(0, "", "", 0.0, "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
+    constructor(): this(0, "", "", 0.0, "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
 }

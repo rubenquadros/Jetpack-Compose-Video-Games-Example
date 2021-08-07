@@ -1,6 +1,6 @@
 package com.ruben.epicworld.remote.retrofit
 
-import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path

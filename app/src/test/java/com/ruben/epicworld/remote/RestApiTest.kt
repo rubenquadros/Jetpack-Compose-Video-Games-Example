@@ -2,7 +2,7 @@ package com.ruben.epicworld.remote
 
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
-import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert

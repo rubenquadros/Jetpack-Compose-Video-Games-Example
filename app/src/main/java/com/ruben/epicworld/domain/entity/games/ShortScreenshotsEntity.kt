@@ -7,7 +7,3 @@ data class ShortScreenshotsEntity(
     val id: Int,
     val image: String
 )
-
-fun ShortScreenshotsEntity.toStringArray() = image
-
-fun List<ShortScreenshotsEntity>.toStringArray() = map { it.toStringArray() }

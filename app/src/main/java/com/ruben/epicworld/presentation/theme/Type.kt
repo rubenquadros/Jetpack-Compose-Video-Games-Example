@@ -38,17 +38,27 @@ val Typography = Typography(
     ),
     h4 = TextStyle(
       fontFamily = PlayFair,
-      fontWeight = FontWeight.Normal,
+      fontWeight = FontWeight.Bold,
       fontSize = 18.sp
+    ),
+    h5 = TextStyle(
+        fontFamily = PlayFair,
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp
+    ),
+    h6 = TextStyle(
+        fontFamily = PlayFair,
+        fontWeight = FontWeight.Bold,
+        fontSize = 16.sp
     ),
     body1 = TextStyle(
         fontFamily = PlayFair,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp
+        fontSize = 18.sp
     ),
     body2 = TextStyle(
         fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         color = Black
     ),

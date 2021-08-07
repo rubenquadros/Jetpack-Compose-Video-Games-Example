@@ -129,13 +129,14 @@ data class GetGameDetailsResponse(
 fun GetGameDetailsResponse.toEntity() = GameDetailsEntity(
     id = id,
     name = name,
-    description = description,
+    description = descriptionRaw,
     rating = rating,
     released = released,
     backgroundImage = backgroundImage,
-    parentPlatformsEntities = parentPlatforms.toEntity(),
-    storesEntities = stores.toEntity(),
-    developersEntities = developers.toEntity(),
-    genresEntities = genres.toEntity(),
-    publishersEntities = publishers.toEntity()
+    parentPlatformsEntity = parentPlatforms.toEntity(),
+    platformsEntity = platforms.toEntity(),
+    storesEntity = stores.toEntity(),
+    developersEntity = developers.toEntity(),
+    genresEntity = genres.toEntity(),
+    publishersEntity = publishers.toEntity()
 )

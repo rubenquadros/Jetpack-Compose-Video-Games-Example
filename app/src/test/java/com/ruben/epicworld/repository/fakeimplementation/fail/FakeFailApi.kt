@@ -3,7 +3,7 @@ package com.ruben.epicworld.repository.fakeimplementation.fail
 import com.ruben.epicworld.remote.RemoteException
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
-import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.rest.RestApi
 

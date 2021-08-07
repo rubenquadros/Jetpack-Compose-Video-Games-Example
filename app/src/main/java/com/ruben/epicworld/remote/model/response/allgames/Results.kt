@@ -75,6 +75,6 @@ data class Results(
     val shortScreenshots : List<ShortScreenshots>
 )
 
-fun Results.toEntity() = GameResultsEntity(id, name, backgroundImage, rating, shortScreenshots.toEntity())
+fun Results.toEntity() = GameResultsEntity(id, name, backgroundImage, rating)
 
 fun List<Results>.toEntity() = map { it.toEntity() }

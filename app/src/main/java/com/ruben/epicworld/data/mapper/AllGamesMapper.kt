@@ -3,7 +3,7 @@ package com.ruben.epicworld.data.mapper
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
-import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.allgames.toEntity
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.toEntity
