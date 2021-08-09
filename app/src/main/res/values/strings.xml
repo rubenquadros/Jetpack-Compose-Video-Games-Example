@@ -25,4 +25,8 @@
     <string name="game_details_stores">Stores</string>
     <string name="game_details_developer">Developer</string>
     <string name="game_details_publisher">Publisher</string>
+    <string name="game_videos_invalid_game_id">Sorry cannot get videos of this game</string>
+    <string name="game_videos_no_videos">Sorry there are no videos available for this game.</string>
+    <string name="game_videos_trailer">Game Trailer</string>
+    <string name="game_videos_play">Play Game Trailer</string>
 </resources>

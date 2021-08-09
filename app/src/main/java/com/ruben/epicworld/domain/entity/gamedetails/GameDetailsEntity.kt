@@ -10,6 +10,7 @@ data class GameDetailsEntity(
     val rating: Double,
     val released: String,
     val backgroundImage: String,
+    val moviesCount: Int,
     val parentPlatformsEntity: List<ParentPlatformsEntity>,
     val platformsEntity: List<PlatformsEntity>,
     val storesEntity: List<StoresEntity>,
@@ -17,5 +18,5 @@ data class GameDetailsEntity(
     val genresEntity: List<GenresEntity>,
     val publishersEntity: List<PublishersEntity>
 ) {
-    constructor(): this(0, "", "", 0.0, "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
+    constructor(): this(0, "", "", 0.0, "", "", 0,  arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf())
 }
