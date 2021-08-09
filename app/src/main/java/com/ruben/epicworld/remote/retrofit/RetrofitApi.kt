@@ -1,7 +1,9 @@
 package com.ruben.epicworld.remote.retrofit
 
-import com.ruben.epicworld.remote.model.response.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
+import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -14,4 +16,9 @@ interface RetrofitApi {
         @Query("page") page: Int,
         @Query("page_size") pageSize: Int,
     ): GetAllGamesResponse
+
+    @GET("/api/games/{id}")
+    suspend fun getGameDetails(
+        @Path("id") gameId: Int
+    ): GetGameDetailsResponse
 }

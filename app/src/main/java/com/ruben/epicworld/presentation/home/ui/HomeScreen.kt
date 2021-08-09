@@ -35,8 +35,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
-import com.ruben.epicworld.domain.entity.games.AddedByStatusEntity
-import com.ruben.epicworld.domain.entity.games.EsrbRatingEntity
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.HomeAppBar
@@ -133,7 +131,11 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
             .clip(RoundedCornerShape(10.dp))
             .height(250.dp)
             .fillMaxWidth()
-            .clickable(enabled = true, onClick = { gameClick(game.id) })
+            .clickable(
+                enabled = true,
+                onClick = {
+                    gameClick(game.id)
+                })
     ) {
         ConstraintLayout {
             val (image, title, rating) = createRefs()
@@ -187,7 +189,7 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
                 Image(
                     contentScale = ContentScale.Crop,
                     painter = painterResource(id = R.drawable.ic_star),
-                    contentDescription ="",
+                    contentDescription = stringResource(id = R.string.all_star_rating),
                     modifier = Modifier
                         .padding(top = 10.dp)
                 )
@@ -209,7 +211,7 @@ fun ErrorItem(buttonClick: () -> Unit) {
             text = stringResource(id = R.string.home_screen_error_message),
             textAlign = TextAlign.Center,
             color = Black,
-            style = Typography.h4
+            style = Typography.h5
         )
         Button(
             modifier = Modifier.padding(16.dp),
@@ -244,16 +246,9 @@ fun HandleSideEffect(uiSideEffectFlow: Flow<HomeSideEffect>, scaffoldState: Scaf
 @Composable
 fun GameItemPreview() {
     GameItem(
-        game = GameResultsEntity(123, "", "Max Payne", "", false, "",
-            4.48, 5, 4908, arrayListOf(), 33, 15375,
-            AddedByStatusEntity(1, 2, 3, 4, 5, 6),
-            97, 79, 410, "", "", 4963,
-            "", "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(),
-            "", arrayListOf(), EsrbRatingEntity(1, "", ""), arrayListOf()
-        )
-    ) {
-        //do nothing
-    }
+        game = GameResultsEntity(123, "Max Payne", "", 4.5),
+        gameClick = {  }
+    )
 }
 
 @Preview(showBackground = true)

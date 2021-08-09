@@ -16,19 +16,24 @@ object Destinations {
 
     object GameDetailsArgs {
         const val GameId = "gameId"
+        const val GameScreenShots = "gameScreenShots"
     }
 }
 
 class Actions(navHostController: NavHostController) {
-    val openSearch = {
+    val openSearch: () -> Unit = {
         navHostController.navigate(Search)
     }
 
-    val openFilter = {
+    val openFilter: () -> Unit = {
         navHostController.navigate(Filters)
     }
 
     val openGameDetails: (Int) -> Unit = { gameId ->
         navHostController.navigate("$GameDetails/$gameId")
+    }
+
+    val navigateBack: () -> Unit = {
+        navHostController.navigateUp()
     }
 }
