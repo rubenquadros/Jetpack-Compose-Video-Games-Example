@@ -2,8 +2,10 @@ package com.ruben.epicworld.remote
 
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
+import com.ruben.epicworld.remote.model.request.GetGameVideosRequest
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
+import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -28,6 +30,14 @@ class RestApiTest: BaseTest() {
         getResponse("get_game_details_success_response.json", HttpURLConnection.HTTP_OK)
         val result = restApi.getGameDetails(GetGameDetailsRequest(1))
         Assert.assertEquals(expectedResponse.id, result.id)
+    }
+
+    @Test
+    fun `should get game videos when server gives success response`() = runBlocking {
+        val expectedResponse = getExpectedResponse("get_game_videos_success_response.json", GetGameVideosResponse::class.java)
+        getResponse("get_game_videos_success_response.json", HttpURLConnection.HTTP_OK)
+        val result = restApi.getGameVideos(GetGameVideosRequest(1))
+        Assert.assertEquals(expectedResponse.count, result.count)
     }
 
     @Test

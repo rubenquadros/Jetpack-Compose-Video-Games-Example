@@ -47,4 +47,22 @@ class GameRepositoryTest {
         Assert.assertTrue(result.error != null)
         Assert.assertTrue(result.error.toString() == "Error from server")
     }
+
+    @Test
+    fun `should get game videos entity when server gives success response`() = runBlocking {
+        val repository: GamesRepository = GamesRepositoryImpl(FakeSuccessDataSource())
+        val result = repository.getGameVideos(3)
+        Assert.assertTrue(result.error == null)
+        Assert.assertTrue(result.data != null)
+        Assert.assertTrue(result.data?.count == 2)
+    }
+
+    @Test
+    fun `should get error entity when server gives fail game videos response`() = runBlocking {
+        val repository: GamesRepository = GamesRepositoryImpl(FakeFailDataSource())
+        val result = repository.getGameVideos(3)
+        Assert.assertTrue(result.data == null)
+        Assert.assertTrue(result.error != null)
+        Assert.assertTrue(result.error.toString() == "Network Error")
+    }
 }

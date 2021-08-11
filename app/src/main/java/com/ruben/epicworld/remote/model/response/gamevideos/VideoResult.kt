@@ -17,6 +17,6 @@ data class VideoResult(
     val data : VideoData
 )
 
-fun VideoResult.toEntity() = VideoResultEntity(preview = preview, name = name, video = data.toEntity())
+fun VideoResult.toEntity() = VideoResultEntity(preview = preview, name = name, video = data.toEntity(), id = id)
 
 fun List<VideoResult>.toEntity() = map { it.toEntity() }

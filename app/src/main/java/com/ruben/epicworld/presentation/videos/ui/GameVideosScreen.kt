@@ -2,14 +2,21 @@ package com.ruben.epicworld.presentation.videos.ui
 
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,7 +35,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,6 +47,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.MediaMetadata
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.PlayerView
 import com.ruben.epicworld.R
@@ -60,6 +69,7 @@ import kotlinx.coroutines.flow.collect
 /**
  * Created by Ruben Quadros on 09/08/21
  **/
+@ExperimentalAnimationApi
 @Composable
 fun GameVideosScreen(
     gameId: Int,
@@ -95,11 +105,16 @@ fun GameVideosScreen(
     }
 }
 
+@ExperimentalAnimationApi
 @Composable
 fun ShowGameVideos(gameVideos: GameVideosEntity) {
     Column {
-        VideoPlayer(video = gameVideos.results[0].video)
+        VideoPlayer(
+            modifier = Modifier.weight(1f, fill = true),
+            gameVideos = gameVideos.results
+        )
         LazyColumn(
+            modifier = Modifier.weight(1f, fill = true),
             content = {
             items(gameVideos.results) { trailer ->
                 ShowTrailers(trailer)
@@ -182,28 +197,86 @@ fun TrailerDivider() {
     )
 }
 
+@ExperimentalAnimationApi
 @Composable
-fun VideoPlayer(video: String) {
+fun VideoPlayer(gameVideos: List<VideoResultEntity>, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val config = LocalConfiguration.current
+    val visible = remember {
+        mutableStateOf(true)
+    }
+    val videoTitle = remember {
+        mutableStateOf(gameVideos[0].name)
+    }
+    val mediaItems = arrayListOf<MediaItem>()
+    gameVideos.forEach {
+        mediaItems.add(
+            MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString())
+                .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
+                .build()
+        )
+    }
     val exoPlayer = remember {
         SimpleExoPlayer.Builder(context).build().apply {
-            val mediaItem = MediaItem.fromUri(video)
-            this.setMediaItem(mediaItem)
+            this.setMediaItems(mediaItems)
             this.prepare()
             this.playWhenReady = true
         }
     }
 
-    DisposableEffect(AndroidView(modifier = Modifier.background(Black),
-        factory = {
-        PlayerView(context).apply {
-            player = exoPlayer
-            layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, config.screenHeightDp)
+    exoPlayer.addListener(object : Player.Listener {
+        override fun onEvents(player: Player, events: Player.Events) {
+            super.onEvents(player, events)
+            if (player.contentPosition >= 200) visible.value = false
         }
-    })) {
-        onDispose {
-            exoPlayer.release()
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            super.onMediaItemTransition(mediaItem, reason)
+            visible.value = true
+            videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
+        }
+    })
+
+    ConstraintLayout(modifier = modifier.background(Black)) {
+        val (title, videoPlayer) = createRefs()
+        AnimatedVisibility(
+            visible = visible.value,
+            enter = fadeIn(initialAlpha = 0.4f),
+            exit = fadeOut(animationSpec = tween(durationMillis = 250)),
+            modifier = Modifier.constrainAs(title) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+            }
+        ) {
+            Text(
+                text = videoTitle.value,
+                style = Typography.h6,
+                color = White,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+            )
+        }
+        DisposableEffect(
+            AndroidView(
+                modifier = modifier
+                    .constrainAs(videoPlayer) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(parent.bottom)
+                    },
+                factory = {
+                    PlayerView(context).apply {
+                        player = exoPlayer
+                        layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+                    }
+                })
+        ) {
+            onDispose {
+                exoPlayer.release()
+            }
         }
     }
 }
@@ -234,5 +307,12 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>) {
 @Preview(showBackground = true)
 @Composable
 fun ShowTrailerPreview() {
-    ShowTrailers(trailer = VideoResultEntity("", "GTA Online: DeadLine GTA Online: DeadLine", ""))
+    ShowTrailers(trailer = VideoResultEntity(1,"", "GTA Online: DeadLine GTA Online: DeadLine", ""))
+}
+
+@ExperimentalAnimationApi
+@Preview(showBackground = true)
+@Composable
+fun ShowGameVideosPreview() {
+    ShowGameVideos(gameVideos = GameVideosEntity(3, arrayListOf()))
 }
