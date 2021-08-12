@@ -29,4 +29,5 @@
     <string name="game_videos_no_videos">Sorry there are no videos available for this game.</string>
     <string name="game_videos_trailer">Game Trailer</string>
     <string name="game_videos_play">Play Game Trailer</string>
+    <string name="game_videos_now_playing">Now Playing</string>
 </resources>

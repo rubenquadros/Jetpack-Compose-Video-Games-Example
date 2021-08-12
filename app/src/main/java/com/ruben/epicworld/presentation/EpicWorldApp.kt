@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -20,6 +21,7 @@ import com.ruben.epicworld.presentation.videos.ui.GameVideosScreen
 /**
  * Created by Ruben Quadros on 05/08/21
  **/
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun EpicWorldApp() {

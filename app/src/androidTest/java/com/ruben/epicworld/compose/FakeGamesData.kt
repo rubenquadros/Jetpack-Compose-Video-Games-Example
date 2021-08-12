@@ -39,17 +39,34 @@ object FakeGamesData {
         gameResults.add(
             GameResultsEntity(2, "GTA V", "", 4.8)
         )
+        gameResults.add(
+            GameResultsEntity(3, "Portal 2", "", 4.7)
+        )
+        gameResults.add(
+            GameResultsEntity(4, "Dota 2", "", 4.6)
+        )
+        gameResults.add(
+            GameResultsEntity(5, "BioShock", "", 4.2)
+        )
+        gameResults.add(
+            GameResultsEntity(6, "Limbo", "", 4.3)
+        )
         return gameResults
     }
 
     fun getFakeGameDetails() = GameDetailsEntity(123, "Max Payne",
         "Max Payne is a man with nothing to lose in the violent, cold urban night. A fugitive undercover cop framed for murder and now hunted by cops and the mob. Max is a man with his back against the wall, fighting a battle he cannot hope to win",
-        4.5, "2013-09-17", "", getParentPlatforms(), getPlatforms(), getStores(), getDevelopers(),
+        4.5, "2013-09-17", "", 2, getParentPlatforms(), getPlatforms(), getStores(), getDevelopers(),
         getGenres(), getPublishers())
 
     fun getFakeGameDetailsShortDesc() = GameDetailsEntity(123, "Max Payne", "This is a cool shooting game!",
-        4.5, "2013-09-17", "", getParentPlatforms(), getPlatforms(), getStores()
-        , getDevelopers(), getGenres(), getPublishers())
+        4.5, "2013-09-17", "", 2, getParentPlatforms(), getPlatforms(), getStores(),
+        getDevelopers(), getGenres(), getPublishers())
+
+    fun getFakeGameDetailsNoVideos() = GameDetailsEntity(123, "Max Payne",
+        "Max Payne is a man with nothing to lose in the violent, cold urban night. A fugitive undercover cop framed for murder and now hunted by cops and the mob. Max is a man with his back against the wall, fighting a battle he cannot hope to win",
+        4.5, "2013-09-17", "", 0, getParentPlatforms(), getPlatforms(), getStores(),
+        getDevelopers(), getGenres(), getPublishers())
 
     private fun getParentPlatforms(): List<ParentPlatformsEntity> = arrayListOf()
 

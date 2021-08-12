@@ -19,13 +19,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberImagePainter
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaMetadata
 import com.google.android.exoplayer2.Player
@@ -108,30 +110,53 @@ fun GameVideosScreen(
 @ExperimentalAnimationApi
 @Composable
 fun ShowGameVideos(gameVideos: GameVideosEntity) {
+    val playingIndex = remember {
+        mutableStateOf(0)
+    }
+
+    fun onTrailerChange(index: Int) {
+        playingIndex.value = index
+    }
+
     Column {
         VideoPlayer(
             modifier = Modifier.weight(1f, fill = true),
-            gameVideos = gameVideos.results
+            gameVideos = gameVideos.results,
+            playingIndex = playingIndex,
+            onTrailerChange = { newIndex -> onTrailerChange(newIndex) }
         )
         LazyColumn(
             modifier = Modifier.weight(1f, fill = true),
             content = {
-            items(gameVideos.results) { trailer ->
-                ShowTrailers(trailer)
+            itemsIndexed(gameVideos.results) { index, trailer ->
+                ShowTrailers(
+                    index = index,
+                    trailer = trailer,
+                    playingIndex = playingIndex,
+                    onTrailerClicked = { newIndex -> onTrailerChange(newIndex) })
             }
         })
     }
 }
 
 @Composable
-fun ShowTrailers(trailer: VideoResultEntity) {
+fun ShowTrailers(
+    index: Int,
+    trailer: VideoResultEntity,
+    playingIndex: State<Int>,
+    onTrailerClicked: (Int) -> Unit
+) {
+    val currentlyPlaying = remember {
+        mutableStateOf(false)
+    }
+    currentlyPlaying.value = index == playingIndex.value
     ConstraintLayout(modifier = Modifier
         .padding(8.dp)
         .wrapContentSize()
         .clickable {
-
+            onTrailerClicked(index)
         }) {
-        val (thumbnail, play, title) = createRefs()
+        val (thumbnail, play, title, nowPlaying) = createRefs()
         Image(
             contentScale = ContentScale.Crop,
             painter = rememberImagePainter(data = trailer.preview, builder = {
@@ -150,41 +175,60 @@ fun ShowTrailers(trailer: VideoResultEntity) {
                     bottom.linkTo(parent.bottom)
                 }
         )
-        Image(
-            contentScale = ContentScale.Crop,
-            colorFilter = if (trailer.preview.isEmpty()) ColorFilter.tint(White) else ColorFilter.tint(PinkA400),
-            painter = painterResource(id = R.drawable.ic_play),
-            contentDescription = stringResource(id = R.string.game_videos_play),
-            modifier = Modifier
-                .height(50.dp)
-                .width(50.dp)
-                .graphicsLayer {
-                    clip = true
-                    shadowElevation = 20.dp.toPx()
-                }
-                .constrainAs(play) {
-                    top.linkTo(thumbnail.top)
-                    start.linkTo(thumbnail.start)
-                    end.linkTo(thumbnail.end)
-                    bottom.linkTo(thumbnail.bottom)
-                }
-        )
+        if (currentlyPlaying.value) {
+            Image(
+                contentScale = ContentScale.Crop,
+                colorFilter = if (trailer.preview.isEmpty()) ColorFilter.tint(White) else ColorFilter.tint(
+                    PinkA400
+                ),
+                painter = painterResource(id = R.drawable.ic_play),
+                contentDescription = stringResource(id = R.string.game_videos_play),
+                modifier = Modifier
+                    .height(50.dp)
+                    .width(50.dp)
+                    .graphicsLayer {
+                        clip = true
+                        shadowElevation = 20.dp.toPx()
+                    }
+                    .constrainAs(play) {
+                        top.linkTo(thumbnail.top)
+                        start.linkTo(thumbnail.start)
+                        end.linkTo(thumbnail.end)
+                        bottom.linkTo(thumbnail.bottom)
+                    }
+            )
+        }
         Text(
             text = trailer.name,
             modifier = Modifier
                 .constrainAs(title) {
                     top.linkTo(thumbnail.top, margin = 8.dp)
                     start.linkTo(thumbnail.end, margin = 8.dp)
-                    bottom.linkTo(thumbnail.bottom, margin = 8.dp)
                     end.linkTo(parent.end, margin = 8.dp)
                     width = Dimension.preferredWrapContent
-                    height = Dimension.preferredWrapContent
+                    height = Dimension.wrapContent
             },
             color = Black,
             textAlign = TextAlign.Center,
             softWrap = true,
             style = Typography.h4
         )
+        if (currentlyPlaying.value) {
+            Text(
+                text = stringResource(id = R.string.game_videos_now_playing),
+                color = PinkA400,
+                textAlign = TextAlign.Center,
+                style = Typography.h6,
+                modifier = Modifier.constrainAs(nowPlaying) {
+                    top.linkTo(title.bottom, margin = 8.dp)
+                    start.linkTo(thumbnail.end, margin = 8.dp)
+                    bottom.linkTo(thumbnail.bottom, margin = 8.dp)
+                    end.linkTo(parent.end, margin = 8.dp)
+                    width = Dimension.preferredWrapContent
+                    height = Dimension.preferredWrapContent
+                }
+            )
+        }
         TrailerDivider()
     }
 }
@@ -199,18 +243,23 @@ fun TrailerDivider() {
 
 @ExperimentalAnimationApi
 @Composable
-fun VideoPlayer(gameVideos: List<VideoResultEntity>, modifier: Modifier = Modifier) {
+fun VideoPlayer(
+    gameVideos: List<VideoResultEntity>,
+    playingIndex: State<Int>,
+    onTrailerChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
     val visible = remember {
         mutableStateOf(true)
     }
     val videoTitle = remember {
-        mutableStateOf(gameVideos[0].name)
+        mutableStateOf(gameVideos[playingIndex.value].name)
     }
     val mediaItems = arrayListOf<MediaItem>()
     gameVideos.forEach {
         mediaItems.add(
-            MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString())
+            MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString()).setTag(it)
                 .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
                 .build()
         )
@@ -219,9 +268,11 @@ fun VideoPlayer(gameVideos: List<VideoResultEntity>, modifier: Modifier = Modifi
         SimpleExoPlayer.Builder(context).build().apply {
             this.setMediaItems(mediaItems)
             this.prepare()
-            this.playWhenReady = true
         }
     }
+
+    exoPlayer.seekTo(playingIndex.value, C.TIME_UNSET)
+    exoPlayer.playWhenReady = true
 
     exoPlayer.addListener(object : Player.Listener {
         override fun onEvents(player: Player, events: Player.Events) {
@@ -231,6 +282,7 @@ fun VideoPlayer(gameVideos: List<VideoResultEntity>, modifier: Modifier = Modifi
 
         override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
             super.onMediaItemTransition(mediaItem, reason)
+            onTrailerChange(exoPlayer.currentPeriodIndex)
             visible.value = true
             videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
         }
@@ -307,7 +359,12 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>) {
 @Preview(showBackground = true)
 @Composable
 fun ShowTrailerPreview() {
-    ShowTrailers(trailer = VideoResultEntity(1,"", "GTA Online: DeadLine GTA Online: DeadLine", ""))
+    ShowTrailers(
+        index = 0,
+        trailer = VideoResultEntity(1, "", "GTA Online: DeadLine GTA Online: DeadLine", ""),
+        playingIndex = remember { mutableStateOf(0) },
+        onTrailerClicked = { }
+    )
 }
 
 @ExperimentalAnimationApi

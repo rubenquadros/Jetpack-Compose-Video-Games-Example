@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.home.HomeViewModel
@@ -75,9 +76,26 @@ class HomeScreenTest {
         }
         composeTestRule.onNodeWithText("Max Payne").assertIsDisplayed()
         composeTestRule.onNodeWithText("4.5").assertIsDisplayed()
-        composeTestRule.onAllNodesWithContentDescription("Game Image").assertCountEquals(2)
+        composeTestRule.onAllNodesWithContentDescription("Game Image").assertCountEquals(6)
         composeTestRule.onNodeWithText("GTA V").assertIsDisplayed()
         composeTestRule.onNodeWithText("4.8").assertIsDisplayed()
+    }
+
+    @Test
+    fun games_should_be_scrollable() {
+        composeTestRule.setContent {
+            EpicWorldTheme {
+                HomeScreen(
+                    openSearch = { },
+                    openFilters = { },
+                    openGameDetails = { },
+                    homeViewModel = homeViewModel
+                )
+            }
+        }
+        composeTestRule.onNodeWithText("Limbo").performScrollTo()
+        composeTestRule.onNodeWithText("Limbo").assertIsDisplayed()
+        composeTestRule.onNodeWithText("4.2").assertIsDisplayed()
     }
 
     @Test
