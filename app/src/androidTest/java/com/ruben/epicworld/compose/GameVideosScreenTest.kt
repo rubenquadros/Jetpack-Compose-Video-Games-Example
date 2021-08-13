@@ -1,9 +1,17 @@
 package com.ruben.epicworld.compose
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollTo
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -62,6 +70,64 @@ class GameVideosScreenTest {
             GameVideosScreen(gameId = 0, navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
         }
         Assert.assertTrue(navigateBack)
+    }
+
+    @Test
+    fun should_start_playing_trailer_after_getting_game_videos() {
+        every { gameVideosViewModel.uiState() } answers {
+            MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
+        }
+        composeTestRule.setContent {
+            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+        }
+        composeTestRule.onNodeWithTag("VideoPlayer").assertIsDisplayed()
+    }
+
+    @Test
+    fun should_display_current_playing_game_video_title() {
+        every { gameVideosViewModel.uiState() } answers {
+            MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
+        }
+        composeTestRule.setContent {
+            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+        }
+        composeTestRule.onAllNodesWithText("GTA Online: Smuggler's Run Trailer").assertCountEquals(2)
+    }
+
+    @Test
+    fun should_show_all_videos_as_a_playlist() {
+        every { gameVideosViewModel.uiState() } answers {
+            MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
+        }
+        composeTestRule.setContent {
+            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+        }
+        composeTestRule.onAllNodesWithContentDescription("Game Trailer").assertCountEquals(3)
+        composeTestRule.onNodeWithContentDescription("Play Game Trailer").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Now Playing").assertIsDisplayed()
+    }
+
+    @Test
+    fun game_play_list_should_be_scrollable() {
+        every { gameVideosViewModel.uiState() } answers {
+            MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
+        }
+        composeTestRule.setContent {
+            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+        }
+        composeTestRule.onNodeWithText("GTA Online: Tiny Racers Trailer").performScrollTo()
+        composeTestRule.onNodeWithText("GTA Online: Tiny Racers Trailer").assertIsDisplayed()
+    }
+
+    @Test
+    fun game_videos_in_playlist_should_be_clickable() {
+        every { gameVideosViewModel.uiState() } answers {
+            MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
+        }
+        composeTestRule.setContent {
+            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+        }
+        composeTestRule.onAllNodesWithTag("TrailerParent").assertCountEquals(3)[0].assertHasClickAction()
     }
 
     @Test

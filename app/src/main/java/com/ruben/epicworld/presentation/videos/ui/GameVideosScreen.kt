@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -150,7 +151,7 @@ fun ShowTrailers(
         mutableStateOf(false)
     }
     currentlyPlaying.value = index == playingIndex.value
-    ConstraintLayout(modifier = Modifier
+    ConstraintLayout(modifier = Modifier.testTag("TrailerParent")
         .padding(8.dp)
         .wrapContentSize()
         .clickable {
@@ -236,7 +237,7 @@ fun ShowTrailers(
 @Composable
 fun TrailerDivider() {
     Divider(
-        modifier = Modifier.padding(horizontal = 8.dp),
+        modifier = Modifier.padding(horizontal = 8.dp).testTag("Divider"),
         color = Gray300
     )
 }
@@ -312,7 +313,7 @@ fun VideoPlayer(
         }
         DisposableEffect(
             AndroidView(
-                modifier = modifier
+                modifier = modifier.testTag("VideoPlayer")
                     .constrainAs(videoPlayer) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
