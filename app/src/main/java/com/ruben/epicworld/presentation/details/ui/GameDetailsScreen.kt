@@ -65,7 +65,7 @@ import kotlinx.coroutines.flow.collect
 fun GameDetailsScreen(
     gameId: Int,
     navigateBack: () -> Unit,
-    openGameTrailer: () -> Unit,
+    openGameTrailer: (Int) -> Unit,
     gameDetailsViewModel: GameDetailsViewModel = hiltViewModel()
 ) {
     HandleSideEffect(gameDetailsViewModel.uiSideEffect())
@@ -98,7 +98,7 @@ fun GameDetailsScreen(
 @Composable
 fun GameDetails(
     gameDetails: GameDetailsEntity,
-    openGameTrailer: () -> Unit
+    openGameTrailer: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
     val shouldShowMore = remember {
@@ -120,6 +120,7 @@ fun GameDetails(
                     .graphicsLayer {
                         clip = true
                         shape = BottomRoundedArcShape()
+                        shadowElevation = 50.dp.toPx()
                     }
                     .constrainAs(gameImage) {
                         top.linkTo(parent.top)
@@ -136,14 +137,16 @@ fun GameDetails(
                 ),
                 contentDescription = stringResource(id = R.string.game_details_screenshots)
             )
-            PlayTrailer(
-                openGameTrailer = openGameTrailer,
-                modifier = Modifier.constrainAs(play) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-            )
+            if (gameDetails.moviesCount > 0) {
+                PlayTrailer(
+                    openGameTrailer = { openGameTrailer(gameDetails.id) },
+                    modifier = Modifier.constrainAs(play) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                )
+            }
         }
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 30.dp, end = 16.dp),
@@ -243,7 +246,7 @@ fun GameDetails(
             DescriptionStatus.SHOW_MORE -> {
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp)
+                        .padding(horizontal = 16.dp)
                         .clickable {
                             maxLines.value = Int.MAX_VALUE
                         },
@@ -256,7 +259,7 @@ fun GameDetails(
             DescriptionStatus.SHOW_LESS -> {
                 Text(
                     modifier = Modifier
-                        .padding(start = 16.dp, end = 16.dp)
+                        .padding(horizontal = 16.dp)
                         .clickable {
                             maxLines.value = 4
                         },
@@ -368,7 +371,7 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameDetailsSideEffect>) {
 fun GameDetailsPreview() {
     GameDetails(
         gameDetails = GameDetailsEntity(1, "Max Payne", "The third game in a series, it holds nothing back from the player. Open world adventures of the renowned monster slayer Geralt of Rivia are now even on a larger scale. Following the source material more accurately, this time Geralt is trying to find the child of the prophecy, Ciri while making a quick coin from various contracts on the side", 4.5, "",
-            "", arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf()),
+            "", 8, arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf()),
         openGameTrailer = {  }
     )
 }

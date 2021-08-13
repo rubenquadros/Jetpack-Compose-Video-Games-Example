@@ -2,8 +2,8 @@ package com.ruben.epicworld.domain
 
 import com.ruben.epicworld.CoroutinesTestRule
 import com.ruben.epicworld.domain.entity.base.Record
-import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
-import com.ruben.epicworld.domain.interactor.GetGameDetailsUseCase
+import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
+import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import io.mockk.MockKAnnotations
 import io.mockk.confirmVerified
@@ -19,16 +19,16 @@ import org.junit.Rule
 import org.junit.Test
 
 /**
- * Created by Ruben Quadros on 07/08/21
+ * Created by Ruben Quadros on 11/08/21
  **/
 @ExperimentalCoroutinesApi
-class GetGameDetailsUseCaseTest {
+class GetGameVideosUseCaseTest {
 
     @get:Rule
     val coroutinesTestRule = CoroutinesTestRule()
 
     private val mockGamesRepository = mockk<GamesRepository>()
-    private val getGameDetailsUseCase = GetGameDetailsUseCase(mockGamesRepository)
+    private val getGameVideosUseCase = GetGameVideosUseCase(mockGamesRepository)
 
     @Before
     fun init() {
@@ -36,16 +36,16 @@ class GetGameDetailsUseCaseTest {
     }
 
     @Test
-    fun `should get game details entity from repository`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        every { runBlocking { mockGamesRepository.getGameDetails(2) } } answers {
-            Record(GameDetailsEntity(), null)
+    fun `should get game videos from repository`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        every { runBlocking { mockGamesRepository.getGameVideos(1) } } answers {
+            Record(GameVideosEntity(), null)
         }
-        getGameDetailsUseCase.invoke(
+        getGameVideosUseCase.invoke(
             coroutinesTestRule.testCoroutineScope,
             coroutinesTestRule.testDispatcher,
-            GetGameDetailsUseCase.RequestValue(2)
+            GetGameVideosUseCase.RequestValue(1)
         ) {
-            verify { runBlocking { mockGamesRepository.getGameDetails(2) } }
+            verify { runBlocking { mockGamesRepository.getGameVideos(1) } }
             confirmVerified(mockGamesRepository)
             Assert.assertTrue(it?.data != null)
             Assert.assertTrue(it?.error == null)

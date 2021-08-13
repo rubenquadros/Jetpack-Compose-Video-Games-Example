@@ -133,6 +133,7 @@ fun GetGameDetailsResponse.toEntity() = GameDetailsEntity(
     rating = rating,
     released = released,
     backgroundImage = backgroundImage,
+    moviesCount = moviesCount,
     parentPlatformsEntity = parentPlatforms.toEntity(),
     platformsEntity = platforms.toEntity(),
     storesEntity = stores.toEntity(),

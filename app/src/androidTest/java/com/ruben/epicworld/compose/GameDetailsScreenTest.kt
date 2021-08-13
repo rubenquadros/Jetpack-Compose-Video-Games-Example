@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import com.ruben.epicworld.presentation.details.ui.GameDetailsScreen
@@ -37,7 +38,7 @@ class GameDetailsScreenTest {
     @Before
     fun init() {
         MockKAnnotations.init(this, true)
-        every { gameDetailsViewModel.initData() } answers {  }
+        every { gameDetailsViewModel.initData() } answers { }
         every { gameDetailsViewModel.uiSideEffect() } answers  { flow {  } }
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Loading, null, null)) }
         every { gameDetailsViewModel.getGameDetails(any()) } answers { }
@@ -141,6 +142,15 @@ class GameDetailsScreenTest {
     }
 
     @Test
+    fun play_button_should_not_be_visible_if_no_videos() {
+        every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetailsNoVideos(), null)) }
+        composeTestRule.setContent {
+            GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+        }
+        composeTestRule.onNodeWithContentDescription("Play Trailer").assertDoesNotExist()
+    }
+
+    @Test
     fun show_more_should_not_be_visible_for_short_description() {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetailsShortDesc(), null)) }
         composeTestRule.setContent {
@@ -180,6 +190,23 @@ class GameDetailsScreenTest {
         showLessView.assertIsDisplayed().assertHasClickAction()
         showMoreView.assertDoesNotExist()
         showLessView.performClick()
+    }
+
+    @Test
+    fun getting_error_on_fetching_game_details_should_show_toast_and_exit_screen() {
+        every { gameDetailsViewModel.uiState() } answers {
+            MutableStateFlow(GameDetailsState(ScreenState.Error, null, ErrorRecord.GenericError))
+        }
+        every { gameDetailsViewModel.uiSideEffect() } answers  {
+            flow { emit(GameDetailsSideEffect.ShowGameDetailsErrorToast) }
+        }
+        var navigateBack = false
+        composeTestRule.setContent {
+            EpicWorldTheme {
+                GameDetailsScreen(gameId = 0, navigateBack = { navigateBack = true }, openGameTrailer = { }, gameDetailsViewModel)
+            }
+        }
+        Assert.assertTrue(navigateBack)
     }
 
 }

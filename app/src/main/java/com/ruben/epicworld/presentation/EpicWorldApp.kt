@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -10,13 +11,17 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import com.ruben.epicworld.presentation.Destinations.GameDetails
 import com.ruben.epicworld.presentation.Destinations.GameDetailsArgs.GameId
+import com.ruben.epicworld.presentation.Destinations.GameVideos
+import com.ruben.epicworld.presentation.Destinations.GameVideosArgs.GameIdVideo
 import com.ruben.epicworld.presentation.Destinations.Home
 import com.ruben.epicworld.presentation.details.ui.GameDetailsScreen
 import com.ruben.epicworld.presentation.home.ui.HomeScreen
+import com.ruben.epicworld.presentation.videos.ui.GameVideosScreen
 
 /**
  * Created by Ruben Quadros on 05/08/21
  **/
+@ExperimentalAnimationApi
 @ExperimentalFoundationApi
 @Composable
 fun EpicWorldApp() {
@@ -39,7 +44,18 @@ fun EpicWorldApp() {
             GameDetailsScreen(
                 gameId = it.arguments?.getInt(GameId) ?: 0,
                 navigateBack = actions.navigateBack,
-                openGameTrailer = {  }
+                openGameTrailer =  actions.openGameVideos
+            )
+        }
+        composable(
+            "$GameVideos/{${GameIdVideo}}",
+            arguments = listOf(
+                navArgument(GameIdVideo) { type = NavType.IntType }
+            )
+        ) {
+            GameVideosScreen(
+                gameId = it.arguments?.getInt(GameIdVideo) ?: 0,
+                navigateBack = actions.navigateBack
             )
         }
     }

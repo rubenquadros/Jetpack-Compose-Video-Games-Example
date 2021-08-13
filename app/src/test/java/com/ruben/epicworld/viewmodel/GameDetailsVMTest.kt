@@ -1,6 +1,7 @@
 package com.ruben.epicworld.viewmodel
 
 import com.ruben.epicworld.CoroutinesTestRule
+import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.domain.interactor.GetGameDetailsUseCase
@@ -11,13 +12,9 @@ import com.ruben.epicworld.presentation.details.ui.GameDetailsState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -40,7 +37,6 @@ class GameDetailsVMTest {
     @Before
     fun init() {
         MockKAnnotations.init(this, true)
-        Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
     @Test
@@ -68,11 +64,21 @@ class GameDetailsVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
+        every { runBlocking { mockRepository.getGameDetails(2) } } answers {
+            Record(null, ErrorRecord.GenericError)
+        }
+        gameDetailsViewModel.testIntent {
+            getGameDetails(2)
+        }
         gameDetailsViewModel.testIntent {
             handleGameIdError()
         }
         gameDetailsViewModel.sideEffectObserver.awaitCount(1)
         Assert.assertTrue(gameDetailsViewModel.sideEffectObserver.values.isNotEmpty())
+        gameDetailsViewModel.stateObserver.awaitCount(2)
+        Assert.assertTrue(gameDetailsViewModel.stateObserver.values.last().screenState == ScreenState.Error)
+        Assert.assertTrue(gameDetailsViewModel.stateObserver.values.last().gameDetails == null)
+        Assert.assertTrue(gameDetailsViewModel.stateObserver.values.last().error != null)
     }
 
     @Test
@@ -86,11 +92,6 @@ class GameDetailsVMTest {
         }
         gameDetailsViewModel.sideEffectObserver.awaitCount(1)
         Assert.assertTrue(gameDetailsViewModel.sideEffectObserver.values.isNotEmpty())
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
 }
