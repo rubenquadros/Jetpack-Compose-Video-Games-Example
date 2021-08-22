@@ -1,13 +1,7 @@
 package com.ruben.epicworld.compose
 
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.details.GameDetailsViewModel
@@ -39,14 +33,17 @@ class GameDetailsScreenTest {
     fun init() {
         MockKAnnotations.init(this, true)
         every { gameDetailsViewModel.initData() } answers { }
+        every { gameDetailsViewModel.createInitialState() } answers {
+            GameDetailsState(ScreenState.Loading, null, null)
+        }
         every { gameDetailsViewModel.uiSideEffect() } answers  { flow {  } }
-        every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Loading, null, null)) }
         every { gameDetailsViewModel.getGameDetails(any()) } answers { }
         every { gameDetailsViewModel.handleGameIdError() } answers { }
     }
 
     @Test
     fun loader_should_be_shown_when_data_is_being_fetched() {
+        every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(gameDetailsViewModel.createInitialState()) }
         composeTestRule.setContent {
             EpicWorldTheme {
                 GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)

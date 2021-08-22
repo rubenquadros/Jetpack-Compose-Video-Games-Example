@@ -1,17 +1,8 @@
 package com.ruben.epicworld.compose
 
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performScrollTo
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -44,8 +35,10 @@ class GameVideosScreenTest {
     fun init() {
         MockKAnnotations.init(this, true)
         every { gameVideosViewModel.initData() } answers { }
+        every { gameVideosViewModel.createInitialState() } answers {
+            GameVideosState(ScreenState.Loading, null, null)
+        }
         every { gameVideosViewModel.uiSideEffect() } answers { flow { } }
-        every { gameVideosViewModel.uiState() } answers { MutableStateFlow(GameVideosState(ScreenState.Loading, null, null)) }
         every { gameVideosViewModel.getGameVideos(any()) } answers { }
         every { gameVideosViewModel.handleGameIdError() } answers { }
         every { gameVideosViewModel.handleNoGameVideos() } answers { }
@@ -54,6 +47,7 @@ class GameVideosScreenTest {
 
     @Test
     fun loader_should_be_shown_when_fetching_game_videos() {
+        every { gameVideosViewModel.uiState() } answers { MutableStateFlow(gameVideosViewModel.createInitialState()) }
         composeTestRule.setContent {
             GameVideosScreen(gameId = 123, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
@@ -62,6 +56,7 @@ class GameVideosScreenTest {
 
     @Test
     fun providing_invalid_game_id_should_show_toast_and_exit_screen() {
+        every { gameVideosViewModel.uiState() } answers { MutableStateFlow(gameVideosViewModel.createInitialState()) }
         every { gameVideosViewModel.uiSideEffect() } answers {
             flow { emit(GameVideosSideEffect.ShowGameIdErrorToast) }
         }

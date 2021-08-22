@@ -1,37 +1,21 @@
 package com.ruben.epicworld.presentation.details.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -42,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
@@ -76,8 +62,14 @@ fun GameDetailsScreen(
     } else {
         gameDetailsViewModel.getGameDetails(gameId = gameId)
     }
-    val state = gameDetailsViewModel.uiState().collectAsState()
-    when (state.value.screenState) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val stateFlow = gameDetailsViewModel.uiState()
+    val stateLifecycleAware = remember(lifecycleOwner, stateFlow) {
+        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+    val state by stateLifecycleAware.collectAsState(initial = gameDetailsViewModel.createInitialState())
+
+    when (state.screenState) {
         is ScreenState.Loading -> {
            LoadingView(modifier = Modifier.fillMaxSize())
         }
@@ -85,7 +77,7 @@ fun GameDetailsScreen(
             navigateBack.invoke()
         }
         is ScreenState.Success -> {
-            state.value.gameDetails?.let {
+            state.gameDetails?.let {
                 GameDetails(
                     gameDetails = it,
                     openGameTrailer = openGameTrailer

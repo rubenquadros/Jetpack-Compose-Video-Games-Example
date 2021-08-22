@@ -10,26 +10,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -37,6 +24,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,23 +35,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberImagePainter
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.MediaMetadata
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ui.PlayerView
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
-import com.ruben.epicworld.presentation.theme.Black
-import com.ruben.epicworld.presentation.theme.Gray300
-import com.ruben.epicworld.presentation.theme.PinkA400
-import com.ruben.epicworld.presentation.theme.Typography
-import com.ruben.epicworld.presentation.theme.White
+import com.ruben.epicworld.presentation.theme.*
 import com.ruben.epicworld.presentation.utility.showToast
 import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import kotlinx.coroutines.flow.Flow
@@ -86,8 +68,14 @@ fun GameVideosScreen(
     } else {
         gameVideosViewModel.getGameVideos(gameId = gameId)
     }
-    val state = gameVideosViewModel.uiState().collectAsState()
-    when (state.value.screenState) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val stateFlow = gameVideosViewModel.uiState()
+    val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
+        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
+    }
+    val state by stateFlowLifecycleAware.collectAsState(initial = gameVideosViewModel.createInitialState())
+
+    when (state.screenState) {
         ScreenState.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())
         }
@@ -96,7 +84,7 @@ fun GameVideosScreen(
             navigateBack.invoke()
         }
         ScreenState.Success -> {
-            state.value.gameVideos?.let {
+            state.gameVideos?.let {
                 if (it.count == 0) {
                     gameVideosViewModel.handleNoGameVideos()
                     navigateBack.invoke()
@@ -151,7 +139,8 @@ fun ShowTrailers(
         mutableStateOf(false)
     }
     currentlyPlaying.value = index == playingIndex.value
-    ConstraintLayout(modifier = Modifier.testTag("TrailerParent")
+    ConstraintLayout(modifier = Modifier
+        .testTag("TrailerParent")
         .padding(8.dp)
         .wrapContentSize()
         .clickable {
@@ -237,7 +226,9 @@ fun ShowTrailers(
 @Composable
 fun TrailerDivider() {
     Divider(
-        modifier = Modifier.padding(horizontal = 8.dp).testTag("Divider"),
+        modifier = Modifier
+            .padding(horizontal = 8.dp)
+            .testTag("Divider"),
         color = Gray300
     )
 }
@@ -313,7 +304,8 @@ fun VideoPlayer(
         }
         DisposableEffect(
             AndroidView(
-                modifier = modifier.testTag("VideoPlayer")
+                modifier = modifier
+                    .testTag("VideoPlayer")
                     .constrainAs(videoPlayer) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
