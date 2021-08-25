@@ -38,7 +38,7 @@ fun drawArcPath(size: Size): Path {
             sweepAngleDegrees = 180f,
             forceMoveTo = false
         )
-        lineTo(0f, size.height)
+        lineTo(0f, 0f)
         close()
     }
 }
