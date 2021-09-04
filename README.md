@@ -14,6 +14,14 @@ Once you get your API key, edit your `local.properties` file and add the key as 
 
 `api.key=YOUR_API_KEY`
 
+## Future scope :crystal_ball: :soon:
+
+ - Search and filter functionality
+ 
+ - Custom ExoPlayer controls
+ 
+ - Full screen ExoPlayer
+
 ## Different components used in the project :musical_score: :book: :sparkles:
 
  - [Clean Architecture][architecture] This app is structured using single module clean architecture
@@ -34,7 +42,7 @@ Once you get your API key, edit your `local.properties` file and add the key as 
  
  - [Coil][coil] For displaying images
  
- - [ExoPlater][player] For playing videos
+ - [ExoPlayer][player] For playing videos
 
  - [Coroutines][coroutines] For handling async work
  
