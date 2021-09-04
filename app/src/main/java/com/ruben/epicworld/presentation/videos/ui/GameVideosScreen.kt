@@ -36,6 +36,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.*
@@ -260,23 +262,37 @@ fun VideoPlayer(
         SimpleExoPlayer.Builder(context).build().apply {
             this.setMediaItems(mediaItems)
             this.prepare()
+            this.addListener(object : Player.Listener {
+                override fun onEvents(player: Player, events: Player.Events) {
+                    super.onEvents(player, events)
+                    if (player.contentPosition >= 200) visible.value = false
+                }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+                    onTrailerChange(this@apply.currentPeriodIndex)
+                    visible.value = true
+                    videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
+                }
+            })
         }
     }
 
     exoPlayer.seekTo(playingIndex.value, C.TIME_UNSET)
     exoPlayer.playWhenReady = true
 
-    exoPlayer.addListener(object : Player.Listener {
-        override fun onEvents(player: Player, events: Player.Events) {
-            super.onEvents(player, events)
-            if (player.contentPosition >= 200) visible.value = false
+    LocalLifecycleOwner.current.lifecycle.addObserver(object : LifecycleObserver {
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        fun resumeVideo() {
+            if (exoPlayer.isPlaying.not()) {
+                exoPlayer.play()
+            }
         }
 
-        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-            super.onMediaItemTransition(mediaItem, reason)
-            onTrailerChange(exoPlayer.currentPeriodIndex)
-            visible.value = true
-            videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        fun stopVideo() {
+            exoPlayer.pause()
         }
     })
 
