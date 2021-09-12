@@ -58,7 +58,7 @@ fun HomeScreen(
     Scaffold(topBar = {
         HomeAppBar(
             title = stringResource(id = R.string.home_app_bar_title),
-            searchClick = {  },
+            searchClick = { openSearch.invoke() },
             filterClick = {  }
         )
     },
