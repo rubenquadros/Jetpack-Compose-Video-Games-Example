@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -146,7 +147,8 @@ fun SearchBar(
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .testTag("Search Bar"),
             value = searchState.value,
             onValueChange = {
                 if (searchState.value.text.trim() != it.text.trim() && it.text.trim()
@@ -212,6 +214,7 @@ fun SearchBar(
             .height(1.dp)
             .fillMaxWidth()
             .background(PinkA100)
+            .testTag("Bottom Border")
         )
     }
 }
@@ -239,6 +242,7 @@ fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> 
             .clickable {
                 onSearchResultClicked.invoke(searchResult.id)
             }
+            .testTag("Search Result Parent")
     ) {
         Row(
             modifier = Modifier
@@ -283,6 +287,7 @@ fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> 
                 .height(0.5.dp)
                 .fillMaxWidth()
                 .background(Gray500)
+                .testTag("Search Divider")
         )
     }
 }

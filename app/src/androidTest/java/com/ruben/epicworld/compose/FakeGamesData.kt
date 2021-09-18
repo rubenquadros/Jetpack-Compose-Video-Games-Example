@@ -1,16 +1,7 @@
 package com.ruben.epicworld.compose
 
 import androidx.paging.PagingData
-import com.ruben.epicworld.domain.entity.gamedetails.DevelopersEntity
-import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
-import com.ruben.epicworld.domain.entity.gamedetails.GenresEntity
-import com.ruben.epicworld.domain.entity.gamedetails.ParentPlatformsEntity
-import com.ruben.epicworld.domain.entity.gamedetails.PlatformEntity
-import com.ruben.epicworld.domain.entity.gamedetails.PlatformsEntity
-import com.ruben.epicworld.domain.entity.gamedetails.PublishersEntity
-import com.ruben.epicworld.domain.entity.gamedetails.RequirementsEntity
-import com.ruben.epicworld.domain.entity.gamedetails.StoreEntity
-import com.ruben.epicworld.domain.entity.gamedetails.StoresEntity
+import com.ruben.epicworld.domain.entity.gamedetails.*
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
@@ -71,6 +62,36 @@ object FakeGamesData {
         getDevelopers(), getGenres(), getPublishers())
 
     fun getFakeGameVideos() = GameVideosEntity(4, getVideos())
+
+    fun getFakeSearchResults() = getSearchResults()
+
+    private fun getSearchResults(): List<GameResultsEntity> {
+        val results = arrayListOf<GameResultsEntity>()
+        results.add(
+            GameResultsEntity(1, "Grand Theft Auto", "", 4.5)
+        )
+
+        results.add(
+            GameResultsEntity(2, "GTA-bankrob", "", 4.3)
+        )
+
+        results.add(
+            GameResultsEntity(3, "GTA - Bombay", "", 4.6)
+        )
+
+        results.add(
+            GameResultsEntity(4, "GTA-V-DEMO", "", 4.1)
+        )
+
+        results.add(
+            GameResultsEntity(5, "gta multiplayer", "", 3.5)
+        )
+
+        results.add(
+            GameResultsEntity(6, "GTA Prototype", "", 4.0)
+        )
+        return results
+    }
 
     private fun getVideos(): List<VideoResultEntity> =
         arrayListOf(

@@ -3,6 +3,7 @@ package com.ruben.epicworld.repository.fakeimplementation.success
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
 import com.ruben.epicworld.remote.model.request.GetGameVideosRequest
+import com.ruben.epicworld.remote.model.request.SearchGamesRequest
 import com.ruben.epicworld.remote.model.response.Filters
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.common.AddedByStatus
@@ -10,6 +11,7 @@ import com.ruben.epicworld.remote.model.response.common.EsrbRating
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.Reactions
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 import com.ruben.epicworld.remote.rest.RestApi
 
 /**
@@ -97,5 +99,9 @@ class FakeSuccessApi : RestApi {
 
     override suspend fun getGameVideos(getGameVideosRequest: GetGameVideosRequest): GetGameVideosResponse {
         return GetGameVideosResponse(2, "", "", arrayListOf())
+    }
+
+    override suspend fun searchGames(searchGamesRequest: SearchGamesRequest): SearchGamesResponse {
+        return SearchGamesResponse(10, "", "", arrayListOf(), false)
     }
 }
