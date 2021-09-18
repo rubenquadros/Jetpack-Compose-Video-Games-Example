@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
 
@@ -36,6 +37,10 @@ class GameSearchViewModel @Inject constructor(
     fun searchGame(query: String? = null) = intent {
         query?.let { this@GameSearchViewModel.searchQuery =  it }
         searchFlow.emit(query ?: searchQuery)
+    }
+
+    fun handleDetailsNavigation(gameId: Int) = intent {
+        postSideEffect(SearchSideEffect.NavigateToDetails(gameId))
     }
 
     @OptIn(FlowPreview::class)

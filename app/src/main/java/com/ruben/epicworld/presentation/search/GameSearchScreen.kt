@@ -2,6 +2,7 @@ package com.ruben.epicworld.presentation.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -42,9 +43,11 @@ import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.presentation.commonui.GetGamesError
 import com.ruben.epicworld.presentation.commonui.LoadingView
+import com.ruben.epicworld.presentation.commonui.NoResultsView
 import com.ruben.epicworld.presentation.theme.*
 import com.ruben.epicworld.presentation.utility.shouldPerformSearch
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 12/09/21
@@ -53,8 +56,14 @@ import kotlinx.coroutines.flow.Flow
 @Composable
 fun GameSearchScreen(
     gameSearchViewModel: GameSearchViewModel = hiltViewModel(),
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToDetails: (Int) -> Unit
 ) {
+
+    HandleSideEffect(
+        sideEffectFlow = gameSearchViewModel.uiSideEffect(),
+        navigateToDetails = navigateToDetails
+    )
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -92,11 +101,15 @@ fun GameSearchScreen(
             }
 
             is SearchState.SearchResultState -> {
-                SearchResults((state as SearchState.SearchResultState).searchResults)
+                val results = (state as SearchState.SearchResultState).searchResults
+                SearchResults(
+                    results = results,
+                    onSearchResultClicked = { id -> gameSearchViewModel.handleDetailsNavigation(id) }
+                )
             }
 
             is SearchState.NoResultsState -> {
-
+                NoResultsView()
             }
 
             is SearchState.ErrorState -> {
@@ -204,20 +217,29 @@ fun SearchBar(
 }
 
 @Composable
-fun SearchResults(results: List<GameResultsEntity>) {
+fun SearchResults(results: List<GameResultsEntity>, onSearchResultClicked: (Int) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         items(items = results, key = { item -> item.id }) {
-            SearchItem(searchResult = it)
+            SearchItem(
+                searchResult = it,
+                onSearchResultClicked = onSearchResultClicked
+            )
         }
     }
 }
 
 @Composable
-fun SearchItem(searchResult: GameResultsEntity) {
-    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .clickable {
+                onSearchResultClicked.invoke(searchResult.id)
+            }
+    ) {
         Row(
             modifier = Modifier
                 .padding(bottom = 4.dp)
@@ -265,10 +287,17 @@ fun SearchItem(searchResult: GameResultsEntity) {
     }
 }
 
-
 @Composable
-fun HandleSideEffect(sideEffectFlow: Flow<SearchSideEffect>) {
-
+fun HandleSideEffect(sideEffectFlow: Flow<SearchSideEffect>, navigateToDetails: (Int) -> Unit) {
+    LaunchedEffect(sideEffectFlow) {
+        sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is SearchSideEffect.NavigateToDetails -> {
+                    navigateToDetails.invoke(sideEffect.id)
+                }
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -286,5 +315,8 @@ fun SearchBarPreview() {
 @Preview(showBackground = true)
 @Composable
 fun SearchResultPreview() {
-    SearchItem(searchResult = GameResultsEntity(123, "Max Payne", "", 4.5))
+    SearchItem(
+        searchResult = GameResultsEntity(123, "Max Payne", "", 4.5),
+        onSearchResultClicked = {}
+    )
 }

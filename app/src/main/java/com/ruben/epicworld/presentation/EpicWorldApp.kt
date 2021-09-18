@@ -61,7 +61,10 @@ fun EpicWorldApp() {
             )
         }
         composable(Search) {
-            GameSearchScreen(navigateBack = actions.navigateBack)
+            GameSearchScreen(
+                navigateToDetails = actions.openGameDetails,
+                navigateBack = actions.navigateBack
+            )
         }
     }
 }
