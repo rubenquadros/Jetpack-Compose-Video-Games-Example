@@ -12,6 +12,7 @@ import com.ruben.epicworld.remote.RemoteException
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
 import com.ruben.epicworld.remote.model.request.GetGameVideosRequest
+import com.ruben.epicworld.remote.model.request.SearchGamesRequest
 import javax.inject.Inject
 
 /**
@@ -46,6 +47,16 @@ class GamesRepositoryImpl @Inject constructor(private val dataSource: DataSource
         return try {
             dataSource.api().restApi().getGameVideos(GetGameVideosRequest((gameId))).run {
                 gamesMapper.mapGameVideosResponse(this)
+            }
+        } catch (e: RemoteException) {
+            errorMapper.mapErrorRecord(e)
+        }
+    }
+
+    override suspend fun searchGames(query: String): Record<GamesEntity> {
+        return try {
+            dataSource.api().restApi().searchGames(SearchGamesRequest(query)).run {
+                gamesMapper.mapSearchGamesResponse(this)
             }
         } catch (e: RemoteException) {
             errorMapper.mapErrorRecord(e)

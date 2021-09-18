@@ -2,11 +2,7 @@ package com.ruben.epicworld.presentation.utility
 
 import android.content.Context
 import android.widget.Toast
-import com.ruben.epicworld.domain.entity.gamedetails.DevelopersEntity
-import com.ruben.epicworld.domain.entity.gamedetails.GenresEntity
-import com.ruben.epicworld.domain.entity.gamedetails.PlatformsEntity
-import com.ruben.epicworld.domain.entity.gamedetails.PublishersEntity
-import com.ruben.epicworld.domain.entity.gamedetails.StoresEntity
+import com.ruben.epicworld.domain.entity.gamedetails.*
 
 /**
  * Created by Ruben Quadros on 06/08/21
@@ -71,4 +67,8 @@ object ApplicationUtility {
 
 fun Context.showToast(message: String)  {
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+fun String?.shouldPerformSearch(): Boolean {
+    return this.isNullOrBlank().not() && this!!.length >= 3
 }

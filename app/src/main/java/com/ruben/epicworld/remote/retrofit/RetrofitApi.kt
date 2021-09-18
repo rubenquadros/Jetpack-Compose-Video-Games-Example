@@ -3,6 +3,7 @@ package com.ruben.epicworld.remote.retrofit
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -27,4 +28,9 @@ interface RetrofitApi {
     suspend fun getGameVideos(
         @Path("id") gameId: Int
     ): GetGameVideosResponse
+
+    @GET("api/games?parent_platforms=1,2,3&search_precise=false&search_exact=false")
+    suspend fun searchGames(
+        @Query("search") query: String
+    ): SearchGamesResponse
 }

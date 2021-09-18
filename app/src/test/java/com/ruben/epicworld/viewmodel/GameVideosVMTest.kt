@@ -8,7 +8,7 @@ import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.videos.GameVideosViewModel
-import com.ruben.epicworld.presentation.videos.ui.GameVideosState
+import com.ruben.epicworld.presentation.videos.GameVideosState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk

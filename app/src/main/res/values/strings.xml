@@ -3,12 +3,13 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="all_ok">OK</string>
     <string name="all_back_button">Back Button</string>
+    <string name="all_clear_button">Clear Button</string>
     <string name="all_generic_error">There was an error. Please try again later</string>
     <string name="all_star_rating">Star Rating</string>
+    <string name="all_game_image_description">Game Image</string>
     <string name="home_app_bar_search_description">Search</string>
     <string name="home_app_bar_filter_description">Filter Results</string>
     <string name="home_app_bar_title">Epic World</string>
-    <string name="home_screen_game_image_description">Game Image</string>
     <string name="home_screen_error_message">There was an error. We are terribly sorry!</string>
     <string name="home_screen_scroll_error">Not able to get more results. Please try later.</string>
     <string name="home_screen_retry">Retry</string>
@@ -30,4 +31,6 @@
     <string name="game_videos_trailer">Game Trailer</string>
     <string name="game_videos_play">Play Game Trailer</string>
     <string name="game_videos_now_playing">Now Playing</string>
+    <string name="game_search_suggestion">Search here…</string>
+    <string name="game_search_no_matches">No matching results</string>
 </resources>

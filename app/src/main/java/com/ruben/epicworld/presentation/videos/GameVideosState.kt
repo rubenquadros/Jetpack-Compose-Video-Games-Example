@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.videos.ui
+package com.ruben.epicworld.presentation.videos
 
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity

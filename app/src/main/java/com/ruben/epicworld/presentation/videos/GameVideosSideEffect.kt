@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.videos.ui
+package com.ruben.epicworld.presentation.videos
 
 /**
  * Created by Ruben Quadros on 09/08/21
