@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.details.ui
+package com.ruben.epicworld.presentation.details
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -34,7 +34,6 @@ import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
-import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import com.ruben.epicworld.presentation.theme.AmberA400
 import com.ruben.epicworld.presentation.theme.Black
 import com.ruben.epicworld.presentation.theme.PinkA400

@@ -8,7 +8,7 @@ import com.ruben.epicworld.domain.interactor.GetGameDetailsUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.details.GameDetailsViewModel
-import com.ruben.epicworld.presentation.details.ui.GameDetailsState
+import com.ruben.epicworld.presentation.details.GameDetailsState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk

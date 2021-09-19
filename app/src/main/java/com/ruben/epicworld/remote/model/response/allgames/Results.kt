@@ -2,14 +2,7 @@ package com.ruben.epicworld.remote.model.response.allgames
 
 import com.google.gson.annotations.SerializedName
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
-import com.ruben.epicworld.remote.model.response.common.AddedByStatus
-import com.ruben.epicworld.remote.model.response.common.EsrbRating
-import com.ruben.epicworld.remote.model.response.common.Genres
-import com.ruben.epicworld.remote.model.response.common.ParentPlatforms
-import com.ruben.epicworld.remote.model.response.common.Platforms
-import com.ruben.epicworld.remote.model.response.common.Ratings
-import com.ruben.epicworld.remote.model.response.common.Stores
-import com.ruben.epicworld.remote.model.response.common.Tags
+import com.ruben.epicworld.remote.model.response.common.*
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -26,7 +19,7 @@ data class Results(
     @SerializedName("tba")
     val tba: Boolean,
     @SerializedName("background_image")
-    val backgroundImage: String,
+    val backgroundImage: String?,
     @SerializedName("rating")
     val rating: Double,
     @SerializedName("rating_top")
@@ -75,6 +68,6 @@ data class Results(
     val shortScreenshots : List<ShortScreenshots>
 )
 
-fun Results.toEntity() = GameResultsEntity(id, name, backgroundImage, rating)
+fun Results.toEntity() = GameResultsEntity(id, name, backgroundImage ?: "", rating)
 
 fun List<Results>.toEntity() = map { it.toEntity() }

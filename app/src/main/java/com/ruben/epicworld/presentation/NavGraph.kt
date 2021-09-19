@@ -4,6 +4,7 @@ import androidx.navigation.NavHostController
 import com.ruben.epicworld.presentation.Destinations.Filters
 import com.ruben.epicworld.presentation.Destinations.GameDetails
 import com.ruben.epicworld.presentation.Destinations.GameVideos
+import com.ruben.epicworld.presentation.Destinations.Home
 import com.ruben.epicworld.presentation.Destinations.Search
 
 /**
@@ -35,6 +36,7 @@ class Actions(navHostController: NavHostController) {
     }
 
     val openGameDetails: (Int) -> Unit = { gameId ->
+        navHostController.popBackStack(route = Home, inclusive = false)
         navHostController.navigate("$GameDetails/$gameId")
     }
 

@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.details.ui
+package com.ruben.epicworld.presentation.details
 
 /**
  * Created by Ruben Quadros on 06/08/21

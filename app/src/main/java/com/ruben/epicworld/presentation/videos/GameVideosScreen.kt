@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.videos.ui
+package com.ruben.epicworld.presentation.videos
 
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -49,7 +49,6 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.*
 import com.ruben.epicworld.presentation.utility.showToast
-import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 

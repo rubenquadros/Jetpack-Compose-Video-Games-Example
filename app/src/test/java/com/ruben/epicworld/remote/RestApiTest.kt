@@ -3,9 +3,11 @@ package com.ruben.epicworld.remote
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
 import com.ruben.epicworld.remote.model.request.GetGameVideosRequest
+import com.ruben.epicworld.remote.model.request.SearchGamesRequest
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
@@ -37,6 +39,14 @@ class RestApiTest: BaseTest() {
         val expectedResponse = getExpectedResponse("get_game_videos_success_response.json", GetGameVideosResponse::class.java)
         getResponse("get_game_videos_success_response.json", HttpURLConnection.HTTP_OK)
         val result = restApi.getGameVideos(GetGameVideosRequest(1))
+        Assert.assertEquals(expectedResponse.count, result.count)
+    }
+
+    @Test
+    fun `should get search results when server gives success response`() = runBlocking {
+        val expectedResponse = getExpectedResponse("search_game_success_response.json", SearchGamesResponse::class.java)
+        getResponse("search_game_success_response.json", HttpURLConnection.HTTP_OK)
+        val result = restApi.searchGames(SearchGamesRequest("gta"))
         Assert.assertEquals(expectedResponse.count, result.count)
     }
 

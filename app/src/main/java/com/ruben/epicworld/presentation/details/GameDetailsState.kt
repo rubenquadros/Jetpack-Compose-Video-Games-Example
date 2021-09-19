@@ -1,4 +1,4 @@
-package com.ruben.epicworld.presentation.details.ui
+package com.ruben.epicworld.presentation.details
 
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity

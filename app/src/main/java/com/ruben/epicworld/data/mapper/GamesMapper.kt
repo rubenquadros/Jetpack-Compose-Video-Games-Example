@@ -10,6 +10,7 @@ import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsRespo
 import com.ruben.epicworld.remote.model.response.gamedetails.toEntity
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.toEntity
+import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -26,5 +27,9 @@ class GamesMapper {
 
     fun mapGameVideosResponse(gameVideosResponse: GetGameVideosResponse): Record<GameVideosEntity> {
         return Record(gameVideosResponse.toEntity(), null)
+    }
+
+    fun mapSearchGamesResponse(searchGamesResponse: SearchGamesResponse): Record<GamesEntity> {
+        return Record(GamesEntity(searchGamesResponse.results.toEntity()), null)
     }
 }

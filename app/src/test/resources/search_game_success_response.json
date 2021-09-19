@@ -1,0 +1,2431 @@
+{
+  "count": 47,
+  "next": "https://api.rawg.io/api/games?key=2a8418325c0647209461250576288706&page=2&parent_platforms=1%2C2%2C3&search=gta&search_exact%09%0A=false&search_precise=false",
+  "previous": null,
+  "results": [
+    {
+      "slug": "grand-theft-auto-1998",
+      "name": "Grand Theft Auto",
+      "playtime": 1,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 27,
+            "name": "PlayStation",
+            "slug": "playstation1"
+          }
+        },
+        {
+          "platform": {
+            "id": 43,
+            "name": "Game Boy Color",
+            "slug": "game-boy-color"
+          }
+        },
+        {
+          "platform": {
+            "id": 26,
+            "name": "Game Boy",
+            "slug": "game-boy"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 1,
+            "name": "Steam",
+            "slug": "steam"
+          }
+        }
+      ],
+      "released": "1997-10-21",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/games/e66/e66d312550b4769f74228530f912267d.jpg",
+      "rating": 3.86,
+      "rating_top": 4,
+      "ratings": [
+        {
+          "id": 4,
+          "title": "recommended",
+          "count": 155,
+          "percent": 55.76
+        },
+        {
+          "id": 5,
+          "title": "exceptional",
+          "count": 57,
+          "percent": 20.5
+        },
+        {
+          "id": 3,
+          "title": "meh",
+          "count": 51,
+          "percent": 18.35
+        },
+        {
+          "id": 1,
+          "title": "skip",
+          "count": 15,
+          "percent": 5.4
+        }
+      ],
+      "ratings_count": 278,
+      "reviews_text_count": 0,
+      "added": 1405,
+      "added_by_status": {
+        "yet": 47,
+        "owned": 956,
+        "beaten": 173,
+        "toplay": 26,
+        "dropped": 198,
+        "playing": 5
+      },
+      "metacritic": null,
+      "suggestions_count": 339,
+      "updated": "2020-05-14T08:28:09",
+      "id": 52998,
+      "score": "41.75948",
+      "clip": null,
+      "tags": [
+        {
+          "id": 31,
+          "name": "Singleplayer",
+          "slug": "singleplayer",
+          "language": "eng",
+          "games_count": 130467,
+          "image_background": "https://media.rawg.io/media/games/6cd/6cd653e0aaef5ff8bbd295bf4bcb12eb.jpg"
+        },
+        {
+          "id": 7,
+          "name": "Multiplayer",
+          "slug": "multiplayer",
+          "language": "eng",
+          "games_count": 27113,
+          "image_background": "https://media.rawg.io/media/games/364/3642d850efb217c58feab80b8affaa89.jpg"
+        },
+        {
+          "id": 36,
+          "name": "Open World",
+          "slug": "open-world",
+          "language": "eng",
+          "games_count": 4173,
+          "image_background": "https://media.rawg.io/media/games/618/618c2031a07bbff6b4f611f10b6bcdbc.jpg"
+        },
+        {
+          "id": 45,
+          "name": "2D",
+          "slug": "2d",
+          "language": "eng",
+          "games_count": 127972,
+          "image_background": "https://media.rawg.io/media/games/0fd/0fd84d36596a83ef2e5a35f63a072218.jpg"
+        },
+        {
+          "id": 193,
+          "name": "Classic",
+          "slug": "classic",
+          "language": "eng",
+          "games_count": 1591,
+          "image_background": "https://media.rawg.io/media/games/baf/baf9905270314e07e6850cffdb51df41.jpg"
+        },
+        {
+          "id": 61,
+          "name": "Top-Down",
+          "slug": "top-down",
+          "language": "eng",
+          "games_count": 13679,
+          "image_background": "https://media.rawg.io/media/games/d28/d28e64fd1af23d1846d20b47dfa933f8.jpeg"
+        }
+      ],
+      "esrb_rating": {
+        "id": 4,
+        "name": "Mature",
+        "slug": "mature",
+        "name_en": "Mature",
+        "name_ru": "С 17 лет"
+      },
+      "user_game": null,
+      "reviews_count": 278,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/games/e66/e66d312550b4769f74228530f912267d.jpg"
+        },
+        {
+          "id": 803962,
+          "image": "https://media.rawg.io/media/screenshots/8f5/8f577f88855945518d24edf59dba9dff.jpg"
+        },
+        {
+          "id": 803963,
+          "image": "https://media.rawg.io/media/screenshots/aab/aabcb87421c5e3f5af4ac39d62b01eae.jpg"
+        },
+        {
+          "id": 803964,
+          "image": "https://media.rawg.io/media/screenshots/311/31181ab4311854dcccb0da8dcb25a8d1.jpg"
+        },
+        {
+          "id": 729955,
+          "image": "https://media.rawg.io/media/screenshots/9b7/9b7995efbe72ca11c11bdc0101c69eae.jpg"
+        },
+        {
+          "id": 729956,
+          "image": "https://media.rawg.io/media/screenshots/afb/afbe0f8a33778e5434155eaf9b97076b.jpg"
+        },
+        {
+          "id": 729957,
+          "image": "https://media.rawg.io/media/screenshots/d69/d6917c116d2af75bd4c8db1ebc3eb47d.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 2,
+            "name": "PlayStation",
+            "slug": "playstation"
+          }
+        },
+        {
+          "platform": {
+            "id": 7,
+            "name": "Nintendo",
+            "slug": "nintendo"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 3,
+          "name": "Adventure",
+          "slug": "adventure"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-bankrob",
+      "name": "GTA-bankrob",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2017-04-10",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/70d/70d98f3c42cdc6db6cfd6318e6519b96.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 14,
+      "updated": "2019-01-09T12:41:06",
+      "id": 197932,
+      "score": "25.433172",
+      "clip": null,
+      "tags": [
+        {
+          "id": 604,
+          "name": "simple",
+          "slug": "simple",
+          "language": "eng",
+          "games_count": 5400,
+          "image_background": "https://media.rawg.io/media/screenshots/f2e/f2e59a790f186dbeb0a0085ef4558385.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/70d/70d98f3c42cdc6db6cfd6318e6519b96.jpg"
+        },
+        {
+          "id": 1290516,
+          "image": "https://media.rawg.io/media/screenshots/70d/70d98f3c42cdc6db6cfd6318e6519b96.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": []
+    },
+    {
+      "slug": "gta-bombay",
+      "name": "GTA - Bombay",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2020-12-17",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/c25/c2562f01738a7677238732340f906aa7.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2020-12-18T05:09:16",
+      "id": 532755,
+      "score": "24.240244",
+      "clip": null,
+      "tags": [
+        {
+          "id": 36,
+          "name": "Open World",
+          "slug": "open-world",
+          "language": "eng",
+          "games_count": 3187,
+          "image_background": "https://media.rawg.io/media/games/6cd/6cd653e0aaef5ff8bbd295bf4bcb12eb.jpg"
+        },
+        {
+          "id": 130,
+          "name": "Driving",
+          "slug": "driving",
+          "language": "eng",
+          "games_count": 3025,
+          "image_background": "https://media.rawg.io/media/games/97a/97a5fee8bba1189f70a9874171f45195.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 29202,
+          "image_background": "https://media.rawg.io/media/games/238/238e2b2b24c9838626700c69cacf1e3a.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 56,
+          "image_background": "https://media.rawg.io/media/screenshots/b26/b2693a90e0cb2556ccc8af17f8b732df.jpg"
+        },
+        {
+          "id": 59485,
+          "name": "drivingsim",
+          "slug": "drivingsim",
+          "language": "eng",
+          "games_count": 0,
+          "image_background": null
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/c25/c2562f01738a7677238732340f906aa7.jpg"
+        },
+        {
+          "id": 2640321,
+          "image": "https://media.rawg.io/media/screenshots/d41/d416ff1ef3064e8734720286a3137c6e.jpg"
+        },
+        {
+          "id": 2640322,
+          "image": "https://media.rawg.io/media/screenshots/66d/66d2db6e1108d947caefc011f29e6095.jpg"
+        },
+        {
+          "id": 2640323,
+          "image": "https://media.rawg.io/media/screenshots/b4f/b4f546f83a869f92f6f41d71f5e29808.jpg"
+        },
+        {
+          "id": 2640324,
+          "image": "https://media.rawg.io/media/screenshots/00a/00aaf230890e9a601577ac00cf36547a.jpg"
+        },
+        {
+          "id": 2640325,
+          "image": "https://media.rawg.io/media/screenshots/43d/43d59648f2c7f4e2149f42ff62ae0250.jpg"
+        },
+        {
+          "id": 2640326,
+          "image": "https://media.rawg.io/media/screenshots/c25/c2562f01738a7677238732340f906aa7.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 1,
+          "name": "Racing",
+          "slug": "racing"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        },
+        {
+          "id": 14,
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "slug": "gta-v-demo",
+      "name": "GTA-V-DEMO (itch)",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2014-03-02",
+      "tba": false,
+      "background_image": null,
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2019-06-24T09:39:22",
+      "id": 91472,
+      "score": "19.378668",
+      "clip": null,
+      "tags": [
+        {
+          "id": 1709,
+          "name": "work",
+          "slug": "work",
+          "language": "eng",
+          "games_count": 5785,
+          "image_background": "https://media.rawg.io/media/games/193/1934acd8d51d68a69e91d97c0bfd9b41.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        }
+      ]
+    },
+    {
+      "slug": "gta-multiplayer",
+      "name": "gta multiplayer",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2020-06-14",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/7f4/7f463bc88ca1a3641ee90816bde99b11.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 126,
+      "updated": "2020-06-15T03:25:31",
+      "id": 454892,
+      "score": "16.023476",
+      "clip": null,
+      "tags": [
+        {
+          "id": 7,
+          "name": "Multiplayer",
+          "slug": "multiplayer",
+          "language": "eng",
+          "games_count": 22719,
+          "image_background": "https://media.rawg.io/media/games/34b/34b1f1850a1c06fd971bc6ab3ac0ce0e.jpg"
+        },
+        {
+          "id": 149,
+          "name": "Third Person",
+          "slug": "third-person",
+          "language": "eng",
+          "games_count": 3195,
+          "image_background": "https://media.rawg.io/media/games/b7d/b7d3f1715fa8381a4e780173a197a615.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 28928,
+          "image_background": "https://media.rawg.io/media/games/b2c/b2c0cc14e80cfd38be0f2b2ccd4d6db5.jpg"
+        },
+        {
+          "id": 591,
+          "name": "Unreal Engine",
+          "slug": "unreal-engine",
+          "language": "eng",
+          "games_count": 3533,
+          "image_background": "https://media.rawg.io/media/screenshots/774/774f81b667da1174f01ee35c7b1392d9.jpg"
+        },
+        {
+          "id": 607,
+          "name": "Unity",
+          "slug": "unity",
+          "language": "eng",
+          "games_count": 28374,
+          "image_background": "https://media.rawg.io/media/screenshots/40d/40dc4b5b0524efa25dab220ce2b93794.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 56,
+          "image_background": "https://media.rawg.io/media/screenshots/b26/b2693a90e0cb2556ccc8af17f8b732df.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/7f4/7f463bc88ca1a3641ee90816bde99b11.jpg"
+        },
+        {
+          "id": 2415069,
+          "image": "https://media.rawg.io/media/screenshots/275/275ccb63d66cf29a8135c28f69af3342.jpg"
+        },
+        {
+          "id": 2415070,
+          "image": "https://media.rawg.io/media/screenshots/7f4/7f463bc88ca1a3641ee90816bde99b11.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        }
+      ]
+    },
+    {
+      "slug": "gta-prototype",
+      "name": "GTA Prototype",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-05-30",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/173/173f430a46b6a18206c77bba8ace55ea.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-06-04T12:26:18",
+      "id": 613476,
+      "score": "16.023476",
+      "clip": null,
+      "tags": [
+        {
+          "id": 31,
+          "name": "Singleplayer",
+          "slug": "singleplayer",
+          "language": "eng",
+          "games_count": 115570,
+          "image_background": "https://media.rawg.io/media/games/490/49016e06ae2103881ff6373248843069.jpg"
+        },
+        {
+          "id": 13,
+          "name": "Atmospheric",
+          "slug": "atmospheric",
+          "language": "eng",
+          "games_count": 13508,
+          "image_background": "https://media.rawg.io/media/games/b7d/b7d3f1715fa8381a4e780173a197a615.jpg"
+        },
+        {
+          "id": 118,
+          "name": "Story Rich",
+          "slug": "story-rich",
+          "language": "eng",
+          "games_count": 10061,
+          "image_background": "https://media.rawg.io/media/games/b8c/b8c243eaa0fbac8115e0cdccac3f91dc.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 38927,
+          "image_background": "https://media.rawg.io/media/screenshots/0cf/0cfe4ec4dcffb8fcac999d7176c69176.jpg"
+        },
+        {
+          "id": 2082,
+          "name": "Male protagonist",
+          "slug": "male-protagonist",
+          "language": "eng",
+          "games_count": 383,
+          "image_background": "https://media.rawg.io/media/screenshots/5cd/5cdcafcead8bca6be5be47a17c49fe10.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 72,
+          "image_background": "https://media.rawg.io/media/screenshots/5e0/5e0a203fafd809705d04eea671712371.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/173/173f430a46b6a18206c77bba8ace55ea.jpg"
+        },
+        {
+          "id": 2872879,
+          "image": "https://media.rawg.io/media/screenshots/173/173f430a46b6a18206c77bba8ace55ea.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-6",
+      "name": "GTA 6",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-03-02",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/e32/e32c4f0a00b6b7a652f5c4587b634c87.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": {},
+      "metacritic": null,
+      "suggestions_count": 26,
+      "updated": "2021-03-05T10:40:42",
+      "id": 567714,
+      "score": "16.023476",
+      "clip": null,
+      "tags": [],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/e32/e32c4f0a00b6b7a652f5c4587b634c87.jpg"
+        },
+        {
+          "id": 2743234,
+          "image": "https://media.rawg.io/media/screenshots/e32/e32c4f0a00b6b7a652f5c4587b634c87.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": []
+    },
+    {
+      "slug": "gta-fangame",
+      "name": "GTA Fangame",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-08-11",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/b08/b08d12b6357f6c4e3cdf446d2138cb21.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-08-13T06:15:55",
+      "id": 648219,
+      "score": "16.023476",
+      "clip": null,
+      "tags": [
+        {
+          "id": 730,
+          "name": "youtube",
+          "slug": "youtube",
+          "language": "eng",
+          "games_count": 3321,
+          "image_background": "https://media.rawg.io/media/screenshots/548/5480f9bb1204045c5164d3f1293c9f41.jpg"
+        },
+        {
+          "id": 1067,
+          "name": "Fangame",
+          "slug": "fangame",
+          "language": "eng",
+          "games_count": 1761,
+          "image_background": "https://media.rawg.io/media/screenshots/618/61834fa6432e53e2d575e58edc045a65.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 78,
+          "image_background": "https://media.rawg.io/media/screenshots/e9d/e9d05f1297e925067f170e0fa3647c8b.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/b08/b08d12b6357f6c4e3cdf446d2138cb21.jpg"
+        },
+        {
+          "id": 2974898,
+          "image": "https://media.rawg.io/media/screenshots/11d/11d960c0f67326d17c3a431d1b2e68ab.jpg"
+        },
+        {
+          "id": 2974899,
+          "image": "https://media.rawg.io/media/screenshots/606/606408c98b3f321489f66043c8e48abb.jpg"
+        },
+        {
+          "id": 2974900,
+          "image": "https://media.rawg.io/media/screenshots/b65/b65aeff918884aeeb011d87f0acc1a81.jpg"
+        },
+        {
+          "id": 2974901,
+          "image": "https://media.rawg.io/media/screenshots/b08/b08d12b6357f6c4e3cdf446d2138cb21.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-7",
+      "name": "GTA 7",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-04-28",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/0c3/0c33796508ffb5b1c4336d5650775174.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-04-30T07:30:29",
+      "id": 593997,
+      "score": "15.338068",
+      "clip": null,
+      "tags": [
+        {
+          "id": 69,
+          "name": "Action-Adventure",
+          "slug": "action-adventure",
+          "language": "eng",
+          "games_count": 7501,
+          "image_background": "https://media.rawg.io/media/games/fd8/fd882c8267a44621a0de6f9cec77ae90.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 36650,
+          "image_background": "https://media.rawg.io/media/games/035/035b7bd6d015e07e501d2234ec629dc3.jpg"
+        },
+        {
+          "id": 42203,
+          "name": "gta-like",
+          "slug": "gta-like",
+          "language": "eng",
+          "games_count": 3,
+          "image_background": "https://media.rawg.io/media/screenshots/457/45728883e9007b2a855258c46adfbc96.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 69,
+          "image_background": "https://media.rawg.io/media/screenshots/cc0/cc02f219f0289faa874bcf899cd8f5fc.jpg"
+        },
+        {
+          "id": 64372,
+          "name": "gigatroubleautomatic",
+          "slug": "gigatroubleautomatic",
+          "language": "eng",
+          "games_count": 0,
+          "image_background": null
+        },
+        {
+          "id": 64373,
+          "name": "gta7",
+          "slug": "gta7",
+          "language": "eng",
+          "games_count": 0,
+          "image_background": null
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/0c3/0c33796508ffb5b1c4336d5650775174.jpg"
+        },
+        {
+          "id": 2818537,
+          "image": "https://media.rawg.io/media/screenshots/6ac/6ac64f5c84e5aeec212e858cd7c579a3.jpg"
+        },
+        {
+          "id": 2818538,
+          "image": "https://media.rawg.io/media/screenshots/82c/82c12ead8f702cfd96f953f5087c650f.jpg"
+        },
+        {
+          "id": 2818539,
+          "image": "https://media.rawg.io/media/screenshots/6fd/6fd2947a9731440c8959e993f504b4e5.jpg"
+        },
+        {
+          "id": 2818540,
+          "image": "https://media.rawg.io/media/screenshots/cfc/cfcd75bc4496d7249579ebfdccd12c81.jpg"
+        },
+        {
+          "id": 2818541,
+          "image": "https://media.rawg.io/media/screenshots/25e/25e57802bebc04c499df895706bfdb2d.jpg"
+        },
+        {
+          "id": 2818542,
+          "image": "https://media.rawg.io/media/screenshots/321/32127540c6fd6052f4d299edc8bcdc68.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 3,
+          "name": "Adventure",
+          "slug": "adventure"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        },
+        {
+          "id": 6,
+          "name": "Fighting",
+          "slug": "fighting"
+        }
+      ]
+    },
+    {
+      "slug": "gta-shorts",
+      "name": "Gta Shorts",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-06-12",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/754/7547035eebca350788b47e4a4cf31f1c.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-06-15T01:23:25",
+      "id": 622078,
+      "score": "15.338068",
+      "clip": null,
+      "tags": [
+        {
+          "id": 406,
+          "name": "Story",
+          "slug": "story",
+          "language": "eng",
+          "games_count": 8692,
+          "image_background": "https://media.rawg.io/media/games/562/562553814dd54e001a541e4ee83a591c.jpg"
+        },
+        {
+          "id": 1632,
+          "name": "cars",
+          "slug": "cars",
+          "language": "eng",
+          "games_count": 5168,
+          "image_background": "https://media.rawg.io/media/games/6e3/6e319b00ea9844539b3b20753d8ca0b4.jpg"
+        },
+        {
+          "id": 4881,
+          "name": "bugs",
+          "slug": "bugs",
+          "language": "eng",
+          "games_count": 2604,
+          "image_background": "https://media.rawg.io/media/screenshots/f5f/f5f7d5df83e6a57d21865677afa9f9aa.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 73,
+          "image_background": "https://media.rawg.io/media/screenshots/bc3/bc36f4a9ab5a32ebaf3e20ac93d85e26.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/754/7547035eebca350788b47e4a4cf31f1c.jpg"
+        },
+        {
+          "id": 2896064,
+          "image": "https://media.rawg.io/media/screenshots/379/3795731b4266951513f45fb2274365d0.jpg"
+        },
+        {
+          "id": 2896065,
+          "image": "https://media.rawg.io/media/screenshots/e75/e754af12c92215a7508768f251f7fc7d.jpg"
+        },
+        {
+          "id": 2896066,
+          "image": "https://media.rawg.io/media/screenshots/5ff/5ff1f13851b74986b31ccea087ef3d5f.jpg"
+        },
+        {
+          "id": 2896067,
+          "image": "https://media.rawg.io/media/screenshots/7eb/7eb29cd3b4782ddfe8281771695e9dd5.jpg"
+        },
+        {
+          "id": 2896068,
+          "image": "https://media.rawg.io/media/screenshots/3d8/3d85db124c9dd726d2220011db070d46.jpg"
+        },
+        {
+          "id": 2896069,
+          "image": "https://media.rawg.io/media/screenshots/754/7547035eebca350788b47e4a4cf31f1c.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-sa",
+      "name": "Gta Sa",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 6,
+            "name": "Linux",
+            "slug": "linux"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-01-02",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/13a/13ad341361815465984c668b470d21aa.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-01-04T05:13:51",
+      "id": 539681,
+      "score": "15.118385",
+      "clip": null,
+      "tags": [
+        {
+          "id": 31,
+          "name": "Singleplayer",
+          "slug": "singleplayer",
+          "language": "eng",
+          "games_count": 96534,
+          "image_background": "https://media.rawg.io/media/games/b45/b45575f34285f2c4479c9a5f719d972e.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 59,
+          "image_background": "https://media.rawg.io/media/screenshots/fbd/fbd46ff7f57707956ec0469e41f44c3d.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/13a/13ad341361815465984c668b470d21aa.jpg"
+        },
+        {
+          "id": 2660139,
+          "image": "https://media.rawg.io/media/screenshots/13a/13ad341361815465984c668b470d21aa.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 6,
+            "name": "Linux",
+            "slug": "linux"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-1-fanmade",
+      "name": "GTA 1 Fanmade",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 6,
+            "name": "Linux",
+            "slug": "linux"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2020-05-25",
+      "tba": false,
+      "background_image": null,
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [
+        {
+          "id": 5,
+          "title": "exceptional",
+          "count": 1,
+          "percent": 100.0
+        }
+      ],
+      "ratings_count": 1,
+      "reviews_text_count": 0,
+      "added": 1,
+      "added_by_status": {
+        "owned": 1
+      },
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2020-05-29T06:37:23",
+      "id": 448945,
+      "score": "12.023617",
+      "clip": null,
+      "tags": [],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 1,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 6,
+            "name": "Linux",
+            "slug": "linux"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-mamaia-vice",
+      "name": "gta mamaia vice",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2018-12-29",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/d33/d3353832a30b659bdf1dd1cc31cf72ed.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 1,
+      "added_by_status": {
+        "beaten": 1
+      },
+      "metacritic": null,
+      "suggestions_count": 38,
+      "updated": "2019-01-09T12:41:06",
+      "id": 281271,
+      "score": "12.023617",
+      "clip": null,
+      "tags": [],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/d33/d3353832a30b659bdf1dd1cc31cf72ed.jpg"
+        },
+        {
+          "id": 1794315,
+          "image": "https://media.rawg.io/media/screenshots/d33/d3353832a30b659bdf1dd1cc31cf72ed.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": []
+    },
+    {
+      "slug": "gta-6-installer",
+      "name": "GTA 6 INSTALLER",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-05-27",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/ceb/ceb285eb480c5e87411148bd54e6b9ac.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-05-28T06:31:39",
+      "id": 609115,
+      "score": "11.971001",
+      "clip": null,
+      "tags": [
+        {
+          "id": 7,
+          "name": "Multiplayer",
+          "slug": "multiplayer",
+          "language": "eng",
+          "games_count": 25291,
+          "image_background": "https://media.rawg.io/media/games/b7b/b7b8381707152afc7d91f5d95de70e39.jpg"
+        },
+        {
+          "id": 114,
+          "name": "Physics",
+          "slug": "physics",
+          "language": "eng",
+          "games_count": 12428,
+          "image_background": "https://media.rawg.io/media/games/929/9295e55ce69cf5337c567983cf8b4137.jpeg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 38383,
+          "image_background": "https://media.rawg.io/media/games/df2/df20fd77db56ae7b0a26a7ff4baa9ccc.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/ceb/ceb285eb480c5e87411148bd54e6b9ac.jpg"
+        },
+        {
+          "id": 2860760,
+          "image": "https://media.rawg.io/media/screenshots/ceb/ceb285eb480c5e87411148bd54e6b9ac.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "stonogas-gta-parody",
+      "name": "Stonoga's GTA - Parody",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2018-09-15",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/ce9/ce978160c6e53e4acecfb9543acf9979.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [
+        {
+          "id": 1,
+          "title": "skip",
+          "count": 1,
+          "percent": 100.0
+        }
+      ],
+      "ratings_count": 1,
+      "reviews_text_count": 0,
+      "added": 1,
+      "added_by_status": {
+        "owned": 1
+      },
+      "metacritic": null,
+      "suggestions_count": 174,
+      "updated": "2019-01-09T12:41:06",
+      "id": 240838,
+      "score": "11.676189",
+      "clip": null,
+      "tags": [
+        {
+          "id": 31,
+          "name": "Singleplayer",
+          "slug": "singleplayer",
+          "language": "eng",
+          "games_count": 97915,
+          "image_background": "https://media.rawg.io/media/games/4be/4be6a6ad0364751a96229c56bf69be59.jpg"
+        },
+        {
+          "id": 7,
+          "name": "Multiplayer",
+          "slug": "multiplayer",
+          "language": "eng",
+          "games_count": 23246,
+          "image_background": "https://media.rawg.io/media/games/34b/34b1f1850a1c06fd971bc6ab3ac0ce0e.jpg"
+        },
+        {
+          "id": 8,
+          "name": "First-Person",
+          "slug": "first-person",
+          "language": "eng",
+          "games_count": 10333,
+          "image_background": "https://media.rawg.io/media/games/bc0/bc06a29ceac58652b684deefe7d56099.jpg"
+        },
+        {
+          "id": 149,
+          "name": "Third Person",
+          "slug": "third-person",
+          "language": "eng",
+          "games_count": 3409,
+          "image_background": "https://media.rawg.io/media/games/618/618c2031a07bbff6b4f611f10b6bcdbc.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 30693,
+          "image_background": "https://media.rawg.io/media/games/baf/baf9905270314e07e6850cffdb51df41.jpg"
+        },
+        {
+          "id": 607,
+          "name": "Unity",
+          "slug": "unity",
+          "language": "eng",
+          "games_count": 29745,
+          "image_background": "https://media.rawg.io/media/screenshots/4df/4df381a99abc421edd29ae572777a2aa.jpg"
+        },
+        {
+          "id": 591,
+          "name": "Unreal Engine",
+          "slug": "unreal-engine",
+          "language": "eng",
+          "games_count": 3721,
+          "image_background": "https://media.rawg.io/media/screenshots/637/637c33839455633ceb854ae36a582ea5.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 60,
+          "image_background": "https://media.rawg.io/media/screenshots/47f/47feae484100014893d8620835909f2e.jpg"
+        },
+        {
+          "id": 34327,
+          "name": "stonoga",
+          "slug": "stonoga",
+          "language": "eng",
+          "games_count": 18,
+          "image_background": "https://media.rawg.io/media/screenshots/996/996b41cc20b6843bbe11e888eee028fd.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 1,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/ce9/ce978160c6e53e4acecfb9543acf9979.jpg"
+        },
+        {
+          "id": 1627066,
+          "image": "https://media.rawg.io/media/screenshots/68f/68f6c172b23d54190e619648092568a7.jpg"
+        },
+        {
+          "id": 1627067,
+          "image": "https://media.rawg.io/media/screenshots/580/5800c29b0aa72dcd59ed564679475709.jpg"
+        },
+        {
+          "id": 1627068,
+          "image": "https://media.rawg.io/media/screenshots/66e/66e3f0796b085e13ec272d9cae218f67.jpg"
+        },
+        {
+          "id": 1627069,
+          "image": "https://media.rawg.io/media/screenshots/ce9/ce978160c6e53e4acecfb9543acf9979.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        }
+      ]
+    },
+    {
+      "slug": "kta-bootleg-gta",
+      "name": "KTA: Bootleg GTA",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-06-23",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/429/4299a4c500b0a4b176290698baed589f.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-06-25T07:40:52",
+      "id": 626538,
+      "score": "11.216698",
+      "clip": null,
+      "tags": [
+        {
+          "id": 31,
+          "name": "Singleplayer",
+          "slug": "singleplayer",
+          "language": "eng",
+          "games_count": 119618,
+          "image_background": "https://media.rawg.io/media/games/bc0/bc06a29ceac58652b684deefe7d56099.jpg"
+        },
+        {
+          "id": 36,
+          "name": "Open World",
+          "slug": "open-world",
+          "language": "eng",
+          "games_count": 3851,
+          "image_background": "https://media.rawg.io/media/games/84d/84da2ac3fdfc6507807a1808595afb12.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 40336,
+          "image_background": "https://media.rawg.io/media/games/9a1/9a18c226cf379272c698f26d2b79b3da.jpg"
+        },
+        {
+          "id": 591,
+          "name": "Unreal Engine",
+          "slug": "unreal-engine",
+          "language": "eng",
+          "games_count": 4619,
+          "image_background": "https://media.rawg.io/media/screenshots/3e2/3e2c5bf7370014ed1799b8ca1b95bced.jpg"
+        },
+        {
+          "id": 648,
+          "name": "ragdoll-physics",
+          "slug": "ragdoll-physics",
+          "language": "eng",
+          "games_count": 7,
+          "image_background": "https://media.rawg.io/media/screenshots/cd2/cd2cf41a24a8022c7d5239ebc3327965.jpg"
+        },
+        {
+          "id": 34570,
+          "name": "npcs",
+          "slug": "npcs",
+          "language": "eng",
+          "games_count": 5,
+          "image_background": "https://media.rawg.io/media/screenshots/84b/84be39cb8e0c03cc81a4a89f55a022bf.jpg"
+        },
+        {
+          "id": 66722,
+          "name": "active-ragdoll-inspired",
+          "slug": "active-ragdoll-inspired",
+          "language": "eng",
+          "games_count": 0,
+          "image_background": null
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/429/4299a4c500b0a4b176290698baed589f.jpg"
+        },
+        {
+          "id": 2910111,
+          "image": "https://media.rawg.io/media/screenshots/313/313e2e20546e03347e4460bce0fbc416.jpg"
+        },
+        {
+          "id": 2910112,
+          "image": "https://media.rawg.io/media/screenshots/810/8103fc4fcaf1cec3cfc2feeff4b0274e.jpg"
+        },
+        {
+          "id": 2910113,
+          "image": "https://media.rawg.io/media/screenshots/12f/12fa191aa0b14afcd27ac071af00b441.jpg"
+        },
+        {
+          "id": 2910114,
+          "image": "https://media.rawg.io/media/screenshots/429/4299a4c500b0a4b176290698baed589f.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 83,
+          "name": "Platformer",
+          "slug": "platformer"
+        },
+        {
+          "id": 14,
+          "name": "Simulation",
+          "slug": "simulation"
+        }
+      ]
+    },
+    {
+      "slug": "gta-v-2",
+      "name": "GTA V 2",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2020-12-20",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/b11/b11f24d95fdf904f58a18a46997678ef.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2020-12-21T03:42:24",
+      "id": 534451,
+      "score": "11.211185",
+      "clip": null,
+      "tags": [
+        {
+          "id": 122,
+          "name": "Pixel Graphics",
+          "slug": "pixel-graphics",
+          "language": "eng",
+          "games_count": 40289,
+          "image_background": "https://media.rawg.io/media/screenshots/d68/d684c5ec81b8ea46bfd4b5c3bae4007f.jpg"
+        },
+        {
+          "id": 74,
+          "name": "Retro",
+          "slug": "retro",
+          "language": "eng",
+          "games_count": 17636,
+          "image_background": "https://media.rawg.io/media/games/6d3/6d33014a4ed48a19c30a77ead5a0f62e.jpg"
+        },
+        {
+          "id": 1654,
+          "name": "monkey",
+          "slug": "monkey",
+          "language": "eng",
+          "games_count": 412,
+          "image_background": "https://media.rawg.io/media/screenshots/2f9/2f981ad5709ce36a9ae2573a878f698f.jpg"
+        },
+        {
+          "id": 672,
+          "name": "High Score",
+          "slug": "high-score",
+          "language": "eng",
+          "games_count": 2775,
+          "image_background": "https://media.rawg.io/media/screenshots/693/6932b02a159fd485dff06e1a8e1a9917.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 57,
+          "image_background": "https://media.rawg.io/media/screenshots/1e8/1e8b586d9456c51430f54aec8a00b11d.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/b11/b11f24d95fdf904f58a18a46997678ef.jpg"
+        },
+        {
+          "id": 2645008,
+          "image": "https://media.rawg.io/media/screenshots/1e0/1e06f3e2dc2738c95241456196957ad3.jpg"
+        },
+        {
+          "id": 2645009,
+          "image": "https://media.rawg.io/media/screenshots/b11/b11f24d95fdf904f58a18a46997678ef.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "gta-police-chase",
+      "name": "GTA Police chase",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2021-04-07",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/aea/aea344f93ffd3616b49835e248992004.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 0,
+      "updated": "2021-04-13T00:14:27",
+      "id": 583685,
+      "score": "11.211185",
+      "clip": null,
+      "tags": [],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/aea/aea344f93ffd3616b49835e248992004.jpg"
+        },
+        {
+          "id": 2789905,
+          "image": "https://media.rawg.io/media/screenshots/aea/aea344f93ffd3616b49835e248992004.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": []
+    },
+    {
+      "slug": "coffin-dance-gta",
+      "name": "coffin dance - gta",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "stores": [
+        {
+          "store": {
+            "id": 9,
+            "name": "itch.io",
+            "slug": "itch"
+          }
+        }
+      ],
+      "released": "2020-06-11",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/screenshots/ecc/ecc535756580f483addbb6d227718011.jpg",
+      "rating": 0.0,
+      "rating_top": 0,
+      "ratings": [],
+      "ratings_count": 0,
+      "reviews_text_count": 0,
+      "added": 0,
+      "added_by_status": null,
+      "metacritic": null,
+      "suggestions_count": 198,
+      "updated": "2020-06-12T04:19:24",
+      "id": 453215,
+      "score": "10.2903595",
+      "clip": null,
+      "tags": [
+        {
+          "id": 7,
+          "name": "Multiplayer",
+          "slug": "multiplayer",
+          "language": "eng",
+          "games_count": 22719,
+          "image_background": "https://media.rawg.io/media/games/34b/34b1f1850a1c06fd971bc6ab3ac0ce0e.jpg"
+        },
+        {
+          "id": 149,
+          "name": "Third Person",
+          "slug": "third-person",
+          "language": "eng",
+          "games_count": 3195,
+          "image_background": "https://media.rawg.io/media/games/b7d/b7d3f1715fa8381a4e780173a197a615.jpg"
+        },
+        {
+          "id": 571,
+          "name": "3D",
+          "slug": "3d",
+          "language": "eng",
+          "games_count": 28928,
+          "image_background": "https://media.rawg.io/media/games/b2c/b2c0cc14e80cfd38be0f2b2ccd4d6db5.jpg"
+        },
+        {
+          "id": 591,
+          "name": "Unreal Engine",
+          "slug": "unreal-engine",
+          "language": "eng",
+          "games_count": 3533,
+          "image_background": "https://media.rawg.io/media/screenshots/774/774f81b667da1174f01ee35c7b1392d9.jpg"
+        },
+        {
+          "id": 607,
+          "name": "Unity",
+          "slug": "unity",
+          "language": "eng",
+          "games_count": 28374,
+          "image_background": "https://media.rawg.io/media/screenshots/40d/40dc4b5b0524efa25dab220ce2b93794.jpg"
+        },
+        {
+          "id": 4556,
+          "name": "gta",
+          "slug": "gta",
+          "language": "eng",
+          "games_count": 56,
+          "image_background": "https://media.rawg.io/media/screenshots/b26/b2693a90e0cb2556ccc8af17f8b732df.jpg"
+        }
+      ],
+      "esrb_rating": null,
+      "user_game": null,
+      "reviews_count": 0,
+      "community_rating": 0,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/screenshots/ecc/ecc535756580f483addbb6d227718011.jpg"
+        },
+        {
+          "id": 2410272,
+          "image": "https://media.rawg.io/media/screenshots/f9c/f9c32a368d1339fd9c68315b21b4eb62.jpg"
+        },
+        {
+          "id": 2410273,
+          "image": "https://media.rawg.io/media/screenshots/786/786f5237766002abbdb3f17276543003.jpg"
+        },
+        {
+          "id": 2410274,
+          "image": "https://media.rawg.io/media/screenshots/ecc/ecc535756580f483addbb6d227718011.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    },
+    {
+      "slug": "grand-theft-auto-online",
+      "name": "Grand Theft Auto Online",
+      "playtime": 0,
+      "platforms": [
+        {
+          "platform": {
+            "id": 4,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 187,
+            "name": "PlayStation 5",
+            "slug": "playstation5"
+          }
+        },
+        {
+          "platform": {
+            "id": 1,
+            "name": "Xbox One",
+            "slug": "xbox-one"
+          }
+        },
+        {
+          "platform": {
+            "id": 18,
+            "name": "PlayStation 4",
+            "slug": "playstation4"
+          }
+        },
+        {
+          "platform": {
+            "id": 16,
+            "name": "PlayStation 3",
+            "slug": "playstation3"
+          }
+        }
+      ],
+      "stores": null,
+      "released": "2013-10-01",
+      "tba": false,
+      "background_image": "https://media.rawg.io/media/games/bbd/bbd7af2d6dab31e0b3bbfb5f63575ab8.jpg",
+      "rating": 3.87,
+      "rating_top": 4,
+      "ratings": [
+        {
+          "id": 4,
+          "title": "recommended",
+          "count": 42,
+          "percent": 49.41
+        },
+        {
+          "id": 3,
+          "title": "meh",
+          "count": 21,
+          "percent": 24.71
+        },
+        {
+          "id": 5,
+          "title": "exceptional",
+          "count": 19,
+          "percent": 22.35
+        },
+        {
+          "id": 1,
+          "title": "skip",
+          "count": 3,
+          "percent": 3.53
+        }
+      ],
+      "ratings_count": 83,
+      "reviews_text_count": 2,
+      "added": 155,
+      "added_by_status": {
+        "yet": 5,
+        "owned": 21,
+        "beaten": 39,
+        "toplay": 7,
+        "dropped": 59,
+        "playing": 24
+      },
+      "metacritic": 82,
+      "suggestions_count": 552,
+      "updated": "2020-06-14T14:21:06",
+      "id": 42336,
+      "score": "9.996283",
+      "clip": null,
+      "tags": [
+        {
+          "id": 11669,
+          "name": "stats",
+          "slug": "stats",
+          "language": "eng",
+          "games_count": 3794,
+          "image_background": "https://media.rawg.io/media/games/bff/bff077fb7c3b037bd5ed920bf447c863.jpg"
+        },
+        {
+          "id": 413,
+          "name": "online",
+          "slug": "online",
+          "language": "eng",
+          "games_count": 5848,
+          "image_background": "https://media.rawg.io/media/games/4ea/4ea507ceebeabb43edbc09468f5aaac6.jpg"
+        },
+        {
+          "id": 808,
+          "name": "character",
+          "slug": "character",
+          "language": "eng",
+          "games_count": 6843,
+          "image_background": "https://media.rawg.io/media/games/0bc/0bcc108295a244b488d5c25f7d867220.jpg"
+        },
+        {
+          "id": 744,
+          "name": "friends",
+          "slug": "friends",
+          "language": "eng",
+          "games_count": 13791,
+          "image_background": "https://media.rawg.io/media/games/2ee/2eeed8524931b4fae1e4a40d0e5443b5.jpg"
+        },
+        {
+          "id": 2326,
+          "name": "explore",
+          "slug": "explore",
+          "language": "eng",
+          "games_count": 2751,
+          "image_background": "https://media.rawg.io/media/games/f87/f87de0e93f02007fd044e4bf04d453d8.jpg"
+        },
+        {
+          "id": 1709,
+          "name": "work",
+          "slug": "work",
+          "language": "eng",
+          "games_count": 7098,
+          "image_background": "https://media.rawg.io/media/games/6e3/6e319b00ea9844539b3b20753d8ca0b4.jpg"
+        },
+        {
+          "id": 1234,
+          "name": "ambient",
+          "slug": "ambient",
+          "language": "eng",
+          "games_count": 388,
+          "image_background": "https://media.rawg.io/media/screenshots/5fe/5fec109979d1d49ad5b0c0c7cd1c1ae6.jpg"
+        }
+      ],
+      "esrb_rating": {
+        "id": 4,
+        "name": "Mature",
+        "slug": "mature",
+        "name_en": "Mature",
+        "name_ru": "С 17 лет"
+      },
+      "user_game": null,
+      "reviews_count": 85,
+      "saturated_color": "0f0f0f",
+      "dominant_color": "0f0f0f",
+      "short_screenshots": [
+        {
+          "id": -1,
+          "image": "https://media.rawg.io/media/games/bbd/bbd7af2d6dab31e0b3bbfb5f63575ab8.jpg"
+        },
+        {
+          "id": 613481,
+          "image": "https://media.rawg.io/media/screenshots/28c/28c64b3a4fe99ba36a565ec7d72472bf.jpg"
+        },
+        {
+          "id": 613482,
+          "image": "https://media.rawg.io/media/screenshots/e4c/e4cc9e5ee9fe6e025c69e0473e766030.jpg"
+        },
+        {
+          "id": 613483,
+          "image": "https://media.rawg.io/media/screenshots/eea/eea60f7e7e1283d044a3f1db3a76ac80.jpg"
+        },
+        {
+          "id": 613484,
+          "image": "https://media.rawg.io/media/screenshots/4c8/4c872e618e9ffe20ec30c76c4ea934ff.jpg"
+        },
+        {
+          "id": 613485,
+          "image": "https://media.rawg.io/media/screenshots/676/676b62378865c84beaef8755db8e99b3.jpg"
+        },
+        {
+          "id": 613486,
+          "image": "https://media.rawg.io/media/screenshots/c0e/c0e74ff2c777b6e169d7340c030120b4.jpg"
+        }
+      ],
+      "parent_platforms": [
+        {
+          "platform": {
+            "id": 1,
+            "name": "PC",
+            "slug": "pc"
+          }
+        },
+        {
+          "platform": {
+            "id": 2,
+            "name": "PlayStation",
+            "slug": "playstation"
+          }
+        },
+        {
+          "platform": {
+            "id": 3,
+            "name": "Xbox",
+            "slug": "xbox"
+          }
+        }
+      ],
+      "genres": [
+        {
+          "id": 2,
+          "name": "Shooter",
+          "slug": "shooter"
+        },
+        {
+          "id": 4,
+          "name": "Action",
+          "slug": "action"
+        }
+      ]
+    }
+  ],
+  "user_platforms": false
+}

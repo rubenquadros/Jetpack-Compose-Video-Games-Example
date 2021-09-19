@@ -7,9 +7,9 @@ import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.videos.GameVideosViewModel
-import com.ruben.epicworld.presentation.videos.ui.GameVideosScreen
-import com.ruben.epicworld.presentation.videos.ui.GameVideosSideEffect
-import com.ruben.epicworld.presentation.videos.ui.GameVideosState
+import com.ruben.epicworld.presentation.videos.GameVideosScreen
+import com.ruben.epicworld.presentation.videos.GameVideosSideEffect
+import com.ruben.epicworld.presentation.videos.GameVideosState
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk

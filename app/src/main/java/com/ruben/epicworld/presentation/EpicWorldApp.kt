@@ -14,9 +14,11 @@ import com.ruben.epicworld.presentation.Destinations.GameDetailsArgs.GameId
 import com.ruben.epicworld.presentation.Destinations.GameVideos
 import com.ruben.epicworld.presentation.Destinations.GameVideosArgs.GameIdVideo
 import com.ruben.epicworld.presentation.Destinations.Home
-import com.ruben.epicworld.presentation.details.ui.GameDetailsScreen
+import com.ruben.epicworld.presentation.Destinations.Search
+import com.ruben.epicworld.presentation.details.GameDetailsScreen
 import com.ruben.epicworld.presentation.home.ui.HomeScreen
-import com.ruben.epicworld.presentation.videos.ui.GameVideosScreen
+import com.ruben.epicworld.presentation.search.GameSearchScreen
+import com.ruben.epicworld.presentation.videos.GameVideosScreen
 
 /**
  * Created by Ruben Quadros on 05/08/21
@@ -55,6 +57,12 @@ fun EpicWorldApp() {
         ) {
             GameVideosScreen(
                 gameId = it.arguments?.getInt(GameIdVideo) ?: 0,
+                navigateBack = actions.navigateBack
+            )
+        }
+        composable(Search) {
+            GameSearchScreen(
+                navigateToDetails = actions.openGameDetails,
                 navigateBack = actions.navigateBack
             )
         }

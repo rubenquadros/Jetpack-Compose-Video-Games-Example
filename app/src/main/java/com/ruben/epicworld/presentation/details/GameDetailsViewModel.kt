@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.interactor.GetGameDetailsUseCase
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.details.ui.GameDetailsSideEffect
-import com.ruben.epicworld.presentation.details.ui.GameDetailsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

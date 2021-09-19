@@ -4,8 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.videos.ui.GameVideosSideEffect
-import com.ruben.epicworld.presentation.videos.ui.GameVideosState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

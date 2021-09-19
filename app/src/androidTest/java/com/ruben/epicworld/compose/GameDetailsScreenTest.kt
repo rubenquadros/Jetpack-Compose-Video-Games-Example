@@ -5,9 +5,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.details.GameDetailsViewModel
-import com.ruben.epicworld.presentation.details.ui.GameDetailsScreen
-import com.ruben.epicworld.presentation.details.ui.GameDetailsSideEffect
-import com.ruben.epicworld.presentation.details.ui.GameDetailsState
+import com.ruben.epicworld.presentation.details.GameDetailsScreen
+import com.ruben.epicworld.presentation.details.GameDetailsSideEffect
+import com.ruben.epicworld.presentation.details.GameDetailsState
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import io.mockk.MockKAnnotations
 import io.mockk.every
