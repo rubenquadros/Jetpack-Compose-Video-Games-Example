@@ -16,7 +16,7 @@ Once you get your API key, edit your `local.properties` file and add the key as 
 
 ## Future scope :crystal_ball: :soon:
 
- - Search and filter functionality
+ - Add filter functionality
  
  - Custom ExoPlayer controls
  
