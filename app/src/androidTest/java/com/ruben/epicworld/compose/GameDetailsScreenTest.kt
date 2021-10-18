@@ -4,10 +4,10 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import com.ruben.epicworld.presentation.details.GameDetailsScreen
 import com.ruben.epicworld.presentation.details.GameDetailsSideEffect
 import com.ruben.epicworld.presentation.details.GameDetailsState
+import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -104,6 +104,9 @@ class GameDetailsScreenTest {
         //Game platforms should be shown
         composeTestRule.onNodeWithText("Platforms").assertIsDisplayed()
         composeTestRule.onNodeWithText("PlayStation 3").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Stores").performScrollTo()
+        composeTestRule.onNodeWithText("PlayStation Store").performScrollTo()
 
         //Game stores should be shown
         composeTestRule.onNodeWithText("Stores").assertIsDisplayed()
