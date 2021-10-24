@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
@@ -234,6 +235,7 @@ fun SearchResults(results: List<GameResultsEntity>, onSearchResultClicked: (Int)
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
     Column(

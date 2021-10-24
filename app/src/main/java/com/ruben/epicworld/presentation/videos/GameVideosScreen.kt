@@ -35,10 +35,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.*
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ui.PlayerView
@@ -129,6 +127,7 @@ fun ShowGameVideos(gameVideos: GameVideosEntity) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun ShowTrailers(
     index: Int,
@@ -280,18 +279,18 @@ fun VideoPlayer(
     exoPlayer.seekTo(playingIndex.value, C.TIME_UNSET)
     exoPlayer.playWhenReady = true
 
-    LocalLifecycleOwner.current.lifecycle.addObserver(object : LifecycleObserver {
+    LocalLifecycleOwner.current.lifecycle.addObserver(object : DefaultLifecycleObserver {
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_START)
-        fun resumeVideo() {
+        override fun onStart(owner: LifecycleOwner) {
+            super.onStart(owner)
             if (exoPlayer.isPlaying.not()) {
                 exoPlayer.play()
             }
         }
 
-        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-        fun stopVideo() {
+        override fun onStop(owner: LifecycleOwner) {
             exoPlayer.pause()
+            super.onStop(owner)
         }
     })
 

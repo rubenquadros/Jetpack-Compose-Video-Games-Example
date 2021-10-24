@@ -4,7 +4,7 @@ import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
 import com.ruben.epicworld.remote.model.request.GetGameDetailsRequest
 import com.ruben.epicworld.remote.model.request.GetGameVideosRequest
 import com.ruben.epicworld.remote.model.request.SearchGamesRequest
-import com.ruben.epicworld.remote.model.response.Filters
+import com.ruben.epicworld.remote.model.response.allgames.Filters
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.common.AddedByStatus
 import com.ruben.epicworld.remote.model.response.common.EsrbRating

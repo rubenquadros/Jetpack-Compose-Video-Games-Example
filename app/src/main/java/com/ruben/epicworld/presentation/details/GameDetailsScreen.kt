@@ -28,6 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
@@ -86,6 +87,7 @@ fun GameDetailsScreen(
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun GameDetails(
     gameDetails: GameDetailsEntity,

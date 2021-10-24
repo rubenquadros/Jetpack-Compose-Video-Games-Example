@@ -47,8 +47,8 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.0.0'
-        kotlinCompilerVersion '1.5.10'
+        kotlinCompilerExtensionVersion '1.1.0-alpha06'
+        kotlinCompilerVersion '1.5.31'
     }
     testOptions {
         unitTests {
