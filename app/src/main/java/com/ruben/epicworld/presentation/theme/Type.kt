@@ -1,18 +1,16 @@
 package com.ruben.epicworld.presentation.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.ruben.epicworld.R
+import javax.annotation.concurrent.Immutable
 
 /**
  * Created by Ruben Quadros on 31/07/21
  **/
-
-// Set of Material typography styles to start with
 
 val PlayFair = FontFamily(
     Font(R.font.playfair_display_regular, FontWeight.Normal),
@@ -20,51 +18,27 @@ val PlayFair = FontFamily(
     Font(R.font.playfair_display_italic, FontWeight.Medium)
 )
 
-val Typography = Typography(
-    h1 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp
-    ),
-    h2 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
-    ),
-    h3 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
-    ),
-    h4 = TextStyle(
-      fontFamily = PlayFair,
-      fontWeight = FontWeight.Bold,
-      fontSize = 18.sp
-    ),
-    h5 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
-    ),
-    h6 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
-        fontSize = 16.sp
-    ),
-    body1 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
-    ),
-    body2 = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        color = Black
-    ),
-    button = TextStyle(
-        fontFamily = PlayFair,
-        fontWeight = FontWeight.Bold,
-        fontSize = 18.sp
-    )
+@Immutable
+data class EpicWorldTypography(
+    val title1: TextStyle,
+    val title2: TextStyle,
+    val title3: TextStyle,
+    val subTitle1: TextStyle,
+    val subTitle2: TextStyle,
+    val body1: TextStyle,
+    val body2: TextStyle,
+    val button: TextStyle
 )
+
+val LocalEpicWorldTypography = staticCompositionLocalOf {
+    EpicWorldTypography(
+        title1 = TextStyle.Default,
+        title2 = TextStyle.Default,
+        title3 = TextStyle.Default,
+        subTitle1 = TextStyle.Default,
+        subTitle2 = TextStyle.Default,
+        body1 = TextStyle.Default,
+        body2 = TextStyle.Default,
+        button = TextStyle.Default
+    )
+}

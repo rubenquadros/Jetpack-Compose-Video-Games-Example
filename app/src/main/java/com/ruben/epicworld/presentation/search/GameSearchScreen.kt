@@ -163,18 +163,18 @@ fun SearchBar(
                 Text(
                     modifier = Modifier.background(Color.Transparent),
                     text = stringResource(id = R.string.game_search_suggestion),
-                    color = Black,
-                    style = Typography.body2
+                    color = EpicWorldTheme.colors.background,
+                    style = EpicWorldTheme.typography.body2
                 )
             },
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = White,
+                backgroundColor = EpicWorldTheme.colors.onBackground,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = PinkA400
+                cursorColor = EpicWorldTheme.colors.primary
             ),
             textStyle = TextStyle(
-                color = Black,
+                color = EpicWorldTheme.colors.background,
                 fontFamily = PlayFair,
                 fontWeight = FontWeight.Normal,
                 fontSize = 16.sp
@@ -214,7 +214,7 @@ fun SearchBar(
         Box(modifier = Modifier
             .height(1.dp)
             .fillMaxWidth()
-            .background(PinkA100)
+            .background(EpicWorldTheme.colors.primaryVariant)
             .testTag("Bottom Border")
         )
     }
@@ -272,8 +272,8 @@ fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> 
 
             Text(
                 text = searchResult.name,
-                style = Typography.h5,
-                color = Black,
+                style = EpicWorldTheme.typography.body1,
+                color = EpicWorldTheme.colors.background,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
@@ -288,7 +288,7 @@ fun SearchItem(searchResult: GameResultsEntity, onSearchResultClicked: (Int) -> 
                 .padding(horizontal = 8.dp)
                 .height(0.5.dp)
                 .fillMaxWidth()
-                .background(Gray500)
+                .background(EpicWorldTheme.colors.onDisabled)
                 .testTag("Search Divider")
         )
     }

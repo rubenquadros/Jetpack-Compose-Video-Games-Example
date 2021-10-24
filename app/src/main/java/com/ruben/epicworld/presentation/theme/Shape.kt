@@ -1,15 +1,25 @@
 package com.ruben.epicworld.presentation.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Shapes
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.ZeroCornerSize
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Shape
+import javax.annotation.concurrent.Immutable
 
 /**
  * Created by Ruben Quadros on 31/07/21
  **/
-
-val Shapes = Shapes(
-    small = RoundedCornerShape(4.dp),
-    medium = RoundedCornerShape(4.dp),
-    large = RoundedCornerShape(0.dp)
+@Immutable
+data class EpicWorldShapes(
+    val smallRoundCornerShape: Shape,
+    val mediumRoundCornerShape: Shape,
+    val largeRoundCornerShape: Shape,
 )
+
+val LocalEpicWorldShapes = staticCompositionLocalOf {
+    EpicWorldShapes(
+        smallRoundCornerShape = RoundedCornerShape(ZeroCornerSize),
+        mediumRoundCornerShape = RoundedCornerShape(ZeroCornerSize),
+        largeRoundCornerShape = RoundedCornerShape(ZeroCornerSize)
+    )
+}

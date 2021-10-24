@@ -13,9 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ruben.epicworld.R
-import com.ruben.epicworld.presentation.theme.Black
-import com.ruben.epicworld.presentation.theme.PinkA100
-import com.ruben.epicworld.presentation.theme.Typography
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 
 /**
  * Created by Ruben Quadros on 18/09/21
@@ -32,8 +30,8 @@ fun GetGamesError(buttonClick: () -> Unit) {
             modifier = Modifier.padding(8.dp),
             text = stringResource(id = R.string.home_screen_error_message),
             textAlign = TextAlign.Center,
-            color = Black,
-            style = Typography.h5
+            color = EpicWorldTheme.colors.background,
+            style = EpicWorldTheme.typography.body1
         )
         Button(
             modifier = Modifier.padding(16.dp),
@@ -41,7 +39,7 @@ fun GetGamesError(buttonClick: () -> Unit) {
         ) {
             Text(
                 text = stringResource(id = R.string.home_screen_retry),
-                style = Typography.button
+                style = EpicWorldTheme.typography.button
             )
         }
     }
@@ -52,8 +50,8 @@ fun NoResultsView() {
     Text(
         modifier = Modifier.padding(16.dp),
         text = stringResource(id = R.string.game_search_no_matches),
-        style = Typography.h5,
-        color = PinkA100
+        style = EpicWorldTheme.typography.body1,
+        color = EpicWorldTheme.colors.primary
     )
 }
 

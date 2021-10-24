@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -19,7 +20,10 @@ fun LoadingView(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator(modifier = Modifier.testTag("ProgressBar"))
+        CircularProgressIndicator(
+            modifier = Modifier.testTag("ProgressBar"),
+            color = EpicWorldTheme.colors.primary
+        )
     }
 }
 
@@ -30,7 +34,8 @@ fun LoadingItem() {
             .testTag("ProgressBarItem")
             .fillMaxWidth()
             .padding(16.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally)
+            .wrapContentWidth(Alignment.CenterHorizontally),
+        color = EpicWorldTheme.colors.primary
     )
 }
 

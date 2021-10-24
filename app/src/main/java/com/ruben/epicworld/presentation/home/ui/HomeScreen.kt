@@ -26,6 +26,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
@@ -35,10 +36,7 @@ import com.ruben.epicworld.presentation.commonui.HomeAppBar
 import com.ruben.epicworld.presentation.commonui.LoadingItem
 import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
-import com.ruben.epicworld.presentation.theme.AmberA400
-import com.ruben.epicworld.presentation.theme.Black
-import com.ruben.epicworld.presentation.theme.PinkA400
-import com.ruben.epicworld.presentation.theme.Typography
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
@@ -121,11 +119,12 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
     }
 }
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
     Card(
         elevation = 20.dp,
-        backgroundColor = Black,
+        backgroundColor = EpicWorldTheme.colors.background,
         modifier = Modifier
             .padding(16.dp)
             .clip(RoundedCornerShape(10.dp))
@@ -160,8 +159,8 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
             )
             Text(
                 text = game.name,
-                style = Typography.h3,
-                color = PinkA400,
+                style = EpicWorldTheme.typography.title3,
+                color = EpicWorldTheme.colors.primary,
                 maxLines = 2,
                 modifier = Modifier
                     .constrainAs(title) {
@@ -181,8 +180,8 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
                 }) {
                 Text(
                     text = game.rating.toString(),
-                    style = Typography.h4,
-                    color = AmberA400,
+                    style = EpicWorldTheme.typography.subTitle1,
+                    color = EpicWorldTheme.colors.secondary,
                     modifier = Modifier
                         .padding(8.dp)
                 )

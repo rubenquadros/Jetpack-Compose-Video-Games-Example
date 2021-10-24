@@ -35,10 +35,7 @@ import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
-import com.ruben.epicworld.presentation.theme.AmberA400
-import com.ruben.epicworld.presentation.theme.Black
-import com.ruben.epicworld.presentation.theme.PinkA400
-import com.ruben.epicworld.presentation.theme.Typography
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.showToast
 import kotlinx.coroutines.flow.Flow
@@ -144,14 +141,14 @@ fun GameDetails(
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 30.dp, end = 16.dp),
             text = gameDetails.name,
-            style = Typography.h3,
-            color = Black
+            style = EpicWorldTheme.typography.title3,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = ApplicationUtility.getGenres(gameDetails.genresEntity),
-            style = Typography.body2,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
         ConstraintLayout(modifier = Modifier.fillMaxWidth()) {
             val (dateLabel, dateValue, ratingLabel, ratingValue) = createRefs()
@@ -163,14 +160,14 @@ fun GameDetails(
                 }) {
                 Text(
                     text = stringResource(id = R.string.game_details_released),
-                    style = Typography.h6,
-                    color = Black
+                    style = EpicWorldTheme.typography.subTitle2,
+                    color = EpicWorldTheme.colors.background
                 )
                 Icon(
                     modifier = Modifier.padding(start = 8.dp),
                     imageVector = Icons.Filled.Update,
                     contentDescription = stringResource(id = R.string.game_details_calendar_date),
-                    tint = AmberA400
+                    tint = EpicWorldTheme.colors.secondary
                 )
             }
             Text(
@@ -181,8 +178,8 @@ fun GameDetails(
                 },
                 text = gameDetails.released,
                 textAlign = TextAlign.Center,
-                color = Black,
-                style = Typography.body2,
+                color = EpicWorldTheme.colors.background,
+                style = EpicWorldTheme.typography.body2,
             )
             Row(modifier = Modifier
                 .wrapContentSize()
@@ -192,14 +189,14 @@ fun GameDetails(
                 }) {
                 Text(
                     text = stringResource(id = R.string.game_details_rating),
-                    style = Typography.h6,
-                    color = Black
+                    style = EpicWorldTheme.typography.subTitle2,
+                    color = EpicWorldTheme.colors.background
                 )
                 Icon(
                     modifier = Modifier.padding(start = 8.dp),
                     imageVector = Icons.Filled.StarRate,
                     contentDescription = stringResource(id = R.string.all_star_rating),
-                    tint = AmberA400
+                    tint = EpicWorldTheme.colors.secondary
                 )
             }
             Text(
@@ -210,21 +207,21 @@ fun GameDetails(
                 },
                 text = gameDetails.rating.toString(),
                 textAlign = TextAlign.Center,
-                color = Black,
-                style = Typography.body2,
+                color = EpicWorldTheme.colors.background,
+                style = EpicWorldTheme.typography.body2,
             )
         }
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_about),
-            style = Typography.h6,
-            color = Black
+            style = EpicWorldTheme.typography.subTitle2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = gameDetails.description,
-            style = Typography.body2,
-            color = Black,
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background,
             overflow = TextOverflow.Ellipsis,
             maxLines = maxLines.value,
             onTextLayout = {
@@ -244,9 +241,9 @@ fun GameDetails(
                             maxLines.value = Int.MAX_VALUE
                         },
                     text = stringResource(id = R.string.game_details_about_show_more),
-                    style = Typography.body2,
+                    style = EpicWorldTheme.typography.body2,
                     textDecoration = TextDecoration.Underline,
-                    color = PinkA400
+                    color = EpicWorldTheme.colors.primary
                 )
             }
             DescriptionStatus.SHOW_LESS -> {
@@ -257,9 +254,9 @@ fun GameDetails(
                             maxLines.value = 4
                         },
                     text = stringResource(id = R.string.game_details_about_show_less),
-                    style = Typography.body2,
+                    style = EpicWorldTheme.typography.body2,
                     textDecoration = TextDecoration.Underline,
-                    color = PinkA400
+                    color = EpicWorldTheme.colors.primary
                 )
             }
             else -> {
@@ -269,50 +266,50 @@ fun GameDetails(
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_platforms),
-            style = Typography.h6,
-            color = Black
+            style = EpicWorldTheme.typography.subTitle2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = ApplicationUtility.getPlatforms(gameDetails.platformsEntity),
-            style = Typography.body2,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_stores),
-            style = Typography.h6,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = ApplicationUtility.getStores(gameDetails.storesEntity),
-            style = Typography.body2,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_developer),
-            style = Typography.h6,
-            color = Black
+            style = EpicWorldTheme.typography.subTitle2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = ApplicationUtility.getDevelopers(gameDetails.developersEntity),
-            style = Typography.body2,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_publisher),
-            style = Typography.h6,
-            color = Black
+            style = EpicWorldTheme.typography.subTitle2,
+            color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
             text = ApplicationUtility.getPublishers(gameDetails.publishersEntity),
-            style = Typography.body2,
-            color = Black
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background
         )
     }
 }
@@ -332,7 +329,7 @@ fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
                         shape = RoundedCornerShape(15.dp)
                         clip = true
                     }
-                    .background(PinkA400),
+                    .background(EpicWorldTheme.colors.primary),
                 painter = painterResource(id =R.drawable.ic_play),
                 contentDescription = stringResource(id = R.string.game_details_play_trailer)
             )

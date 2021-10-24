@@ -168,8 +168,8 @@ fun ShowTrailers(
         if (currentlyPlaying.value) {
             Image(
                 contentScale = ContentScale.Crop,
-                colorFilter = if (trailer.preview.isEmpty()) ColorFilter.tint(White) else ColorFilter.tint(
-                    PinkA400
+                colorFilter = if (trailer.preview.isEmpty()) ColorFilter.tint(EpicWorldTheme.colors.onBackground) else ColorFilter.tint(
+                    EpicWorldTheme.colors.primary
                 ),
                 painter = painterResource(id = R.drawable.ic_play),
                 contentDescription = stringResource(id = R.string.game_videos_play),
@@ -198,17 +198,17 @@ fun ShowTrailers(
                     width = Dimension.preferredWrapContent
                     height = Dimension.wrapContent
             },
-            color = Black,
+            color = EpicWorldTheme.colors.background,
             textAlign = TextAlign.Center,
             softWrap = true,
-            style = Typography.h4
+            style = EpicWorldTheme.typography.subTitle1
         )
         if (currentlyPlaying.value) {
             Text(
                 text = stringResource(id = R.string.game_videos_now_playing),
-                color = PinkA400,
+                color = EpicWorldTheme.colors.primary,
                 textAlign = TextAlign.Center,
-                style = Typography.h6,
+                style = EpicWorldTheme.typography.subTitle2,
                 modifier = Modifier.constrainAs(nowPlaying) {
                     top.linkTo(title.bottom, margin = 8.dp)
                     start.linkTo(thumbnail.end, margin = 8.dp)
@@ -229,7 +229,7 @@ fun TrailerDivider() {
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .testTag("Divider"),
-        color = Gray300
+        color = EpicWorldTheme.colors.surface
     )
 }
 
@@ -294,7 +294,7 @@ fun VideoPlayer(
         }
     })
 
-    ConstraintLayout(modifier = modifier.background(Black)) {
+    ConstraintLayout(modifier = modifier.background(EpicWorldTheme.colors.background)) {
         val (title, videoPlayer) = createRefs()
         AnimatedVisibility(
             visible = visible.value,
@@ -308,8 +308,8 @@ fun VideoPlayer(
         ) {
             Text(
                 text = videoTitle.value,
-                style = Typography.h6,
-                color = White,
+                style = EpicWorldTheme.typography.subTitle2,
+                color = EpicWorldTheme.colors.onBackground,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()

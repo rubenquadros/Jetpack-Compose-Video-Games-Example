@@ -12,9 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.ruben.epicworld.R
-import com.ruben.epicworld.presentation.theme.PinkA400
-import com.ruben.epicworld.presentation.theme.Typography
-import com.ruben.epicworld.presentation.theme.White
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -31,25 +29,25 @@ fun HomeAppBar(
         title = {
             Text(
                 text = title,
-                style = Typography.h1,
-                color = White
+                style = EpicWorldTheme.typography.title1,
+                color = EpicWorldTheme.colors.onBackground
             )
                 },
         modifier = modifier,
-        backgroundColor = PinkA400,
+        backgroundColor = EpicWorldTheme.colors.primary,
         actions = {
             IconButton(onClick = searchClick) {
                 Icon(
                     imageVector = Icons.Filled.Search,
                     contentDescription = stringResource(id = R.string.home_app_bar_search_description),
-                    tint = White
+                    tint = EpicWorldTheme.colors.onBackground
                 )
             }
             IconButton(onClick = filterClick) {
                 Icon(
                     imageVector = Icons.Filled.FilterList,
                     contentDescription = stringResource(id = R.string.home_app_bar_filter_description),
-                    tint = White
+                    tint = EpicWorldTheme.colors.onBackground
                 )
             }
         }
