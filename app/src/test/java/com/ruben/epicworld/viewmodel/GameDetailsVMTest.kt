@@ -7,13 +7,12 @@ import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.domain.interactor.GetGameDetailsUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import com.ruben.epicworld.presentation.details.GameDetailsState
+import com.ruben.epicworld.presentation.details.GameDetailsViewModel
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -45,7 +44,7 @@ class GameDetailsVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.getGameDetails(2) } } answers {
+        coEvery { mockRepository.getGameDetails(2) } answers {
             Record(GameDetailsEntity(), null)
         }
         gameDetailsViewModel.testIntent {
@@ -64,7 +63,7 @@ class GameDetailsVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.getGameDetails(2) } } answers {
+        coEvery { mockRepository.getGameDetails(2) } answers {
             Record(null, ErrorRecord.GenericError)
         }
         gameDetailsViewModel.testIntent {

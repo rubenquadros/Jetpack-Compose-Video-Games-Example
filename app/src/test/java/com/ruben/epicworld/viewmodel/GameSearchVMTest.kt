@@ -8,10 +8,9 @@ import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.search.GameSearchViewModel
 import com.ruben.epicworld.presentation.search.SearchState
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -43,7 +42,7 @@ class GameSearchVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.searchGames("gta") } } answers  {
+        coEvery { mockRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
         }
         gameSearchViewModel.testIntent {
@@ -56,10 +55,10 @@ class GameSearchVMTest {
 
     @Test
     fun `vm should invoke use case to get search results`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        every { runBlocking { mockRepository.searchGames("gta") } } answers  {
+        coEvery { mockRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
         }
-        every { runBlocking { useCase.invoke(any(), any(), any(), any()) } } answers { Record(GamesEntity(), null) }
+        coEvery { useCase.invoke(any(), any(), any(), any()) } answers { Record(GamesEntity(), null) }
         val gameSearchViewModel = GameSearchViewModel(
             useCase,
             coroutinesTestRule.testDispatcher

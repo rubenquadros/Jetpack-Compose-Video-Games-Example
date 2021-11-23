@@ -6,7 +6,7 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.home.ui.HomeState
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class HomeVMTest {
     fun init() {
         MockKAnnotations.init(this, true)
         Dispatchers.setMain(Dispatchers.Unconfined)
-        every { runBlocking { mockGamesSource.load(any()) } } returns PagingSource.LoadResult.Page(
+        coEvery { mockGamesSource.load(any()) } returns PagingSource.LoadResult.Page(
             data = arrayListOf(),
             nextKey = 2,
             prevKey = null

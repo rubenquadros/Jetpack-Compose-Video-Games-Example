@@ -6,7 +6,7 @@ import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.domain.repository.GamesRepository
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -27,7 +27,7 @@ class PagingTest {
 
     @Test
     fun `should get same amount of result as specified in paging load`() = runBlocking {
-        every { runBlocking { mockRepository.getAllGames(any()) } } returns Record(FakeData.getFakeGames(), null)
+        coEvery { mockRepository.getAllGames(any()) } returns Record(FakeData.getFakeGames(), null)
         val pagingSource = GamesSource(mockRepository)
         Assert.assertEquals(
             PagingSource.LoadResult.Page(
@@ -47,7 +47,7 @@ class PagingTest {
 
     @Test
     fun `should get error if server gives error response`() = runBlocking {
-        every { runBlocking { mockRepository.getAllGames(any()) } } returns Record(null, ErrorRecord.GenericError)
+        coEvery { mockRepository.getAllGames(any()) } returns Record(null, ErrorRecord.GenericError)
         val pagingSource = GamesSource(mockRepository)
         val result = pagingSource.load(
             PagingSource.LoadParams.Refresh(

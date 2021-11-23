@@ -7,7 +7,6 @@ import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -33,7 +32,7 @@ class GameSearchUseCaseTest {
 
     @Test
     fun `should get search results entity from repository`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        every { runBlocking { mockGamesRepository.searchGames("gta") } } answers {
+        coEvery { mockGamesRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
         }
         gameSearchUseCase.invoke(
@@ -41,7 +40,7 @@ class GameSearchUseCaseTest {
             coroutinesTestRule.testDispatcher,
             GameSearchUseCase.RequestValue("gta")
         ) {
-            verify { runBlocking { mockGamesRepository.searchGames("gta") } }
+            coVerify { mockGamesRepository.searchGames("gta") }
             confirmVerified(mockGamesRepository)
             Assert.assertTrue(it?.data != null)
             Assert.assertTrue(it?.error == null)

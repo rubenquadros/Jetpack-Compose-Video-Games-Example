@@ -7,13 +7,12 @@ import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import com.ruben.epicworld.presentation.videos.GameVideosState
+import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
 import org.junit.Before
@@ -45,7 +44,7 @@ class GameVideosVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.getGameVideos(1) } } answers  {
+        coEvery { mockRepository.getGameVideos(1) } answers {
             Record(GameVideosEntity(), null)
         }
         gameVideosViewModel.testIntent {
@@ -64,7 +63,7 @@ class GameVideosVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.getGameVideos(1) } } answers {
+        coEvery { mockRepository.getGameVideos(1) } answers {
             Record(null, ErrorRecord.ServerError)
         }
         gameVideosViewModel.testIntent {
@@ -100,7 +99,7 @@ class GameVideosVMTest {
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
-        every { runBlocking { mockRepository.getGameVideos(1) } } answers  {
+        coEvery { mockRepository.getGameVideos(1) } answers {
             Record(GameVideosEntity(), null)
         }
         gameVideosViewModel.testIntent {
