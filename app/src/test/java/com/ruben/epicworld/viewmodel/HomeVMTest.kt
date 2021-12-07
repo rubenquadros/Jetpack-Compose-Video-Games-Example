@@ -1,5 +1,6 @@
 package com.ruben.epicworld.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.paging.PagingSource
 import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -27,6 +28,7 @@ class HomeVMTest {
 
     private val mockGamesSource = mockk<GamesSource>()
     private val initialState = HomeState(ScreenState.Loading, null, null)
+    private val savedStateHandle = SavedStateHandle()
 
     @Before
     fun init() {
@@ -41,7 +43,7 @@ class HomeVMTest {
 
     @Test
     fun `vm should fetch all games on initiation`() = runBlocking {
-        val homeViewModel = HomeViewModel(mockGamesSource).test(initialState = initialState).apply {
+        val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState).apply {
             runOnCreate()
         }
         homeViewModel.stateObserver.awaitCount(2)
@@ -53,7 +55,7 @@ class HomeVMTest {
 
     @Test
     fun `vm should propagate error state in case of paging error`() = runBlocking {
-        val homeViewModel = HomeViewModel(gamesSource = mockGamesSource).test(initialState = initialState)
+        val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState)
         homeViewModel.testIntent {
             handlePaginationDataError()
         }
@@ -66,7 +68,7 @@ class HomeVMTest {
 
     @Test
     fun `vm should post side effect when there is error in appending paging data`() = runBlocking {
-        val homeViewModel = HomeViewModel(gamesSource = mockGamesSource).test(initialState = initialState)
+        val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState)
         homeViewModel.testIntent {
             handlePaginationAppendError("Error", "OK")
         }

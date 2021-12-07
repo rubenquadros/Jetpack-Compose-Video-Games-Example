@@ -46,19 +46,12 @@ import kotlinx.coroutines.flow.collect
  **/
 @Composable
 fun GameDetailsScreen(
-    gameId: Int,
     navigateBack: () -> Unit,
     openGameTrailer: (Int) -> Unit,
     gameDetailsViewModel: GameDetailsViewModel = hiltViewModel()
 ) {
-    HandleSideEffect(gameDetailsViewModel.uiSideEffect())
-    if (gameId == 0) {
-        gameDetailsViewModel.handleGameIdError()
-        navigateBack.invoke()
-        return
-    } else {
-        gameDetailsViewModel.getGameDetails(gameId = gameId)
-    }
+    HandleSideEffect(gameDetailsViewModel.uiSideEffect(), navigateBack)
+
     val lifecycleOwner = LocalLifecycleOwner.current
     val stateFlow = gameDetailsViewModel.uiState()
     val stateLifecycleAware = remember(lifecycleOwner, stateFlow) {
@@ -338,7 +331,7 @@ fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
 }
 
 @Composable
-fun HandleSideEffect(sideEffectFlow: Flow<GameDetailsSideEffect>) {
+fun HandleSideEffect(sideEffectFlow: Flow<GameDetailsSideEffect>, navigateBack: () -> Unit) {
     val context = LocalContext.current
     val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
     val genericError = stringResource(id = R.string.all_generic_error)
@@ -350,6 +343,7 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameDetailsSideEffect>) {
                 }
                 is GameDetailsSideEffect.ShowGameIdErrorToast -> {
                     context.showToast(gameIdError)
+                    navigateBack.invoke()
                 }
             }
         }

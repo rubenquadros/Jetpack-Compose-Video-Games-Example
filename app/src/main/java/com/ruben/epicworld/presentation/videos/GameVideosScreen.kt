@@ -56,17 +56,11 @@ import kotlinx.coroutines.flow.collect
 @ExperimentalAnimationApi
 @Composable
 fun GameVideosScreen(
-    gameId: Int,
     navigateBack: () -> Unit,
     gameVideosViewModel: GameVideosViewModel = hiltViewModel()
 ) {
-    HandleSideEffect(gameVideosViewModel.uiSideEffect())
-    if (gameId == 0) {
-        gameVideosViewModel.handleGameIdError()
-        navigateBack.invoke()
-    } else {
-        gameVideosViewModel.getGameVideos(gameId = gameId)
-    }
+    HandleSideEffect(gameVideosViewModel.uiSideEffect(), navigateBack)
+
     val lifecycleOwner = LocalLifecycleOwner.current
     val stateFlow = gameVideosViewModel.uiState()
     val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
@@ -341,7 +335,7 @@ fun VideoPlayer(
 }
 
 @Composable
-fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>) {
+fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>, navigateBack: () -> Unit) {
     val context = LocalContext.current
     val gameIdError = stringResource(id = R.string.game_videos_invalid_game_id)
     val gameVideosError = stringResource(id = R.string.all_generic_error)
@@ -351,6 +345,7 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>) {
             when (uiSideEffect) {
                 is GameVideosSideEffect.ShowGameIdErrorToast -> {
                     context.showToast(gameIdError)
+                    navigateBack.invoke()
                 }
                 is GameVideosSideEffect.ShowGameVideosErrorToast -> {
                     context.showToast(gameVideosError)

@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation.search
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.presentation.base.BaseViewModel
@@ -21,9 +22,10 @@ import javax.inject.Inject
  **/
 @HiltViewModel
 class GameSearchViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val gameSearchUseCase: GameSearchUseCase,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-): BaseViewModel<SearchState, SearchSideEffect>() {
+): BaseViewModel<SearchState, SearchSideEffect>(savedStateHandle) {
 
     private var searchQuery = ""
     private val searchFlow: MutableSharedFlow<String> = MutableSharedFlow()

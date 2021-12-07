@@ -1,5 +1,6 @@
 package com.ruben.epicworld.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import com.ruben.epicworld.CoroutinesTestRule
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.games.GamesEntity
@@ -30,6 +31,7 @@ class GameSearchVMTest {
     private val mockRepository = mockk<GamesRepository>()
     private val useCase = mockk<GameSearchUseCase>()
     private val initialState = SearchState.InitialState
+    private val savedStateHandle = SavedStateHandle()
 
     @Before
     fun init() {
@@ -39,6 +41,7 @@ class GameSearchVMTest {
     @Test
     fun `vm should be able to manager view state`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         val gameSearchViewModel = GameSearchViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
@@ -60,6 +63,7 @@ class GameSearchVMTest {
         }
         coEvery { useCase.invoke(any(), any(), any(), any()) } answers { Record(GamesEntity(), null) }
         val gameSearchViewModel = GameSearchViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         )
@@ -75,6 +79,7 @@ class GameSearchVMTest {
     @Test
     fun `vm should post side effect to navigate to details`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         val gameSearchViewModel = GameSearchViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)

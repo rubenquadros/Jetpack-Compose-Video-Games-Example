@@ -6,10 +6,10 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import com.ruben.epicworld.presentation.videos.GameVideosScreen
 import com.ruben.epicworld.presentation.videos.GameVideosSideEffect
 import com.ruben.epicworld.presentation.videos.GameVideosState
+import com.ruben.epicworld.presentation.videos.GameVideosViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.mockk
@@ -39,7 +39,7 @@ class GameVideosScreenTest {
             GameVideosState(ScreenState.Loading, null, null)
         }
         every { gameVideosViewModel.uiSideEffect() } answers { flow { } }
-        every { gameVideosViewModel.getGameVideos(any()) } answers { }
+        every { gameVideosViewModel.initData() } answers { }
         every { gameVideosViewModel.handleGameIdError() } answers { }
         every { gameVideosViewModel.handleNoGameVideos() } answers { }
         every { gameVideosViewModel.handleGameVideoError() } answers { }
@@ -49,7 +49,7 @@ class GameVideosScreenTest {
     fun loader_should_be_shown_when_fetching_game_videos() {
         every { gameVideosViewModel.uiState() } answers { MutableStateFlow(gameVideosViewModel.createInitialState()) }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 123, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onNodeWithTag("ProgressBar").assertIsDisplayed()
     }
@@ -62,7 +62,7 @@ class GameVideosScreenTest {
         }
         var navigateBack = false
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 0, navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
         }
         Assert.assertTrue(navigateBack)
     }
@@ -73,7 +73,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
         }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onNodeWithTag("VideoPlayer").assertIsDisplayed()
     }
@@ -84,7 +84,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
         }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onAllNodesWithText("GTA Online: Smuggler's Run Trailer").assertCountEquals(2)
     }
@@ -95,7 +95,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
         }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onAllNodesWithContentDescription("Game Trailer").assertCountEquals(3)
         composeTestRule.onNodeWithContentDescription("Play Game Trailer").assertIsDisplayed()
@@ -108,7 +108,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
         }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onNodeWithText("GTA Online: Tiny Racers Trailer").performScrollTo()
         composeTestRule.onNodeWithText("GTA Online: Tiny Racers Trailer").assertIsDisplayed()
@@ -120,7 +120,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Success, FakeGamesData.getFakeGameVideos(), null))
         }
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 1, navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { }, gameVideosViewModel = gameVideosViewModel)
         }
         composeTestRule.onAllNodesWithTag("TrailerParent").assertCountEquals(3)[0].assertHasClickAction()
     }
@@ -135,7 +135,7 @@ class GameVideosScreenTest {
         }
         var navigateBack = false
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 123, navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
         }
         Assert.assertTrue(navigateBack)
     }
@@ -150,7 +150,7 @@ class GameVideosScreenTest {
         }
         var navigateBack = false
         composeTestRule.setContent {
-            GameVideosScreen(gameId = 123, navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
+            GameVideosScreen(navigateBack = { navigateBack = true }, gameVideosViewModel = gameVideosViewModel)
         }
         Assert.assertTrue(navigateBack)
     }

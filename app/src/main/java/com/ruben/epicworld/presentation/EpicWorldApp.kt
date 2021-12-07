@@ -44,7 +44,6 @@ fun EpicWorldApp() {
             )
         ) {
             GameDetailsScreen(
-                gameId = it.arguments?.getInt(GameId) ?: 0,
                 navigateBack = actions.navigateBack,
                 openGameTrailer =  actions.openGameVideos
             )
@@ -56,7 +55,6 @@ fun EpicWorldApp() {
             )
         ) {
             GameVideosScreen(
-                gameId = it.arguments?.getInt(GameIdVideo) ?: 0,
                 navigateBack = actions.navigateBack
             )
         }

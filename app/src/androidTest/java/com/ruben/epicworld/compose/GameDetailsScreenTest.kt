@@ -37,7 +37,7 @@ class GameDetailsScreenTest {
             GameDetailsState(ScreenState.Loading, null, null)
         }
         every { gameDetailsViewModel.uiSideEffect() } answers  { flow {  } }
-        every { gameDetailsViewModel.getGameDetails(any()) } answers { }
+        every { gameDetailsViewModel.initData() } answers { }
         every { gameDetailsViewModel.handleGameIdError() } answers { }
     }
 
@@ -46,7 +46,7 @@ class GameDetailsScreenTest {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(gameDetailsViewModel.createInitialState()) }
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         composeTestRule.onNodeWithTag("ProgressBar").assertIsDisplayed()
@@ -54,13 +54,14 @@ class GameDetailsScreenTest {
 
     @Test
     fun providing_invalid_game_id_should_show_toast_and_exit_the_screen() {
+        every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(gameDetailsViewModel.createInitialState()) }
         every { gameDetailsViewModel.uiSideEffect() } answers  {
             flow { emit(GameDetailsSideEffect.ShowGameIdErrorToast) }
         }
         var navigateBack = false
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 0, navigateBack = { navigateBack = true }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { navigateBack = true }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         Assert.assertTrue(navigateBack)
@@ -71,7 +72,7 @@ class GameDetailsScreenTest {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetails(), null)) }
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         //Game image should be shown
@@ -133,7 +134,7 @@ class GameDetailsScreenTest {
         var openGameTrailer = false
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { openGameTrailer = true }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { openGameTrailer = true }, gameDetailsViewModel)
             }
         }
         composeTestRule.onNodeWithContentDescription("Play Trailer").assertIsDisplayed().assertHasClickAction().performClick()
@@ -145,7 +146,7 @@ class GameDetailsScreenTest {
     fun play_button_should_not_be_visible_if_no_videos() {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetailsNoVideos(), null)) }
         composeTestRule.setContent {
-            GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+            GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
         }
         composeTestRule.onNodeWithContentDescription("Play Trailer").assertDoesNotExist()
     }
@@ -155,7 +156,7 @@ class GameDetailsScreenTest {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetailsShortDesc(), null)) }
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         composeTestRule.onNodeWithText("This is a cool shooting game!").assertIsDisplayed()
@@ -167,7 +168,7 @@ class GameDetailsScreenTest {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetails(), null)) }
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         composeTestRule.onNodeWithText("Show Less").assertDoesNotExist()
@@ -180,7 +181,7 @@ class GameDetailsScreenTest {
         every { gameDetailsViewModel.uiState() } answers { MutableStateFlow(GameDetailsState(ScreenState.Success, FakeGamesData.getFakeGameDetails(), null)) }
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 123, navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         composeTestRule.onNodeWithText("Show Less").assertDoesNotExist()
@@ -203,7 +204,7 @@ class GameDetailsScreenTest {
         var navigateBack = false
         composeTestRule.setContent {
             EpicWorldTheme {
-                GameDetailsScreen(gameId = 0, navigateBack = { navigateBack = true }, openGameTrailer = { }, gameDetailsViewModel)
+                GameDetailsScreen(navigateBack = { navigateBack = true }, openGameTrailer = { }, gameDetailsViewModel)
             }
         }
         Assert.assertTrue(navigateBack)

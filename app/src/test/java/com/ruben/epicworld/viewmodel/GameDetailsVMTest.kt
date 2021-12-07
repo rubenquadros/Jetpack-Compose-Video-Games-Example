@@ -1,5 +1,6 @@
 package com.ruben.epicworld.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import com.ruben.epicworld.CoroutinesTestRule
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.base.Record
@@ -32,6 +33,9 @@ class GameDetailsVMTest {
     private val mockRepository = mockk<GamesRepository>()
     private val useCase = GetGameDetailsUseCase(mockRepository)
     private val initialState = GameDetailsState(ScreenState.Loading, null, null)
+    private val savedStateHandle = SavedStateHandle().apply {
+        set("gameId", 2)
+    }
 
     @Before
     fun init() {
@@ -41,6 +45,7 @@ class GameDetailsVMTest {
     @Test
     fun `vm should invoke use case to get game details`() = coroutinesTestRule.testCoroutineScope.runBlockingTest {
         val gameDetailsViewModel = GameDetailsViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
@@ -60,6 +65,7 @@ class GameDetailsVMTest {
     @Test
     fun `vm should post side effect when there is error in getting game details`() = coroutinesTestRule.testCoroutineScope.runBlockingTest {
         val gameDetailsViewModel = GameDetailsViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
@@ -83,6 +89,7 @@ class GameDetailsVMTest {
     @Test
     fun `vm should post side effect when there is error with game id`() = coroutinesTestRule.testCoroutineScope.runBlockingTest {
         val gameDetailsViewModel = GameDetailsViewModel(
+            savedStateHandle,
             useCase,
             coroutinesTestRule.testDispatcher
         ).test(initialState = initialState)
