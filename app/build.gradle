@@ -8,8 +8,7 @@ plugins {
 apply from: './gradleScript/dependencies.gradle'
 
 android {
-    def localProperties = new Properties()
-    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+    def file = rootProject.file("local.properties")
 
     compileSdk 31
 
@@ -26,7 +25,13 @@ android {
         }
 
         buildConfigField 'String', 'BASE_URL', "\"https://api.rawg.io/\""
-        buildConfigField 'String', 'API_KEY', "\"" + localProperties['api.key'] + "\""
+        if (file.exists()) {
+            def localProperties = new Properties()
+            localProperties.load(new FileInputStream(file))
+            buildConfigField 'String', 'API_KEY', "\"" + localProperties['api.key'] + "\""
+        } else {
+            buildConfigField 'String', 'API_KEY', "\"" + System.getenv("API_KEY") + "\""
+        }
     }
 
     buildTypes {
