@@ -1,7 +1,7 @@
 package com.ruben.epicworld.presentation
 
 import androidx.navigation.NavHostController
-import com.ruben.epicworld.presentation.Destinations.Filters
+import com.ruben.epicworld.presentation.Destinations.FiltersBottomSheet
 import com.ruben.epicworld.presentation.Destinations.GameDetails
 import com.ruben.epicworld.presentation.Destinations.GameVideos
 import com.ruben.epicworld.presentation.Destinations.Home
@@ -14,7 +14,7 @@ object Destinations {
     const val Home = "home"
     const val GameDetails = "gameDetails"
     const val Search = "search"
-    const val Filters = "filters"
+    const val FiltersBottomSheet = "filters"
     const val GameVideos = "gameVideos"
 
     object GameDetailsArgs {
@@ -32,7 +32,7 @@ class Actions(navHostController: NavHostController) {
     }
 
     val openFilter: () -> Unit = {
-        navHostController.navigate(Filters)
+        navHostController.navigate(FiltersBottomSheet)
     }
 
     val openGameDetails: (Int) -> Unit = { gameId ->

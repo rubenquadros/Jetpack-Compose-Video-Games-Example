@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
  * Created by Ruben Quadros on 31/07/21
  **/
 @Composable
-fun EpicWorldTheme(content: @Composable() () -> Unit) {
+fun EpicWorldTheme(content: @Composable () -> Unit) {
     val localEpicWorldColors = EpicWorldColors(
         primary = PrimaryColor,
         primaryVariant = PrimaryVariantColor,

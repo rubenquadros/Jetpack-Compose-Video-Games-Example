@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
@@ -31,26 +30,25 @@ import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.commonui.GetGamesError
+import com.ruben.epicworld.presentation.commonui.ErrorView
 import com.ruben.epicworld.presentation.commonui.HomeAppBar
 import com.ruben.epicworld.presentation.commonui.LoadingItem
 import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
 
-@ExperimentalFoundationApi
+
 @Composable
 fun HomeScreen(
     openSearch: () -> Unit,
     openFilters: () -> Unit,
     openGameDetails: (Int) -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel,
 ) {
     val scaffoldState = rememberScaffoldState()
     HandleSideEffect(homeViewModel.uiSideEffect(), scaffoldState)
@@ -58,7 +56,7 @@ fun HomeScreen(
         HomeAppBar(
             title = stringResource(id = R.string.home_app_bar_title),
             searchClick = { openSearch.invoke() },
-            filterClick = {  }
+            filterClick = { openFilters.invoke() }
         )
     },
         scaffoldState = scaffoldState,
@@ -66,7 +64,8 @@ fun HomeScreen(
     )
 }
 
-@ExperimentalFoundationApi
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
@@ -83,7 +82,7 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
             //do nothing
         }
         is ScreenState.Error -> {
-            GetGamesError { homeViewModel.initData() }
+            ErrorView { homeViewModel.initData() }
         }
         is ScreenState.Success -> {
             val lazyGameItems = state.games?.collectAsLazyPagingItems()

@@ -1,9 +1,9 @@
-package com.ruben.epicworld.domain.entity.gamedetails
+package com.ruben.epicworld.domain.entity.genres
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
-data class GenresEntity(
+data class GenresResultEntity(
     val id : Int,
     val name : String,
     val slug : String,

@@ -39,7 +39,6 @@ import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.showToast
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 06/08/21
@@ -139,7 +138,7 @@ fun GameDetails(
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = ApplicationUtility.getGenres(gameDetails.genresEntity),
+            text = ApplicationUtility.getGenres(gameDetails.genresResultEntity),
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )

@@ -1,7 +1,7 @@
 package com.ruben.epicworld.remote.model.response.common
 
 import com.google.gson.annotations.SerializedName
-import com.ruben.epicworld.domain.entity.gamedetails.GenresEntity
+import com.ruben.epicworld.domain.entity.genres.GenresResultEntity
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -19,6 +19,6 @@ data class Genres(
     val imageBackground : String
 )
 
-fun Genres.toEntity() = GenresEntity(id, name, slug, gamesCount, imageBackground)
+fun Genres.toEntity() = GenresResultEntity(id, name, slug, gamesCount, imageBackground)
 
 fun List<Genres>.toEntity() = map { it.toEntity() }

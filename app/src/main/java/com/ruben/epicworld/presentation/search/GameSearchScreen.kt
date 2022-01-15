@@ -43,13 +43,13 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
-import com.ruben.epicworld.presentation.commonui.GetGamesError
+import com.ruben.epicworld.presentation.commonui.ErrorView
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.commonui.NoResultsView
-import com.ruben.epicworld.presentation.theme.*
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
+import com.ruben.epicworld.presentation.theme.PlayFair
 import com.ruben.epicworld.presentation.utility.shouldPerformSearch
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 12/09/21
@@ -115,7 +115,7 @@ fun GameSearchScreen(
             }
 
             is SearchState.ErrorState -> {
-                GetGamesError { gameSearchViewModel.searchGame() }
+                ErrorView { gameSearchViewModel.searchGame() }
             }
 
             else -> {

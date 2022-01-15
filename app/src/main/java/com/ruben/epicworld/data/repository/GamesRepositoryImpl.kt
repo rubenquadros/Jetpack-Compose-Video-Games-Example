@@ -7,6 +7,7 @@ import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
+import com.ruben.epicworld.domain.entity.genres.GenresEntity
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.remote.RemoteException
 import com.ruben.epicworld.remote.model.request.GetAllGamesRequest
@@ -57,6 +58,16 @@ class GamesRepositoryImpl @Inject constructor(private val dataSource: DataSource
         return try {
             dataSource.api().restApi().searchGames(SearchGamesRequest(query)).run {
                 gamesMapper.mapSearchGamesResponse(this)
+            }
+        } catch (e: RemoteException) {
+            errorMapper.mapErrorRecord(e)
+        }
+    }
+
+    override suspend fun getGenres(): Record<GenresEntity> {
+        return try {
+            dataSource.api().restApi().getGenres().run {
+                gamesMapper.mapGeneresResponse(this)
             }
         } catch (e: RemoteException) {
             errorMapper.mapErrorRecord(e)

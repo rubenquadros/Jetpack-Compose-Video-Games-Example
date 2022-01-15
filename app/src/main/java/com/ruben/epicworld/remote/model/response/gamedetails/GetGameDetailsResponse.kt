@@ -138,6 +138,6 @@ fun GetGameDetailsResponse.toEntity() = GameDetailsEntity(
     platformsEntity = platforms.toEntity(),
     storesEntity = stores.toEntity(),
     developersEntity = developers.toEntity(),
-    genresEntity = genres.toEntity(),
+    genresResultEntity = genres.toEntity(),
     publishersEntity = publishers.toEntity()
 )

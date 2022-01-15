@@ -68,6 +68,10 @@ dependencies {
     def splash_api_version = "1.0.0-beta01"
     implementation "androidx.core:core-splashscreen:$splash_api_version"
 
+    def accompanist_version = "0.22.0-rc"
+    implementation "com.google.accompanist:accompanist-navigation-material:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
+
     def leakcanary_version = "2.7"
     debugImplementation "com.squareup.leakcanary:leakcanary-android:$leakcanary_version"
 

@@ -7,6 +7,7 @@ import com.ruben.epicworld.remote.model.request.SearchGamesRequest
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.genres.GetGenresResponse
 import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 
 /**
@@ -17,4 +18,5 @@ interface RestApi {
     suspend fun getGameDetails(getGameDetailsRequest: GetGameDetailsRequest): GetGameDetailsResponse
     suspend fun getGameVideos(getGameVideosRequest: GetGameVideosRequest): GetGameVideosResponse
     suspend fun searchGames(searchGamesRequest: SearchGamesRequest): SearchGamesResponse
+    suspend fun getGenres(): GetGenresResponse
 }

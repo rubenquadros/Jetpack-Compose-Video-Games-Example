@@ -6,6 +6,7 @@ import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
+import com.ruben.epicworld.domain.entity.genres.GenresResultEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -109,10 +110,10 @@ object FakeGamesData {
             "", RequirementsEntity(), RequirementsEntity())
         )
 
-    private fun getGenres(): List<GenresEntity> =
+    private fun getGenres(): List<GenresResultEntity> =
         arrayListOf(
-            GenresEntity(123, "Action", "", 200, ""),
-            GenresEntity(124, "Shooting", "", 250, "")
+            GenresResultEntity(123, "Action", "", 200, ""),
+            GenresResultEntity(124, "Shooting", "", 250, "")
         )
 
     private fun getStores(): List<StoresEntity> =

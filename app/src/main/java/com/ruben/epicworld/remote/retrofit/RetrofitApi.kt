@@ -3,6 +3,7 @@ package com.ruben.epicworld.remote.retrofit
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.genres.GetGenresResponse
 import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -33,4 +34,7 @@ interface RetrofitApi {
     suspend fun searchGames(
         @Query("search") query: String
     ): SearchGamesResponse
+
+    @GET("api/genres")
+    suspend fun getGenres(): GetGenresResponse
 }

@@ -3,7 +3,6 @@ package com.ruben.epicworld.presentation.videos
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -48,12 +47,10 @@ import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.*
 import com.ruben.epicworld.presentation.utility.showToast
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 09/08/21
  **/
-@ExperimentalAnimationApi
 @Composable
 fun GameVideosScreen(
     navigateBack: () -> Unit,
@@ -89,7 +86,6 @@ fun GameVideosScreen(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun ShowGameVideos(gameVideos: GameVideosEntity) {
     val playingIndex = remember {
@@ -227,7 +223,6 @@ fun TrailerDivider() {
     )
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun VideoPlayer(
     gameVideos: List<VideoResultEntity>,
@@ -251,7 +246,7 @@ fun VideoPlayer(
         )
     }
     val exoPlayer = remember {
-        SimpleExoPlayer.Builder(context).build().apply {
+        ExoPlayer.Builder(context).build().apply {
             this.setMediaItems(mediaItems)
             this.prepare()
             this.addListener(object : Player.Listener {
@@ -369,7 +364,6 @@ fun ShowTrailerPreview() {
     )
 }
 
-@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun ShowGameVideosPreview() {

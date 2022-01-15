@@ -3,13 +3,14 @@ package com.ruben.epicworld.presentation.utility
 import android.content.Context
 import android.widget.Toast
 import com.ruben.epicworld.domain.entity.gamedetails.*
+import com.ruben.epicworld.domain.entity.genres.GenresResultEntity
 
 /**
  * Created by Ruben Quadros on 06/08/21
  **/
 
 object ApplicationUtility {
-    fun getGenres(genres: List<GenresEntity>): String {
+    fun getGenres(genres: List<GenresResultEntity>): String {
         var genresString = ""
         for (i in genres.indices) {
             genresString = "$genresString${genres[i].name}"

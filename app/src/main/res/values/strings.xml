@@ -6,6 +6,8 @@
     <string name="all_clear_button">Clear Button</string>
     <string name="all_generic_error">There was an error. Please try again later</string>
     <string name="all_star_rating">Star Rating</string>
+    <string name="all_done">Done</string>
+    <string name="all_clear">Clear</string>
     <string name="all_game_image_description">Game Image</string>
     <string name="home_app_bar_search_description">Search</string>
     <string name="home_app_bar_filter_description">Filter Results</string>
@@ -33,4 +35,8 @@
     <string name="game_videos_now_playing">Now Playing</string>
     <string name="game_search_suggestion">Search here…</string>
     <string name="game_search_no_matches">No matching results</string>
+    <string name="game_filters_title">Filters</string>
+    <string name="game_filters_sort_by">Sort By</string>
+    <string name="game_filters_platforms">Platforms</string>
+    <string name="game_filters_genres">Genres</string>
 </resources>

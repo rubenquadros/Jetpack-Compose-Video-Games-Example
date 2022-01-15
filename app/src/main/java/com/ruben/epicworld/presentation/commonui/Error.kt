@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,9 +20,9 @@ import com.ruben.epicworld.presentation.theme.EpicWorldTheme
  * Created by Ruben Quadros on 18/09/21
  **/
 @Composable
-fun GetGamesError(buttonClick: () -> Unit) {
+fun ErrorView(modifier: Modifier = Modifier, buttonClick: () -> Unit) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .padding(16.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -35,7 +36,11 @@ fun GetGamesError(buttonClick: () -> Unit) {
         )
         Button(
             modifier = Modifier.padding(16.dp),
-            onClick = buttonClick
+            onClick = buttonClick,
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = EpicWorldTheme.colors.primary,
+                contentColor = EpicWorldTheme.colors.onBackground
+            )
         ) {
             Text(
                 text = stringResource(id = R.string.home_screen_retry),
@@ -59,7 +64,7 @@ fun NoResultsView() {
 @Preview(showBackground = true)
 @Composable
 fun ErrorItemPreview() {
-    GetGamesError {
+    ErrorView {
         //do nothing
     }
 }

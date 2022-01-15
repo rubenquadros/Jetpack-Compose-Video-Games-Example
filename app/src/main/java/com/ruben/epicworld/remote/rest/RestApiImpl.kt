@@ -7,6 +7,7 @@ import com.ruben.epicworld.remote.model.request.SearchGamesRequest
 import com.ruben.epicworld.remote.model.response.allgames.GetAllGamesResponse
 import com.ruben.epicworld.remote.model.response.gamedetails.GetGameDetailsResponse
 import com.ruben.epicworld.remote.model.response.gamevideos.GetGameVideosResponse
+import com.ruben.epicworld.remote.model.response.genres.GetGenresResponse
 import com.ruben.epicworld.remote.model.response.search.SearchGamesResponse
 import com.ruben.epicworld.remote.retrofit.RetrofitApi
 import javax.inject.Inject
@@ -30,6 +31,10 @@ class RestApiImpl @Inject constructor(private val retrofitApi: RetrofitApi): Res
 
     override suspend fun searchGames(searchGamesRequest: SearchGamesRequest): SearchGamesResponse {
         return retrofitApi.searchGames(searchGamesRequest.query)
+    }
+
+    override suspend fun getGenres(): GetGenresResponse {
+        return retrofitApi.getGenres()
     }
 
 }
