@@ -1,7 +1,6 @@
 package com.ruben.epicworld.presentation.search
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,9 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -54,21 +51,18 @@ class GameSearchViewModel @Inject constructor(
                 SearchState.LoadingState
             }
             gameSearchUseCase.invoke(
-                viewModelScope,
                 dispatcher,
                 GameSearchUseCase.RequestValue(it)
-            ) { record ->
-                viewModelScope.launch {
-                    reduce {
-                        if (record?.data != null) {
-                            if (record.data.gameEntities.isEmpty()) {
-                                SearchState.NoResultsState
-                            } else {
-                                SearchState.SearchResultState(record.data.gameEntities)
-                            }
+            ).collect { record ->
+                reduce {
+                    if (record.data != null) {
+                        if (record.data.gameEntities.isEmpty()) {
+                            SearchState.NoResultsState
                         } else {
-                            SearchState.ErrorState
+                            SearchState.SearchResultState(record.data.gameEntities)
                         }
+                    } else {
+                        SearchState.ErrorState
                     }
                 }
             }

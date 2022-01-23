@@ -1,35 +1,22 @@
 package com.ruben.epicworld.domain
 
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
 abstract class BaseUseCase<REQUEST, RESPONSE> {
 
-    operator fun invoke(
-        scope: CoroutineScope,
-        dispatcher: CoroutineDispatcher,
-        request: REQUEST,
-        onResponse: (RESPONSE?) -> Unit
-    ) {
-        val job = scope.async(dispatcher) {
-            run(request = request)
-        }
-        scope.launch(dispatcher) {
-            if (isActive) {
-                try {
-                    onResponse(job.await())
-                } catch (e: Exception) {
-                    onResponse(null)
-                }
-            }
-        }
-    }
+    suspend operator fun invoke(
+        dispatcher: CoroutineDispatcher = Dispatchers.IO,
+        request: REQUEST
+    ): Flow<RESPONSE> = flow {
+        emit(run(request = request))
+    }.flowOn(dispatcher)
 
     abstract suspend fun run(request: REQUEST): RESPONSE
 }
