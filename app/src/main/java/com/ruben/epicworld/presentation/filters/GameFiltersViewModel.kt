@@ -1,7 +1,6 @@
 package com.ruben.epicworld.presentation.filters
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.entity.filters.FilterType
 import com.ruben.epicworld.domain.entity.filters.PlatformFilterEntity
 import com.ruben.epicworld.domain.entity.filters.SortFilterEntity
@@ -12,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import javax.inject.Inject
@@ -122,22 +120,19 @@ class GameFiltersViewModel @Inject constructor(
 
     private fun getGenresInternal() = intent {
         getGenresUseCase.invoke(
-            viewModelScope,
             dispatcher,
             Unit
-        ) { record ->
-            viewModelScope.launch {
-                reduce {
-                    if (record?.data != null)  {
-                        genresList = record.data.genres
-                        GameFiltersState.FilterState(
-                            genres = record.data.genres,
-                            platforms = getPlatformsFilter(),
-                            sortOrders = getSortFilters()
-                        )
-                    } else {
-                        GameFiltersState.ErrorState
-                    }
+        ).collect { record ->
+            reduce {
+                if (record.data != null)  {
+                    genresList = record.data.genres
+                    GameFiltersState.FilterState(
+                        genres = record.data.genres,
+                        platforms = getPlatformsFilter(),
+                        sortOrders = getSortFilters()
+                    )
+                } else {
+                    GameFiltersState.ErrorState
                 }
             }
         }
