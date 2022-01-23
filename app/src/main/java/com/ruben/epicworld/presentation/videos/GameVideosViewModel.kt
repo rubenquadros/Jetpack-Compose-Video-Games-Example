@@ -1,7 +1,6 @@
 package com.ruben.epicworld.presentation.videos
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.presentation.Destinations.GameVideosArgs.GameIdVideo
 import com.ruben.epicworld.presentation.base.BaseViewModel
@@ -9,7 +8,6 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -39,25 +37,22 @@ class GameVideosViewModel @Inject constructor(
 
     fun getGameVideos(gameId: Int) = intent {
         getGameVideosUseCase.invoke(
-            viewModelScope,
             dispatcher,
             GetGameVideosUseCase.RequestValue(gameId)
-        ) { record ->
-            viewModelScope.launch {
-                reduce {
-                    if (record?.data != null) {
-                        state.copy(
-                            screenState = ScreenState.Success,
-                            gameVideos = record.data,
-                            error = null
-                        )
-                    } else {
-                        state.copy(
-                            screenState = ScreenState.Error,
-                            gameVideos = null,
-                            error = record?.error
-                        )
-                    }
+        ).collect { record ->
+            reduce {
+                if (record.data != null) {
+                    state.copy(
+                        screenState = ScreenState.Success,
+                        gameVideos = record.data,
+                        error = null
+                    )
+                } else {
+                    state.copy(
+                        screenState = ScreenState.Error,
+                        gameVideos = null,
+                        error = record.error
+                    )
                 }
             }
         }
