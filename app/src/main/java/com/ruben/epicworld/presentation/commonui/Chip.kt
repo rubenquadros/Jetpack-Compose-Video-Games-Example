@@ -25,7 +25,7 @@ fun Chip(
     selected: Boolean = false,
     chipId: Any,
     content: @Composable () -> Unit,
-    onValueChange: (chipId: Any) -> Unit
+    onValueChange: (chipId: Any, isSelected: Boolean) -> Unit
 ) {
     var isSelected by remember {
         mutableStateOf(selected)
@@ -37,7 +37,7 @@ fun Chip(
                 value = isSelected,
                 onValueChange = {
                     isSelected = it
-                    onValueChange.invoke(chipId)
+                    onValueChange.invoke(chipId, isSelected)
                 }
             )
             .background(
@@ -66,7 +66,7 @@ fun PreviewChip(@PreviewParameter(ProvideSelected::class) isSelected: Boolean) {
             )
         },
         selected = isSelected,
-        onValueChange = {}
+        onValueChange = {_, _ ->}
     )
 }
 

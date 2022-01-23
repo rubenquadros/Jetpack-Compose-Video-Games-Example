@@ -5,5 +5,6 @@ package com.ruben.epicworld.domain.entity.filters
  **/
 data class PlatformFilterEntity(
     val name: String,
-    val id: Int
+    val id: Int,
+    var isSelected: Boolean = false
 )

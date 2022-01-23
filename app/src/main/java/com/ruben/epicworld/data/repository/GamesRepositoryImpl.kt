@@ -24,15 +24,28 @@ class GamesRepositoryImpl @Inject constructor(private val dataSource: DataSource
     private val gamesMapper = GamesMapper()
     private val errorMapper = ErrorMapper()
 
-    override suspend fun getAllGames(nextPage: Int): Record<GamesEntity> {
+    override suspend fun getAllGames(
+        nextPage: Int,
+        ordering: String?,
+        platforms: String?,
+        genres: String?
+    ): Record<GamesEntity> {
         return try {
-            dataSource.api().restApi().getAllGames(GetAllGamesRequest(nextPage)).run {
+            dataSource.api().restApi().getAllGames(
+                GetAllGamesRequest(
+                    nextPage = nextPage,
+                    ordering = ordering,
+                    platforms = platforms,
+                    genres = genres
+                )
+            ).run {
                 gamesMapper.mapGamesResponse(this)
             }
         } catch (e: RemoteException) {
             errorMapper.mapErrorRecord(e)
         }
     }
+
 
     override suspend fun getGameDetails(gameId: Int): Record<GameDetailsEntity> {
         return try {

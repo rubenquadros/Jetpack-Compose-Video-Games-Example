@@ -8,5 +8,6 @@ data class GenresResultEntity(
     val name : String,
     val slug : String,
     val gamesCount : Int,
-    val imageBackground : String
+    val imageBackground : String,
+    var isSelected: Boolean = false
 )

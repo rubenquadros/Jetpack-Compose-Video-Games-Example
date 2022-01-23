@@ -7,5 +7,8 @@ import com.ruben.epicworld.remote.ApiConstants
  **/
 data class GetAllGamesRequest(
     val nextPage: Int,
-    val pageSize: Int = ApiConstants.PAGE_SIZE
+    val pageSize: Int = ApiConstants.PAGE_SIZE,
+    val ordering: String?,
+    val platforms: String?,
+    val genres: String?,
 )

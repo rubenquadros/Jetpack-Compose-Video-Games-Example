@@ -5,5 +5,6 @@ package com.ruben.epicworld.domain.entity.filters
  **/
 data class SortFilterEntity(
     val name: String,
-    val value: String
+    val value: String,
+    var isSelected: Boolean = false
 )

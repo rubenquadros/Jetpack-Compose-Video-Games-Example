@@ -41,8 +41,6 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
-
-
 @Composable
 fun HomeScreen(
     openSearch: () -> Unit,
@@ -82,7 +80,7 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
             //do nothing
         }
         is ScreenState.Error -> {
-            ErrorView { homeViewModel.initData() }
+            ErrorView { homeViewModel.getAllGames(isError = true) }
         }
         is ScreenState.Success -> {
             val lazyGameItems = state.games?.collectAsLazyPagingItems()

@@ -1,6 +1,8 @@
 package com.ruben.epicworld.presentation.filters
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import com.google.accompanist.flowlayout.FlowRow
 import com.ruben.epicworld.R
+import com.ruben.epicworld.domain.entity.filters.FilterType
 import com.ruben.epicworld.domain.entity.filters.PlatformFilterEntity
 import com.ruben.epicworld.domain.entity.filters.SortFilterEntity
 import com.ruben.epicworld.domain.entity.genres.GenresResultEntity
@@ -37,9 +39,19 @@ import kotlinx.coroutines.flow.Flow
  **/
 @Composable
 fun GameFiltersScreen(
-    gameFiltersViewModel: GameFiltersViewModel = hiltViewModel()
+    gameFiltersViewModel: GameFiltersViewModel,
+    navigateBack: () -> Unit,
+    onFilteringDone: (filters: Map<FilterType, MutableList<Any>>) -> Unit
 ) {
+
     HandleSideEffect(sideEffectFlow = gameFiltersViewModel.uiSideEffect())
+
+    DisposableEffect(true) {
+        gameFiltersViewModel.getGenres()
+        onDispose {
+            onFilteringDone.invoke(gameFiltersViewModel.getFiltersMap())
+        }
+    }
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val stateFlow = gameFiltersViewModel.uiState()
@@ -47,6 +59,7 @@ fun GameFiltersScreen(
         stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
     val state by stateLifecycleAware.collectAsState(initial = gameFiltersViewModel.createInitialState())
+    val filterState by state.isFilterSelected
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (state) {
@@ -57,26 +70,34 @@ fun GameFiltersScreen(
             }
             is GameFiltersState.FilterState -> {
                 (state as? GameFiltersState.FilterState)?.let {
-                    FiltersContent {
-                        GameFilters(
-                            modifier = Modifier.padding(16.dp),
-                            sortOrders = it.sortOrders,
-                            platforms = it.platforms,
-                            genres = it.genres
-                        )
-                    }
+                    FiltersContent(
+                        filtersSelected = filterState,
+                        onDoneClick = navigateBack,
+                        onClearClick = { gameFiltersViewModel.clearFilters() },
+                        content = {
+                            GameFilters(
+                                modifier = Modifier.padding(16.dp),
+                                sortOrders = it.sortOrders,
+                                platforms = it.platforms,
+                                genres = it.genres,
+                                onFilterUpdate = { type, value, isSelected -> gameFiltersViewModel.updateFilter(type, value, isSelected)  }
+                            )
+                        }
+                    )
                 }
             }
             is GameFiltersState.ErrorState -> {
                 FiltersContent(
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                ) {
-                    ErrorView(
-                        modifier = Modifier.padding(top = 32.dp),
-                        buttonClick = { gameFiltersViewModel.initData() }
-                    )
-                }
+                        .align(Alignment.TopCenter),
+                    onDoneClick = navigateBack,
+                    content = {
+                        ErrorView(
+                            modifier = Modifier.padding(top = 32.dp),
+                            buttonClick = { gameFiltersViewModel.initData() }
+                        )
+                    }
+                )
             }
             else -> { /* do nothing */ }
         }
@@ -86,16 +107,23 @@ fun GameFiltersScreen(
 @Composable
 fun FiltersContent(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
+    filtersSelected: Boolean = false,
+    onDoneClick: () -> Unit,
+    onClearClick: (() -> Unit)? = null
 ) {
     Column(modifier = modifier.fillMaxSize()) {
-        FilterHeader()
+        FilterHeader(
+            filtersSelected = filtersSelected,
+            onCloseClick = onDoneClick,
+            onClearClick = onClearClick
+        )
         content()
     }
 }
 
 @Composable
-fun FilterHeader() {
+fun FilterHeader(filtersSelected: Boolean, onCloseClick: () -> Unit, onClearClick: (() -> Unit)?) {
     ConstraintLayout(
         modifier = Modifier.fillMaxWidth(),
         constraintSet = ConstraintSet {
@@ -140,7 +168,7 @@ fun FilterHeader() {
 
         TextButton(
             modifier = Modifier.layoutId("done_button"),
-            onClick = {}
+            onClick = onCloseClick
         ) {
             Text(
                 text = stringResource(id = R.string.all_done),
@@ -152,9 +180,14 @@ fun FilterHeader() {
         Box(
             modifier = Modifier.layoutId("clear_button")
         ) {
-            AnimatedVisibility(visible = true) {
+            AnimatedVisibility(
+                visible = filtersSelected,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
                 TextButton(
-                    onClick = {}
+                    enabled = onClearClick != null,
+                    onClick = onClearClick ?: {}
                 ) {
                     Text(
                         text = stringResource(id = R.string.all_clear),
@@ -178,7 +211,8 @@ fun GameFilters(
     modifier: Modifier = Modifier,
     sortOrders: List<SortFilterEntity>,
     platforms: List<PlatformFilterEntity>,
-    genres: List<GenresResultEntity>
+    genres: List<GenresResultEntity>,
+    onFilterUpdate: (type: FilterType, value: Any, isSelected: Boolean) -> Unit
 ) {
     LazyColumn(modifier = modifier) {
         stickyHeader {
@@ -187,18 +221,19 @@ fun GameFilters(
 
         item {
             FlowRow {
-                sortOrders.forEach {
+                sortOrders.forEach { entity ->
                     Chip(
                         modifier = Modifier.padding(8.dp),
-                        chipId = it.value,
+                        chipId = entity.value,
                         content = {
                             Text(
                                 modifier = Modifier.padding(16.dp),
-                                text = it.name,
+                                text = entity.name,
                                 color = EpicWorldTheme.colors.onBackground
                             )
                         },
-                        onValueChange = {}
+                        selected = entity.isSelected,
+                        onValueChange = { _, isSelected -> onFilterUpdate.invoke(FilterType.SORT_ORDER, entity.value, isSelected)  }
                     )
                 }
             }
@@ -210,18 +245,19 @@ fun GameFilters(
 
         item {
             FlowRow {
-                platforms.forEach {
+                platforms.forEach { entity ->
                     Chip(
                         modifier = Modifier.padding(8.dp),
-                        chipId = it.id,
+                        chipId = entity.id,
                         content = {
                             Text(
                                 modifier = Modifier.padding(16.dp),
-                                text = it.name,
+                                text = entity.name,
                                 color = EpicWorldTheme.colors.onBackground
                             )
                         },
-                        onValueChange = {}
+                        selected = entity.isSelected,
+                        onValueChange = { _, isSelected -> onFilterUpdate.invoke(FilterType.PLATFORMS, entity.id, isSelected)  }
                     )
                 }
             }
@@ -233,18 +269,19 @@ fun GameFilters(
 
         item {
             FlowRow {
-                genres.forEach {
+                genres.forEach { entity ->
                     Chip(
                         modifier = Modifier.padding(8.dp),
-                        chipId = it.id,
+                        chipId = entity.id,
                         content = {
                             Text(
                                 modifier = Modifier.padding(16.dp),
-                                text = it.name,
+                                text = entity.name,
                                 color = EpicWorldTheme.colors.onBackground
                             )
                         },
-                        onValueChange = {}
+                        selected = entity.isSelected,
+                        onValueChange = { _, isSelected -> onFilterUpdate.invoke(FilterType.GENRES, entity.id, isSelected)  }
                     )
                 }
             }
@@ -276,7 +313,7 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameFiltersSideEffect>) {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFilterHeader() {
-    FilterHeader()
+    FilterHeader(filtersSelected = true, onCloseClick = {}, onClearClick = null)
 }
 
 @Preview(showBackground = true)
@@ -288,71 +325,75 @@ fun PreviewFilterStickyHeader() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewFiltersContent() {
-    FiltersContent {
-        GameFilters(
-            modifier = Modifier.padding(top = 16.dp),
-            sortOrders = listOf(
-                SortFilterEntity(
-                    name = "Name",
-                    value = "name"
+    FiltersContent(
+        onDoneClick = {},
+        content = {
+            GameFilters(
+                modifier = Modifier.padding(top = 16.dp),
+                onFilterUpdate = { _, _, _ ->},
+                sortOrders = listOf(
+                    SortFilterEntity(
+                        name = "Name",
+                        value = "name"
+                    ),
+                    SortFilterEntity(
+                        name = "Released Date",
+                        value = "released"
+                    ),
+                    SortFilterEntity(
+                        name = "Rating",
+                        value = "rating"
+                    ),
+                    SortFilterEntity(
+                        name = "Critics Score",
+                        value = "metacritic"
+                    )
                 ),
-                SortFilterEntity(
-                    name = "Released Date",
-                    value = "released"
+                platforms = listOf(
+                    PlatformFilterEntity(
+                        name = "PC",
+                        id = 1
+                    ),
+                    PlatformFilterEntity(
+                        name = "PlayStation",
+                        id = 2
+                    ),
+                    PlatformFilterEntity(
+                        name = "Xbox",
+                        id = 3
+                    )
                 ),
-                SortFilterEntity(
-                    name = "Rating",
-                    value = "rating"
-                ),
-                SortFilterEntity(
-                    name = "Critics Score",
-                    value = "metacritic"
+                genres = listOf(
+                    GenresResultEntity(
+                        id = 1,
+                        name = "Action",
+                        gamesCount = 1,
+                        imageBackground = "",
+                        slug = ""
+                    ),
+                    GenresResultEntity(
+                        id = 2,
+                        name = "Indie",
+                        gamesCount = 2,
+                        imageBackground = "",
+                        slug = ""
+                    ),
+                    GenresResultEntity(
+                        id = 3,
+                        name = "Adventure",
+                        gamesCount = 3,
+                        imageBackground = "",
+                        slug = ""
+                    ),
+                    GenresResultEntity(
+                        id = 4,
+                        name = "RPG",
+                        gamesCount = 4,
+                        imageBackground = "",
+                        slug = ""
+                    ),
                 )
-            ),
-            platforms = listOf(
-                PlatformFilterEntity(
-                    name = "PC",
-                    id = 1
-                ),
-                PlatformFilterEntity(
-                    name = "PlayStation",
-                    id = 2
-                ),
-                PlatformFilterEntity(
-                    name = "Xbox",
-                    id = 3
-                )
-            ),
-            genres = listOf(
-                GenresResultEntity(
-                    id = 1,
-                    name = "Action",
-                    gamesCount = 1,
-                    imageBackground = "",
-                    slug = ""
-                ),
-                GenresResultEntity(
-                    id = 2,
-                    name = "Indie",
-                    gamesCount = 2,
-                    imageBackground = "",
-                    slug = ""
-                ),
-                GenresResultEntity(
-                    id = 3,
-                    name = "Adventure",
-                    gamesCount = 3,
-                    imageBackground = "",
-                    slug = ""
-                ),
-                GenresResultEntity(
-                    id = 4,
-                    name = "RPG",
-                    gamesCount = 4,
-                    imageBackground = "",
-                    slug = ""
-                ),
             )
-        )
-    }
+        }
+    )
 }

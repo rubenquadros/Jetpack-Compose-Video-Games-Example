@@ -18,7 +18,13 @@ import javax.inject.Inject
 class RestApiImpl @Inject constructor(private val retrofitApi: RetrofitApi): RestApi {
 
     override suspend fun getAllGames(getAllGamesRequest: GetAllGamesRequest): GetAllGamesResponse {
-        return retrofitApi.getAllGames(getAllGamesRequest.nextPage, getAllGamesRequest.pageSize)
+        return retrofitApi.getAllGames(
+            page = getAllGamesRequest.nextPage,
+            pageSize = getAllGamesRequest.pageSize,
+            ordering = getAllGamesRequest.ordering,
+            platforms = getAllGamesRequest.platforms,
+            genres = getAllGamesRequest.genres
+        )
     }
 
     override suspend fun getGameDetails(getGameDetailsRequest: GetGameDetailsRequest): GetGameDetailsResponse {

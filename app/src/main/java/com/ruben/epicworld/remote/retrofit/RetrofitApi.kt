@@ -18,6 +18,9 @@ interface RetrofitApi {
     suspend fun getAllGames(
         @Query("page") page: Int,
         @Query("page_size") pageSize: Int,
+        @Query("ordering", encoded = true) ordering: String?,
+        @Query("genres", encoded = true) genres: String?,
+        @Query("platforms", encoded = true) platforms: String?
     ): GetAllGamesResponse
 
     @GET("/api/games/{id}")

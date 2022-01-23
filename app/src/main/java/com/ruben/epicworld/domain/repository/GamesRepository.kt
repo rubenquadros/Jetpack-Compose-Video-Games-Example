@@ -11,7 +11,12 @@ import com.ruben.epicworld.domain.entity.genres.GenresEntity
  **/
 interface GamesRepository {
 
-    suspend fun getAllGames(nextPage: Int): Record<GamesEntity>
+    suspend fun getAllGames(
+        nextPage: Int,
+        ordering: String? = null,
+        platforms: String? = null,
+        genres: String? = null
+    ): Record<GamesEntity>
     suspend fun getGameDetails(gameId: Int): Record<GameDetailsEntity>
     suspend fun getGameVideos(gameId: Int): Record<GameVideosEntity>
     suspend fun searchGames(query: String): Record<GamesEntity>

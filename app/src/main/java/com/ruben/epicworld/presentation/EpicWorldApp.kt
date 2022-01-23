@@ -4,7 +4,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,6 +22,7 @@ import com.ruben.epicworld.presentation.Destinations.Home
 import com.ruben.epicworld.presentation.Destinations.Search
 import com.ruben.epicworld.presentation.details.GameDetailsScreen
 import com.ruben.epicworld.presentation.filters.GameFiltersScreen
+import com.ruben.epicworld.presentation.filters.GameFiltersViewModel
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.home.ui.HomeScreen
 import com.ruben.epicworld.presentation.search.GameSearchScreen
@@ -34,7 +34,7 @@ import com.ruben.epicworld.presentation.videos.GameVideosScreen
  **/
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
-fun EpicWorldApp() {
+fun EpicWorldApp(homeViewModel: HomeViewModel, gameFiltersViewModel: GameFiltersViewModel) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberNavController(bottomSheetNavigator)
     val actions = remember(navController) { Actions(navController) }
@@ -44,7 +44,8 @@ fun EpicWorldApp() {
         sheetBackgroundColor = EpicWorldTheme.colors.background
     ) {
         //shared viewmodels
-        val homeViewModel: HomeViewModel = hiltViewModel()
+        //val homeViewModel: HomeViewModel = hiltViewModel()
+        //val gameFiltersViewModel: GameFiltersViewModel = hiltViewModel()
 
         NavHost(navController = navController, startDestination = Home) {
             composable(Home) {
@@ -87,7 +88,13 @@ fun EpicWorldApp() {
             }
 
             bottomSheet(FiltersBottomSheet) {
-                GameFiltersScreen()
+                GameFiltersScreen(
+                    gameFiltersViewModel = gameFiltersViewModel,
+                    navigateBack = actions.navigateBack,
+                    onFilteringDone = { filters ->
+                        homeViewModel.getAllGames(filters = filters)
+                    }
+                )
             }
         }
     }
