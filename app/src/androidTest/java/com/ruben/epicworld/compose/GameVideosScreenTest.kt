@@ -42,7 +42,6 @@ class GameVideosScreenTest {
         every { gameVideosViewModel.initData() } answers { }
         every { gameVideosViewModel.handleGameIdError() } answers { }
         every { gameVideosViewModel.handleNoGameVideos() } answers { }
-        every { gameVideosViewModel.handleGameVideoError() } answers { }
     }
 
     @Test
@@ -146,7 +145,7 @@ class GameVideosScreenTest {
             MutableStateFlow(GameVideosState(ScreenState.Error, null, ErrorRecord.ServerError))
         }
         every { gameVideosViewModel.uiSideEffect() } answers {
-            flow { emit(GameVideosSideEffect.ShowGameVideosErrorToast) }
+            flow { emit(GameVideosSideEffect.GameVideosError) }
         }
         var navigateBack = false
         composeTestRule.setContent {

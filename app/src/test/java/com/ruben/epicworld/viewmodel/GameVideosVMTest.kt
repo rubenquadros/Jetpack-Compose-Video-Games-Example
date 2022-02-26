@@ -1,23 +1,21 @@
 package com.ruben.epicworld.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
-import com.ruben.epicworld.CoroutinesTestRule
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.interactor.GetGameVideosUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.base.ScreenState
+import com.ruben.epicworld.presentation.videos.GameVideosSideEffect
 import com.ruben.epicworld.presentation.videos.GameVideosState
 import com.ruben.epicworld.presentation.videos.GameVideosViewModel
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.orbitmvi.orbit.test
 
@@ -27,15 +25,9 @@ import org.orbitmvi.orbit.test
 @ExperimentalCoroutinesApi
 class GameVideosVMTest {
 
-    @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
-
     private val mockRepository = mockk<GamesRepository>()
     private val useCase = GetGameVideosUseCase(mockRepository)
     private val initialState = GameVideosState(ScreenState.Loading, null, null)
-    private val savedStateHandle = SavedStateHandle().apply {
-        set("gameId", 1)
-    }
 
     @Before
     fun init() {
@@ -43,84 +35,110 @@ class GameVideosVMTest {
     }
 
     @Test
-    fun `vm should invoke use case to get game videos`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `vm should invoke use case to get game videos`() = runTest(UnconfinedTestDispatcher()) {
+        val savedStateHandle = SavedStateHandle().apply {
+            set("gameId", 1)
+        }
+        val mockResponse = GameVideosEntity(count = 5, results = emptyList())
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
             useCase,
-            coroutinesTestRule.testDispatcher
+            UnconfinedTestDispatcher()
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
-            Record(GameVideosEntity(), null)
+            Record(data = mockResponse, error = null)
         }
-        gameVideosViewModel.testIntent {
+
+        val success = gameVideosViewModel.testIntent {
             getGameVideos(1)
         }
-        gameVideosViewModel.stateObserver.awaitCount(2)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().screenState == ScreenState.Success)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().gameVideos != null)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().error == null)
-        Assert.assertTrue(gameVideosViewModel.sideEffectObserver.values.isEmpty())
+        success.assert(initialState) {
+            states(
+                { copy(screenState = ScreenState.Success, error = null, gameVideos = mockResponse) }
+            )
+        }
+
+        coVerify { mockRepository.getGameVideos(1) }
+        confirmVerified(mockRepository)
     }
 
     @Test
-    fun `vm should post side effect when there is error in getting game videos`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `vm should post side effect when there is error in getting game videos`() = runTest(UnconfinedTestDispatcher()) {
+        val savedStateHandle = SavedStateHandle().apply {
+            set("gameId", 1)
+        }
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
             useCase,
-            coroutinesTestRule.testDispatcher
+            UnconfinedTestDispatcher()
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
             Record(null, ErrorRecord.ServerError)
         }
-        gameVideosViewModel.testIntent {
+
+        val error = gameVideosViewModel.testIntent {
             getGameVideos(1)
         }
-        gameVideosViewModel.testIntent {
-            handleGameVideoError()
+        error.assert(initialState) {
+            states(
+                { copy(screenState = ScreenState.Error, gameVideos = null, error = ErrorRecord.ServerError) }
+            )
+            postedSideEffects(
+                GameVideosSideEffect.GameVideosError
+            )
         }
-        gameVideosViewModel.sideEffectObserver.awaitCount(1)
-        Assert.assertTrue(gameVideosViewModel.sideEffectObserver.values.isNotEmpty())
-        gameVideosViewModel.stateObserver.awaitCount(2)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().screenState == ScreenState.Error)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().gameVideos == null)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().error != null)
+
+        coVerify { mockRepository.getGameVideos(1) }
+        confirmVerified(mockRepository)
     }
 
     @Test
-    fun `vm should post side effect when there is error with game id`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `vm should post side effect when there is error with game id`() = runTest(UnconfinedTestDispatcher()) {
+        val savedStateHandle = SavedStateHandle()
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
             useCase,
-            coroutinesTestRule.testDispatcher
+            UnconfinedTestDispatcher()
         ).test(initialState = initialState)
-        gameVideosViewModel.testIntent {
-            handleGameIdError()
+
+        val error = gameVideosViewModel.runOnCreate()
+        error.assert(initialState) {
+            postedSideEffects(
+                GameVideosSideEffect.ShowGameIdErrorToast
+            )
         }
-        gameVideosViewModel.sideEffectObserver.awaitCount(1)
-        Assert.assertTrue(gameVideosViewModel.sideEffectObserver.values.isNotEmpty())
     }
 
     @Test
-    fun `vm should post side effect when there are no videos for the game`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `vm should post side effect when there are no videos for the game`() = runTest(UnconfinedTestDispatcher()) {
+        val savedStateHandle = SavedStateHandle().apply {
+            set("gameId", 1)
+        }
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
             useCase,
-            coroutinesTestRule.testDispatcher
+            UnconfinedTestDispatcher()
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
             Record(GameVideosEntity(), null)
         }
-        gameVideosViewModel.testIntent {
+
+        val success = gameVideosViewModel.testIntent {
             getGameVideos(1)
         }
-        gameVideosViewModel.testIntent {
-            handleNoGameVideos()
+        success.assert(initialState) {
+            postedSideEffects(
+                GameVideosSideEffect.ShowNoGameVideosToast
+            )
         }
-        gameVideosViewModel.sideEffectObserver.awaitCount(1)
-        Assert.assertTrue(gameVideosViewModel.sideEffectObserver.values.isNotEmpty())
-        gameVideosViewModel.stateObserver.awaitCount(2)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().screenState == ScreenState.Success)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().gameVideos?.results?.isEmpty() == true)
-        Assert.assertTrue(gameVideosViewModel.stateObserver.values.last().error == null)
+
+        coVerify { mockRepository.getGameVideos(1) }
+        confirmVerified(mockRepository)
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
+        unmockkAll()
     }
 }

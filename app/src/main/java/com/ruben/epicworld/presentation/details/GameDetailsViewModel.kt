@@ -27,7 +27,7 @@ class GameDetailsViewModel @Inject constructor(
 
     override fun initData() {
         super.initData()
-        val gameId: Int? = savedStateHandle.get(GameId)
+        val gameId: Int? = savedStateHandle[GameId]
         if (gameId == null || gameId == 0) {
             handleGameIdError()
         } else {
@@ -40,30 +40,28 @@ class GameDetailsViewModel @Inject constructor(
             dispatcher,
             GetGameDetailsUseCase.RequestValue(gameId = gameId)
         ).collect { record ->
-            reduce {
-                if (record.data != null) {
+            if (record.data != null) {
+                reduce {
                     state.copy(
                         screenState = ScreenState.Success,
                         gameDetails = record.data,
                         error = null
                     )
-                } else {
-                    handleError()
+                }
+            } else {
+                reduce {
                     state.copy(
                         screenState = ScreenState.Error,
                         gameDetails = null,
                         error = record.error
                     )
                 }
+                postSideEffect(GameDetailsSideEffect.ShowGameDetailsErrorToast)
             }
         }
     }
 
     fun handleGameIdError() = intent {
         postSideEffect(GameDetailsSideEffect.ShowGameIdErrorToast)
-    }
-
-    private fun handleError() = intent {
-        postSideEffect(GameDetailsSideEffect.ShowGameDetailsErrorToast)
     }
 }

@@ -103,6 +103,7 @@ class GameDetailsScreenTest {
         composeTestRule.onNodeWithText("Max Payne is a man with nothing to lose in the violent, cold urban night. A fugitive undercover cop framed for murder and now hunted by cops and the mob. Max is a man with his back against the wall, fighting a battle he cannot hope to win").assertIsDisplayed()
 
         //Game platforms should be shown
+        composeTestRule.onNodeWithText("Stores").performScrollTo()
         composeTestRule.onNodeWithText("Platforms").assertIsDisplayed()
         composeTestRule.onNodeWithText("PlayStation 3").assertIsDisplayed()
 

@@ -5,10 +5,9 @@ import com.ruben.epicworld.domain.entity.base.ErrorRecord
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.domain.repository.GamesRepository
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.runBlocking
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -57,5 +56,11 @@ class PagingTest {
             )
         )
         Assert.assertTrue(result is PagingSource.LoadResult.Error)
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
+        unmockkAll()
     }
 }

@@ -27,7 +27,7 @@ class GameVideosViewModel @Inject constructor(
 
     override fun initData() {
         super.initData()
-        val gameId: Int? = savedStateHandle.get(GameIdVideo)
+        val gameId: Int? = savedStateHandle[GameIdVideo]
         if (gameId == null || gameId == 0) {
             handleGameIdError()
         } else {
@@ -40,19 +40,28 @@ class GameVideosViewModel @Inject constructor(
             dispatcher,
             GetGameVideosUseCase.RequestValue(gameId)
         ).collect { record ->
-            reduce {
-                if (record.data != null) {
-                    state.copy(
-                        screenState = ScreenState.Success,
-                        gameVideos = record.data,
-                        error = null
-                    )
-                } else {
-                    state.copy(
-                        screenState = ScreenState.Error,
-                        gameVideos = null,
-                        error = record.error
-                    )
+            when {
+                record.data == null -> {
+                    reduce {
+                        state.copy(
+                            screenState = ScreenState.Error,
+                            gameVideos = null,
+                            error = record.error
+                        )
+                    }
+                    postSideEffect(GameVideosSideEffect.GameVideosError)
+                }
+                record.data.count == 0 -> {
+                    postSideEffect(GameVideosSideEffect.ShowNoGameVideosToast)
+                }
+                else -> {
+                    reduce {
+                        state.copy(
+                            screenState = ScreenState.Success,
+                            gameVideos = record.data,
+                            error = null
+                        )
+                    }
                 }
             }
         }
@@ -60,10 +69,6 @@ class GameVideosViewModel @Inject constructor(
 
     fun handleGameIdError() = intent {
         postSideEffect(GameVideosSideEffect.ShowGameIdErrorToast)
-    }
-
-    fun handleGameVideoError() = intent {
-        postSideEffect(GameVideosSideEffect.ShowGameVideosErrorToast)
     }
 
     fun handleNoGameVideos() = intent {

@@ -35,7 +35,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.*
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.flowWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.*
@@ -45,10 +48,9 @@ import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
-import com.ruben.epicworld.presentation.theme.*
+import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.showToast
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 09/08/21
@@ -73,8 +75,7 @@ fun GameVideosScreen(
             LoadingView(modifier = Modifier.fillMaxSize())
         }
         ScreenState.Error -> {
-            gameVideosViewModel.handleGameVideoError()
-            navigateBack.invoke()
+            //navigate back
         }
         ScreenState.Success -> {
             state.gameVideos?.let {
@@ -347,8 +348,9 @@ fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>, navigateBack: (
                     context.showToast(gameIdError)
                     navigateBack.invoke()
                 }
-                is GameVideosSideEffect.ShowGameVideosErrorToast -> {
+                is GameVideosSideEffect.GameVideosError -> {
                     context.showToast(gameVideosError)
+                    navigateBack.invoke()
                 }
                 is GameVideosSideEffect.ShowNoGameVideosToast -> {
                     context.showToast(noGameVideos)

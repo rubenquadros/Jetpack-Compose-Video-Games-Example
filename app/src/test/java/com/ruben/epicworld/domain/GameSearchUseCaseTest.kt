@@ -1,16 +1,17 @@
 package com.ruben.epicworld.domain
 
-import com.ruben.epicworld.CoroutinesTestRule
+import app.cash.turbine.test
 import com.ruben.epicworld.domain.entity.base.Record
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 /**
@@ -18,9 +19,6 @@ import org.junit.Test
  **/
 @ExperimentalCoroutinesApi
 class GameSearchUseCaseTest {
-
-    @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
 
     private val mockGamesRepository = mockk<GamesRepository>()
     private val gameSearchUseCase = GameSearchUseCase(mockGamesRepository)
@@ -31,20 +29,28 @@ class GameSearchUseCaseTest {
     }
 
     @Test
-    fun `should get search results entity from repository`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `should get search results entity from repository`() = runTest(UnconfinedTestDispatcher()) {
         coEvery { mockGamesRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
         }
-        gameSearchUseCase.invoke(
-            coroutinesTestRule.testCoroutineScope,
-            coroutinesTestRule.testDispatcher,
+        val resultFlow = gameSearchUseCase.invoke(
+            UnconfinedTestDispatcher(),
             GameSearchUseCase.RequestValue("gta")
-        ) {
+        )
+        resultFlow.test {
             coVerify { mockGamesRepository.searchGames("gta") }
             confirmVerified(mockGamesRepository)
-            Assert.assertTrue(it?.data != null)
-            Assert.assertTrue(it?.error == null)
+
+            val result = awaitItem()
+            Assert.assertTrue(result.data != null)
+            Assert.assertTrue(result.error == null)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 
+    @After
+    fun tearDown() {
+        clearAllMocks()
+        unmockkAll()
+    }
 }

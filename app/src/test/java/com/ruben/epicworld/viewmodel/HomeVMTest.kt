@@ -6,14 +6,10 @@ import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.home.ui.HomeState
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
+import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -33,7 +29,6 @@ class HomeVMTest {
     @Before
     fun init() {
         MockKAnnotations.init(this, true)
-        Dispatchers.setMain(Dispatchers.Unconfined)
         coEvery { mockGamesSource.load(any()) } returns PagingSource.LoadResult.Page(
             data = arrayListOf(),
             nextKey = 2,
@@ -42,7 +37,7 @@ class HomeVMTest {
     }
 
     @Test
-    fun `vm should fetch all games on initiation`() = runBlocking {
+    fun `vm should fetch all games on initiation`() = runTest(UnconfinedTestDispatcher()) {
         val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState).apply {
             runOnCreate()
         }
@@ -54,7 +49,7 @@ class HomeVMTest {
     }
 
     @Test
-    fun `vm should propagate error state in case of paging error`() = runBlocking {
+    fun `vm should propagate error state in case of paging error`() = runTest(UnconfinedTestDispatcher()) {
         val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState)
         homeViewModel.testIntent {
             handlePaginationDataError()
@@ -67,7 +62,7 @@ class HomeVMTest {
     }
 
     @Test
-    fun `vm should post side effect when there is error in appending paging data`() = runBlocking {
+    fun `vm should post side effect when there is error in appending paging data`() = runTest(UnconfinedTestDispatcher()) {
         val homeViewModel = HomeViewModel(savedStateHandle, mockGamesSource).test(initialState = initialState)
         homeViewModel.testIntent {
             handlePaginationAppendError("Error", "OK")
@@ -78,6 +73,7 @@ class HomeVMTest {
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain()
+        clearAllMocks()
+        unmockkAll()
     }
 }

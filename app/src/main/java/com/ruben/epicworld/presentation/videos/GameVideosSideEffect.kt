@@ -5,6 +5,6 @@ package com.ruben.epicworld.presentation.videos
  **/
 sealed class GameVideosSideEffect {
     object ShowGameIdErrorToast: GameVideosSideEffect()
-    object ShowGameVideosErrorToast: GameVideosSideEffect()
+    object GameVideosError: GameVideosSideEffect()
     object ShowNoGameVideosToast: GameVideosSideEffect()
 }
