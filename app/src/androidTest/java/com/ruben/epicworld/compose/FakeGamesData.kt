@@ -3,6 +3,7 @@ package com.ruben.epicworld.compose
 import androidx.paging.PagingData
 import com.ruben.epicworld.domain.entity.gamedetails.*
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
+import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
@@ -63,7 +64,7 @@ object FakeGamesData {
 
     fun getFakeGameVideos() = GameVideosEntity(4, getVideos())
 
-    fun getFakeSearchResults() = getSearchResults()
+    fun getFakeSearchResults() = GameResultsEntity(getSearchResults())
 
     private fun getSearchResults(): List<GameResultEntity> {
         val results = arrayListOf<GameResultEntity>()
