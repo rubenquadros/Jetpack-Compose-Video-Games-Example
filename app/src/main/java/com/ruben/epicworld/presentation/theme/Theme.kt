@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -15,7 +16,7 @@ import androidx.compose.ui.unit.sp
  * Created by Ruben Quadros on 31/07/21
  **/
 @Composable
-fun EpicWorldTheme(content: @Composable() () -> Unit) {
+fun EpicWorldTheme(content: @Composable () -> Unit) {
     val localEpicWorldColors = EpicWorldColors(
         primary = PrimaryColor,
         primaryVariant = PrimaryVariantColor,
@@ -96,15 +97,18 @@ object EpicWorldTheme {
     val colors: EpicWorldColors
         @Composable
         @ReadOnlyComposable
+        @NonRestartableComposable
         get() = LocalEpicWorldColors.current
 
     val shapes: EpicWorldShapes
         @Composable
         @ReadOnlyComposable
+        @NonRestartableComposable
         get() = LocalEpicWorldShapes.current
 
     val typography: EpicWorldTypography
         @Composable
         @ReadOnlyComposable
+        @NonRestartableComposable
         get() = LocalEpicWorldTypography.current
 }

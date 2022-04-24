@@ -41,8 +41,7 @@ class GameDetailsVMTest {
         }
         val gameDetailsViewModel = GameDetailsViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
 
         val mockResponse = GameDetailsEntity()
@@ -70,8 +69,7 @@ class GameDetailsVMTest {
         }
         val gameDetailsViewModel = GameDetailsViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
 
         coEvery { mockRepository.getGameDetails(2) } answers {
@@ -99,8 +97,7 @@ class GameDetailsVMTest {
         val savedStateHandle = SavedStateHandle()
         val gameDetailsViewModel = GameDetailsViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
         val error = gameDetailsViewModel.runOnCreate()
         error.assert(initialState) {

@@ -8,7 +8,7 @@ import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 sealed class SearchState {
     object InitialState: SearchState()
     object LoadingState: SearchState()
-    data class SearchResultState(val searchResults: List<GameResultsEntity>): SearchState()
+    data class SearchResultState(val searchResults: GameResultsEntity): SearchState()
     object NoResultsState: SearchState()
     object ErrorState: SearchState()
 }

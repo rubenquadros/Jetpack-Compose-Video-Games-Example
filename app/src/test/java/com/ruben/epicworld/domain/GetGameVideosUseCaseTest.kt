@@ -34,7 +34,6 @@ class GetGameVideosUseCaseTest {
             Record(GameVideosEntity(), null)
         }
         val resultFlow = getGameVideosUseCase.invoke(
-            UnconfinedTestDispatcher(),
             GetGameVideosUseCase.RequestValue(1)
         )
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.ruben.epicworld.domain.entity.base.ErrorRecord
-import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
         postSideEffect(HomeSideEffect.ShowSnackBar(message = message, action = action))
     }
 
-    private fun getAllGames(): Pager<Int, GameResultsEntity> {
+    private fun getAllGames(): Pager<Int, GameResultEntity> {
         return Pager(PagingConfig(50)) {
             gamesSource
         }

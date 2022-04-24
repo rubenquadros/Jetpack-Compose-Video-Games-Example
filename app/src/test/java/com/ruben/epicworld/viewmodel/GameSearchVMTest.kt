@@ -2,6 +2,7 @@ package com.ruben.epicworld.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import com.ruben.epicworld.domain.entity.base.Record
+import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.domain.repository.GamesRepository
@@ -39,8 +40,7 @@ class GameSearchVMTest {
     fun `vm should be able to manage view state`() = runTest(UnconfinedTestDispatcher()) {
         val gameSearchViewModel = GameSearchViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
         coEvery { mockRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
@@ -58,18 +58,17 @@ class GameSearchVMTest {
         coEvery { mockRepository.searchGames("gta") } answers {
             Record(GamesEntity(), null)
         }
-        coEvery { useCase.invoke(any(), any()) } answers { flow { emit(Record(GamesEntity(), null)) } }
+        coEvery { useCase.invoke(any()) } answers { flow { emit(Record(GamesEntity(), null)) } }
         val gameSearchViewModel = GameSearchViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         )
         gameSearchViewModel.searchGame("abc")
         gameSearchViewModel.test(initialState = initialState).apply {
             sideEffectObserver.values.isEmpty()
             stateObserver.awaitCount(3)
             stateObserver.values.contains(SearchState.LoadingState)
-            stateObserver.values.contains(SearchState.SearchResultState(arrayListOf()))
+            stateObserver.values.contains(SearchState.SearchResultState(GameResultsEntity()))
         }
     }
 
@@ -77,8 +76,7 @@ class GameSearchVMTest {
     fun `vm should post side effect to navigate to details`() = runTest(UnconfinedTestDispatcher()) {
         val gameSearchViewModel = GameSearchViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
 
         val success = gameSearchViewModel.testIntent {

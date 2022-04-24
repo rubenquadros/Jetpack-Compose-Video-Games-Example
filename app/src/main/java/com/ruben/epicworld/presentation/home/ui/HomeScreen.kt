@@ -3,14 +3,14 @@ package com.ruben.epicworld.presentation.home.ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,7 +29,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
-import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.GetGamesError
 import com.ruben.epicworld.presentation.commonui.HomeAppBar
@@ -37,8 +37,6 @@ import com.ruben.epicworld.presentation.commonui.LoadingItem
 import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -53,7 +51,21 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val scaffoldState = rememberScaffoldState()
-    HandleSideEffect(homeViewModel.uiSideEffect(), scaffoldState)
+
+    LaunchedEffect(homeViewModel.uiSideEffect()) {
+        val messageHost = SnackbarView(this)
+        homeViewModel.uiSideEffect().collect { uiSideEffect ->
+            when (uiSideEffect) {
+                is HomeSideEffect.ShowSnackBar -> {
+                    messageHost.showSnackBar(
+                        snackbarHostState = scaffoldState.snackbarHostState,
+                        message = uiSideEffect.message
+                    )
+                }
+            }
+        }
+    }
+
     Scaffold(topBar = {
         HomeAppBar(
             title = stringResource(id = R.string.home_app_bar_title),
@@ -62,13 +74,13 @@ fun HomeScreen(
         )
     },
         scaffoldState = scaffoldState,
-        content = { GameListing(openGameDetails = openGameDetails, homeViewModel = homeViewModel) }
+        content = { paddingValues ->  GameListing(paddingValues = paddingValues, openGameDetails = openGameDetails, homeViewModel = homeViewModel) }
     )
 }
 
 @ExperimentalFoundationApi
 @Composable
-fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
     val action: String = stringResource(id = R.string.all_ok)
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -88,7 +100,7 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
         is ScreenState.Success -> {
             val lazyGameItems = state.games?.collectAsLazyPagingItems()
             lazyGameItems?.let { gameItems ->
-                LazyVerticalGrid(cells = GridCells.Fixed(2), content = {
+                LazyVerticalGrid(modifier = Modifier.padding(paddingValues), columns = GridCells.Fixed(count = 2), content = {
                     items(gameItems.itemCount) { index ->
                         gameItems[index]?.let {
                             GameItem(game = it, gameClick = openGameDetails)
@@ -121,7 +133,7 @@ fun GameListing(openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
+fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
     Card(
         elevation = 20.dp,
         backgroundColor = EpicWorldTheme.colors.background,
@@ -197,28 +209,11 @@ fun GameItem(game: GameResultsEntity, gameClick: (Int) -> Unit) {
     }
 }
 
-@Composable
-fun HandleSideEffect(uiSideEffectFlow: Flow<HomeSideEffect>, scaffoldState: ScaffoldState) {
-    LaunchedEffect(uiSideEffectFlow) {
-        val messageHost = SnackbarView(this)
-        uiSideEffectFlow.collect { uiSideEffect ->
-            when (uiSideEffect) {
-                is HomeSideEffect.ShowSnackBar -> {
-                    messageHost.showSnackBar(
-                        snackbarHostState = scaffoldState.snackbarHostState,
-                        message = uiSideEffect.message
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GameItemPreview() {
     GameItem(
-        game = GameResultsEntity(123, "Max Payne", "", 4.5),
+        game = GameResultEntity(123, "Max Payne", "", 4.5),
         gameClick = {  }
     )
 }

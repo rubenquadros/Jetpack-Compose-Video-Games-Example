@@ -1,12 +1,16 @@
 package com.ruben.epicworld.remote.model.response.allgames
 
+import androidx.compose.runtime.Stable
 import com.google.gson.annotations.SerializedName
-import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.remote.model.response.common.*
+import javax.annotation.concurrent.Immutable
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
+@Immutable
+@Stable
 data class Results(
     @SerializedName("id")
     val id: Int,
@@ -68,6 +72,6 @@ data class Results(
     val shortScreenshots : List<ShortScreenshots>
 )
 
-fun Results.toEntity() = GameResultsEntity(id, name, backgroundImage ?: "", rating)
+fun Results.toEntity() = GameResultEntity(id, name, backgroundImage ?: "", rating)
 
 fun List<Results>.toEntity() = map { it.toEntity() }

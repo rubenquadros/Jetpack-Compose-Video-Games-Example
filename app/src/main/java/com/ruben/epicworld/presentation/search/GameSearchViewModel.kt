@@ -1,11 +1,10 @@
 package com.ruben.epicworld.presentation.search
 
 import androidx.lifecycle.SavedStateHandle
+import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.interactor.GameSearchUseCase
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
@@ -20,8 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameSearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val gameSearchUseCase: GameSearchUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val gameSearchUseCase: GameSearchUseCase
 ): BaseViewModel<SearchState, SearchSideEffect>(savedStateHandle) {
 
     private var searchQuery = ""
@@ -51,7 +49,6 @@ class GameSearchViewModel @Inject constructor(
                 SearchState.LoadingState
             }
             gameSearchUseCase.invoke(
-                dispatcher,
                 GameSearchUseCase.RequestValue(it)
             ).collect { record ->
                 reduce {
@@ -59,7 +56,11 @@ class GameSearchViewModel @Inject constructor(
                         if (record.data.gameEntities.isEmpty()) {
                             SearchState.NoResultsState
                         } else {
-                            SearchState.SearchResultState(record.data.gameEntities)
+                            SearchState.SearchResultState(
+                                searchResults = GameResultsEntity(
+                                    gameResults = record.data.gameEntities
+                                )
+                            )
                         }
                     } else {
                         SearchState.ErrorState

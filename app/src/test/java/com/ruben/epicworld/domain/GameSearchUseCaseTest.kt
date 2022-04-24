@@ -34,7 +34,6 @@ class GameSearchUseCaseTest {
             Record(GamesEntity(), null)
         }
         val resultFlow = gameSearchUseCase.invoke(
-            UnconfinedTestDispatcher(),
             GameSearchUseCase.RequestValue("gta")
         )
         resultFlow.test {

@@ -42,8 +42,7 @@ class GameVideosVMTest {
         val mockResponse = GameVideosEntity(count = 5, results = emptyList())
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
             Record(data = mockResponse, error = null)
@@ -69,8 +68,7 @@ class GameVideosVMTest {
         }
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
             Record(null, ErrorRecord.ServerError)
@@ -97,8 +95,7 @@ class GameVideosVMTest {
         val savedStateHandle = SavedStateHandle()
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
 
         val error = gameVideosViewModel.runOnCreate()
@@ -116,8 +113,7 @@ class GameVideosVMTest {
         }
         val gameVideosViewModel = GameVideosViewModel(
             savedStateHandle,
-            useCase,
-            UnconfinedTestDispatcher()
+            useCase
         ).test(initialState = initialState)
         coEvery { mockRepository.getGameVideos(1) } answers {
             Record(GameVideosEntity(), null)

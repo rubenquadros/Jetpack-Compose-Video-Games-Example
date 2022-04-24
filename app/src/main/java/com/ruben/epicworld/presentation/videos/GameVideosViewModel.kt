@@ -6,8 +6,6 @@ import com.ruben.epicworld.presentation.Destinations.GameVideosArgs.GameIdVideo
 import com.ruben.epicworld.presentation.base.BaseViewModel
 import com.ruben.epicworld.presentation.base.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -19,8 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GameVideosViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getGameVideosUseCase: GetGameVideosUseCase,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val getGameVideosUseCase: GetGameVideosUseCase
 ) : BaseViewModel<GameVideosState, GameVideosSideEffect>(savedStateHandle) {
 
     override fun createInitialState(): GameVideosState = GameVideosState(ScreenState.Loading, null, null)
@@ -37,7 +34,6 @@ class GameVideosViewModel @Inject constructor(
 
     fun getGameVideos(gameId: Int) = intent {
         getGameVideosUseCase.invoke(
-            dispatcher,
             GetGameVideosUseCase.RequestValue(gameId)
         ).collect { record ->
             when {

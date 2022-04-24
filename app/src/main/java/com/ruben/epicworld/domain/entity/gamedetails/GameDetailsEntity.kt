@@ -1,8 +1,13 @@
 package com.ruben.epicworld.domain.entity.gamedetails
 
+import androidx.compose.runtime.Stable
+import javax.annotation.concurrent.Immutable
+
 /**
  * Created by Ruben Quadros on 06/08/21
  **/
+@Immutable
+@Stable
 data class GameDetailsEntity(
     val id : Int,
     val name: String,

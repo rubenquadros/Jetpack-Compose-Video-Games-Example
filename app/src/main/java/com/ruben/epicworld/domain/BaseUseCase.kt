@@ -11,8 +11,9 @@ import kotlinx.coroutines.flow.flowOn
  **/
 abstract class BaseUseCase<REQUEST, RESPONSE> {
 
+    open val dispatcher: CoroutineDispatcher = Dispatchers.IO
+
     suspend operator fun invoke(
-        dispatcher: CoroutineDispatcher = Dispatchers.IO,
         request: REQUEST
     ): Flow<RESPONSE> = flow {
         emit(run(request = request))

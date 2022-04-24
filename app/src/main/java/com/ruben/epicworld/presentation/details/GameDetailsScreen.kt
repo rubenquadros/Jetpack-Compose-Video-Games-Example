@@ -38,8 +38,6 @@ import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.showToast
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 
 /**
  * Created by Ruben Quadros on 06/08/21
@@ -50,14 +48,32 @@ fun GameDetailsScreen(
     openGameTrailer: (Int) -> Unit,
     gameDetailsViewModel: GameDetailsViewModel = hiltViewModel()
 ) {
-    HandleSideEffect(gameDetailsViewModel.uiSideEffect(), navigateBack)
 
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val stateFlow = gameDetailsViewModel.uiState()
     val stateLifecycleAware = remember(lifecycleOwner, stateFlow) {
         stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
     val state by stateLifecycleAware.collectAsState(initial = gameDetailsViewModel.createInitialState())
+
+    val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
+    val genericError = stringResource(id = R.string.all_generic_error)
+
+    LaunchedEffect(gameDetailsViewModel.uiSideEffect()) {
+        gameDetailsViewModel.uiSideEffect().collect { uiSideEffect ->
+            when (uiSideEffect) {
+                is GameDetailsSideEffect.ShowGameDetailsErrorToast -> {
+                    context.showToast(genericError)
+                }
+                is GameDetailsSideEffect.ShowGameIdErrorToast -> {
+                    context.showToast(gameIdError)
+                    navigateBack.invoke()
+                }
+            }
+        }
+    }
+
 
     when (state.screenState) {
         is ScreenState.Loading -> {
@@ -326,26 +342,6 @@ fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
                 painter = painterResource(id =R.drawable.ic_play),
                 contentDescription = stringResource(id = R.string.game_details_play_trailer)
             )
-        }
-    }
-}
-
-@Composable
-fun HandleSideEffect(sideEffectFlow: Flow<GameDetailsSideEffect>, navigateBack: () -> Unit) {
-    val context = LocalContext.current
-    val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
-    val genericError = stringResource(id = R.string.all_generic_error)
-    LaunchedEffect(sideEffectFlow) {
-        sideEffectFlow.collect { uiSideEffect ->
-            when (uiSideEffect) {
-                is GameDetailsSideEffect.ShowGameDetailsErrorToast -> {
-                    context.showToast(genericError)
-                }
-                is GameDetailsSideEffect.ShowGameIdErrorToast -> {
-                    context.showToast(gameIdError)
-                    navigateBack.invoke()
-                }
-            }
         }
     }
 }

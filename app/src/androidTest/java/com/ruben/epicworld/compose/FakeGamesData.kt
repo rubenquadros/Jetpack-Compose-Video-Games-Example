@@ -2,7 +2,7 @@ package com.ruben.epicworld.compose
 
 import androidx.paging.PagingData
 import com.ruben.epicworld.domain.entity.gamedetails.*
-import com.ruben.epicworld.domain.entity.games.GameResultsEntity
+import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flow
  **/
 object FakeGamesData {
 
-    fun getFakePagingData(): Flow<PagingData<GameResultsEntity>> {
+    fun getFakePagingData(): Flow<PagingData<GameResultEntity>> {
         return flow {
             emit(
                 PagingData.from(getFakeGames().gameEntities)
@@ -24,25 +24,25 @@ object FakeGamesData {
 
     private fun getFakeGames() = GamesEntity(getGamesEntity())
 
-    private fun getGamesEntity(): List<GameResultsEntity> {
-        val gameResults: ArrayList<GameResultsEntity> = ArrayList()
+    private fun getGamesEntity(): List<GameResultEntity> {
+        val gameResults: ArrayList<GameResultEntity> = ArrayList()
         gameResults.add(
-            GameResultsEntity(1, "Max Payne", "", 4.5)
+            GameResultEntity(1, "Max Payne", "", 4.5)
         )
         gameResults.add(
-            GameResultsEntity(2, "GTA V", "", 4.8)
+            GameResultEntity(2, "GTA V", "", 4.8)
         )
         gameResults.add(
-            GameResultsEntity(3, "Portal 2", "", 4.7)
+            GameResultEntity(3, "Portal 2", "", 4.7)
         )
         gameResults.add(
-            GameResultsEntity(4, "Dota 2", "", 4.6)
+            GameResultEntity(4, "Dota 2", "", 4.6)
         )
         gameResults.add(
-            GameResultsEntity(5, "BioShock", "", 4.2)
+            GameResultEntity(5, "BioShock", "", 4.2)
         )
         gameResults.add(
-            GameResultsEntity(6, "Limbo", "", 4.3)
+            GameResultEntity(6, "Limbo", "", 4.3)
         )
         return gameResults
     }
@@ -65,30 +65,30 @@ object FakeGamesData {
 
     fun getFakeSearchResults() = getSearchResults()
 
-    private fun getSearchResults(): List<GameResultsEntity> {
-        val results = arrayListOf<GameResultsEntity>()
+    private fun getSearchResults(): List<GameResultEntity> {
+        val results = arrayListOf<GameResultEntity>()
         results.add(
-            GameResultsEntity(1, "Grand Theft Auto", "", 4.5)
+            GameResultEntity(1, "Grand Theft Auto", "", 4.5)
         )
 
         results.add(
-            GameResultsEntity(2, "GTA-bankrob", "", 4.3)
+            GameResultEntity(2, "GTA-bankrob", "", 4.3)
         )
 
         results.add(
-            GameResultsEntity(3, "GTA - Bombay", "", 4.6)
+            GameResultEntity(3, "GTA - Bombay", "", 4.6)
         )
 
         results.add(
-            GameResultsEntity(4, "GTA-V-DEMO", "", 4.1)
+            GameResultEntity(4, "GTA-V-DEMO", "", 4.1)
         )
 
         results.add(
-            GameResultsEntity(5, "gta multiplayer", "", 3.5)
+            GameResultEntity(5, "gta multiplayer", "", 3.5)
         )
 
         results.add(
-            GameResultsEntity(6, "GTA Prototype", "", 4.0)
+            GameResultEntity(6, "GTA Prototype", "", 4.0)
         )
         return results
     }

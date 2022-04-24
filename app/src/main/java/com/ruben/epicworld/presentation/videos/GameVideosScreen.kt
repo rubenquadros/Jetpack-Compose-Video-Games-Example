@@ -3,7 +3,6 @@ package com.ruben.epicworld.presentation.videos
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,7 +41,7 @@ import androidx.lifecycle.flowWithLifecycle
 import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
@@ -50,25 +49,44 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.showToast
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by Ruben Quadros on 09/08/21
  **/
-@ExperimentalAnimationApi
 @Composable
 fun GameVideosScreen(
     navigateBack: () -> Unit,
     gameVideosViewModel: GameVideosViewModel = hiltViewModel()
 ) {
-    HandleSideEffect(gameVideosViewModel.uiSideEffect(), navigateBack)
-
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
     val stateFlow = gameVideosViewModel.uiState()
     val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
         stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
     }
     val state by stateFlowLifecycleAware.collectAsState(initial = gameVideosViewModel.createInitialState())
+
+    val gameIdError = stringResource(id = R.string.game_videos_invalid_game_id)
+    val gameVideosError = stringResource(id = R.string.all_generic_error)
+    val noGameVideos = stringResource(id = R.string.game_videos_no_videos)
+
+    LaunchedEffect(gameVideosViewModel.uiSideEffect()) {
+        gameVideosViewModel.uiSideEffect().collect { uiSideEffect ->
+            when (uiSideEffect) {
+                is GameVideosSideEffect.ShowGameIdErrorToast -> {
+                    context.showToast(gameIdError)
+                    navigateBack.invoke()
+                }
+                is GameVideosSideEffect.GameVideosError -> {
+                    context.showToast(gameVideosError)
+                    navigateBack.invoke()
+                }
+                is GameVideosSideEffect.ShowNoGameVideosToast -> {
+                    context.showToast(noGameVideos)
+                }
+            }
+        }
+    }
 
     when (state.screenState) {
         ScreenState.Loading -> {
@@ -90,7 +108,6 @@ fun GameVideosScreen(
     }
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun ShowGameVideos(gameVideos: GameVideosEntity) {
     val playingIndex = remember {
@@ -104,7 +121,7 @@ fun ShowGameVideos(gameVideos: GameVideosEntity) {
     Column {
         VideoPlayer(
             modifier = Modifier.weight(1f, fill = true),
-            gameVideos = gameVideos.results,
+            gameVideos = gameVideos,
             playingIndex = playingIndex,
             onTrailerChange = { newIndex -> onTrailerChange(newIndex) }
         )
@@ -228,23 +245,22 @@ fun TrailerDivider() {
     )
 }
 
-@ExperimentalAnimationApi
 @Composable
 fun VideoPlayer(
-    gameVideos: List<VideoResultEntity>,
+    gameVideos: GameVideosEntity,
     playingIndex: State<Int>,
     onTrailerChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val visible = remember {
+    var visible by remember {
         mutableStateOf(true)
     }
-    val videoTitle = remember {
-        mutableStateOf(gameVideos[playingIndex.value].name)
+    var videoTitle by remember {
+        mutableStateOf(gameVideos.results[playingIndex.value].name)
     }
     val mediaItems = arrayListOf<MediaItem>()
-    gameVideos.forEach {
+    gameVideos.results.forEach {
         mediaItems.add(
             MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString()).setTag(it)
                 .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
@@ -252,20 +268,20 @@ fun VideoPlayer(
         )
     }
     val exoPlayer = remember {
-        SimpleExoPlayer.Builder(context).build().apply {
+        ExoPlayer.Builder(context).build().apply {
             this.setMediaItems(mediaItems)
             this.prepare()
             this.addListener(object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)
-                    if (player.contentPosition >= 200) visible.value = false
+                    if (player.contentPosition >= 200) visible = false
                 }
 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     super.onMediaItemTransition(mediaItem, reason)
                     onTrailerChange(this@apply.currentPeriodIndex)
-                    visible.value = true
-                    videoTitle.value = mediaItem?.mediaMetadata?.displayTitle.toString()
+                    visible = true
+                    videoTitle = mediaItem?.mediaMetadata?.displayTitle.toString()
                 }
             })
         }
@@ -292,7 +308,7 @@ fun VideoPlayer(
     ConstraintLayout(modifier = modifier.background(EpicWorldTheme.colors.background)) {
         val (title, videoPlayer) = createRefs()
         AnimatedVisibility(
-            visible = visible.value,
+            visible = visible,
             enter = fadeIn(initialAlpha = 0.4f),
             exit = fadeOut(animationSpec = tween(durationMillis = 250)),
             modifier = Modifier.constrainAs(title) {
@@ -302,7 +318,7 @@ fun VideoPlayer(
             }
         ) {
             Text(
-                text = videoTitle.value,
+                text = videoTitle,
                 style = EpicWorldTheme.typography.subTitle2,
                 color = EpicWorldTheme.colors.onBackground,
                 modifier = Modifier
@@ -322,7 +338,7 @@ fun VideoPlayer(
                         bottom.linkTo(parent.bottom)
                     },
                 factory = {
-                    PlayerView(context).apply {
+                    StyledPlayerView(context).apply {
                         player = exoPlayer
                         layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                     }
@@ -330,31 +346,6 @@ fun VideoPlayer(
         ) {
             onDispose {
                 exoPlayer.release()
-            }
-        }
-    }
-}
-
-@Composable
-fun HandleSideEffect(sideEffectFlow: Flow<GameVideosSideEffect>, navigateBack: () -> Unit) {
-    val context = LocalContext.current
-    val gameIdError = stringResource(id = R.string.game_videos_invalid_game_id)
-    val gameVideosError = stringResource(id = R.string.all_generic_error)
-    val noGameVideos = stringResource(id = R.string.game_videos_no_videos)
-    LaunchedEffect(sideEffectFlow) {
-        sideEffectFlow.collect { uiSideEffect ->
-            when (uiSideEffect) {
-                is GameVideosSideEffect.ShowGameIdErrorToast -> {
-                    context.showToast(gameIdError)
-                    navigateBack.invoke()
-                }
-                is GameVideosSideEffect.GameVideosError -> {
-                    context.showToast(gameVideosError)
-                    navigateBack.invoke()
-                }
-                is GameVideosSideEffect.ShowNoGameVideosToast -> {
-                    context.showToast(noGameVideos)
-                }
             }
         }
     }
@@ -371,7 +362,6 @@ fun ShowTrailerPreview() {
     )
 }
 
-@ExperimentalAnimationApi
 @Preview(showBackground = true)
 @Composable
 fun ShowGameVideosPreview() {
