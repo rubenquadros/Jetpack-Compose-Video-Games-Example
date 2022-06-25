@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation.home.ui
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -31,10 +32,7 @@ import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.commonui.GetGamesError
-import com.ruben.epicworld.presentation.commonui.HomeAppBar
-import com.ruben.epicworld.presentation.commonui.LoadingItem
-import com.ruben.epicworld.presentation.commonui.SnackbarView
+import com.ruben.epicworld.presentation.commonui.*
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 
@@ -65,6 +63,8 @@ fun HomeScreen(
             }
         }
     }
+
+    ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     Scaffold(topBar = {
         HomeAppBar(

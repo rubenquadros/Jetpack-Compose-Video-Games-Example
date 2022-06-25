@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation.details
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,13 +29,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
+import com.ruben.epicworld.presentation.commonui.ScreenOrientation
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.showToast
@@ -74,6 +75,7 @@ fun GameDetailsScreen(
         }
     }
 
+    ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     when (state.screenState) {
         is ScreenState.Loading -> {
@@ -93,7 +95,6 @@ fun GameDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun GameDetails(
     gameDetails: GameDetailsEntity,

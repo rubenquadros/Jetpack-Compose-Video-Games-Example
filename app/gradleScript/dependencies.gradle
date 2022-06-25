@@ -1,37 +1,37 @@
 dependencies {
 
-    def core_version = "1.7.0"
+    def core_version = "1.8.0"
     implementation "androidx.core:core-ktx:$core_version"
 
-    def appcompat_version = "1.4.1"
+    def appcompat_version = "1.4.2"
     implementation "androidx.appcompat:appcompat:$appcompat_version"
 
-    def material_design_version = "1.5.0"
+    def material_design_version = "1.6.1"
     implementation "com.google.android.material:material:$material_design_version"
 
-    def jetpack_compose_version = "1.2.0-alpha08"
+    def jetpack_compose_version = "1.2.0-rc01"
     implementation "androidx.compose.ui:ui:$jetpack_compose_version"
     implementation "androidx.compose.material:material:$jetpack_compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$jetpack_compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$jetpack_compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$jetpack_compose_version"
 
-    def jetpack_compose_viewmodel_version = "2.4.1"
+    def jetpack_compose_viewmodel_version = "2.5.0-rc02"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$jetpack_compose_viewmodel_version"
 
-    def jetpack_navigation_version = "2.5.0-beta01"
+    def jetpack_navigation_version = "2.5.0-rc02"
     implementation "androidx.navigation:navigation-compose:$jetpack_navigation_version"
 
-    def jetpack_lifecycle_version = "2.4.1"
+    def jetpack_lifecycle_version = "2.5.0-rc02"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$jetpack_lifecycle_version"
 
-    def activity_compose_version = "1.6.0-alpha01"
+    def activity_compose_version = "1.6.0-alpha05"
     implementation "androidx.activity:activity-compose:$activity_compose_version"
 
-    def jetpack_constraint_layout_version = "1.0.0"
+    def jetpack_constraint_layout_version = "1.0.1"
     implementation "androidx.constraintlayout:constraintlayout-compose:$jetpack_constraint_layout_version"
 
-    def jetpack_paging_version = "1.0.0-alpha14"
+    def jetpack_paging_version = "1.0.0-alpha15"
     implementation "androidx.paging:paging-compose:$jetpack_paging_version"
 
     def material_icons_version = "1.1.1"
@@ -40,7 +40,7 @@ dependencies {
     def coil_version = "1.4.0"
     implementation "io.coil-kt:coil-compose:$coil_version"
 
-    def exo_player_version = "2.17.1"
+    def exo_player_version = "2.18.0"
     implementation "com.google.android.exoplayer:exoplayer:$exo_player_version"
 
     def coroutines_version = "1.6.1"
@@ -51,7 +51,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    def logging_interceptor_version = "4.9.1"
+    def logging_interceptor_version = "4.9.3"
     implementation "com.squareup.okhttp3:logging-interceptor:$logging_interceptor_version"
 
     def dagger_hilt_version = "2.38.1"
@@ -65,7 +65,7 @@ dependencies {
     implementation "org.orbit-mvi:orbit-core:$mvi_orbit_version"
     implementation "org.orbit-mvi:orbit-viewmodel:$mvi_orbit_version"
 
-    def splash_api_version = "1.0.0-beta02"
+    def splash_api_version = "1.0.0-rc01"
     implementation "androidx.core:core-splashscreen:$splash_api_version"
 
     def leakcanary_version = "2.8.1"

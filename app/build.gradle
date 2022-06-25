@@ -10,12 +10,12 @@ apply from: './gradleScript/dependencies.gradle'
 android {
     def file = rootProject.file("local.properties")
 
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.ruben.epicworld"
         minSdk 21
-        targetSdk 31
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -72,7 +72,7 @@ android {
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
         kotlinOptions {
-            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+            freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=enable"]
         }
     }
 }

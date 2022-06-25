@@ -1,5 +1,6 @@
 package com.ruben.epicworld.presentation.search
 
+import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,6 +48,7 @@ import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.presentation.commonui.GetGamesError
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.commonui.NoResultsView
+import com.ruben.epicworld.presentation.commonui.ScreenOrientation
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.theme.PlayFair
 import com.ruben.epicworld.presentation.utility.shouldPerformSearch
@@ -79,6 +81,8 @@ fun GameSearchScreen(
             keyboardController?.hide()
         }
     }
+
+    ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
     fun onSearch(query: String) {
         gameSearchViewModel.searchGame(query)
