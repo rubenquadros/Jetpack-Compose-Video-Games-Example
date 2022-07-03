@@ -1,16 +1,7 @@
 package com.ruben.epicworld.presentation.videos
 
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,14 +34,14 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
-import com.ruben.epicworld.presentation.utility.findActivity
+import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_BACK_INCREMENT
+import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_FORWARD_INCREMENT
 import com.ruben.epicworld.presentation.utility.showToast
 
 /**
@@ -132,13 +122,6 @@ fun ShowGameVideos(
         getGameVideosEntity()
     }
 
-    var visible by remember {
-        mutableStateOf(true)
-    }
-    var videoTitle by remember {
-        mutableStateOf(gameVideos.results[playingIndex].name)
-    }
-
     val mediaItems = arrayListOf<MediaItem>()
     gameVideos.results.forEach {
         mediaItems.add(
@@ -149,23 +132,13 @@ fun ShowGameVideos(
     }
 
     val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            this.setMediaItems(mediaItems)
-            this.prepare()
-            this.addListener(object : Player.Listener {
-                override fun onEvents(player: Player, events: Player.Events) {
-                    super.onEvents(player, events)
-                    if (player.contentPosition >= 200) visible = false
-                }
-
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    super.onMediaItemTransition(mediaItem, reason)
-                    onTrailerChange(currentPeriodIndex)
-                    visible = true
-                    videoTitle = mediaItem?.mediaMetadata?.displayTitle.toString()
-                }
-            })
-        }
+        ExoPlayer.Builder(context)
+            .setSeekBackIncrementMs(PLAYER_SEEK_BACK_INCREMENT)
+            .setSeekForwardIncrementMs(PLAYER_SEEK_FORWARD_INCREMENT)
+            .build().apply {
+                this.setMediaItems(mediaItems)
+                this.prepare()
+            }
     }
 
     exoPlayer.seekTo(playingIndex, C.TIME_UNSET)
@@ -192,8 +165,6 @@ fun ShowGameVideos(
 
     GameVideos(
         exoPlayer = exoPlayer,
-        getVideoTitle = { videoTitle },
-        isVisible = { visible },
         playingIndex = playingIndex,
         gameVideos = gameVideos,
         onTrailerChange = { index -> onTrailerChange(index) }
@@ -203,42 +174,16 @@ fun ShowGameVideos(
 @Composable
 fun GameVideos(
     exoPlayer: Player,
-    getVideoTitle: () -> String,
     playingIndex: Int,
-    isVisible: () -> Boolean,
     gameVideos: GameVideosEntity,
     onTrailerChange: (Int) -> Unit
 ) {
-    val context = LocalContext.current
     val configuration = LocalConfiguration.current
-
-    fun handleOrientation(isFullScreen: Boolean) {
-        context.findActivity()?.requestedOrientation = if (isFullScreen) {
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
-    }
-
-    val playerView: View = remember {
-        StyledPlayerView(context).apply {
-            player = exoPlayer
-            setFullscreenButtonClickListener { isFullScreen ->
-                handleOrientation(isFullScreen)
-            }
-            layoutParams = FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        }
-    }
 
     when (configuration.orientation) {
         Configuration.ORIENTATION_PORTRAIT -> {
             PortraitView(
-                playerView = playerView,
-                getVideoTitle = getVideoTitle,
-                isVisible = isVisible,
+                exoPlayer = exoPlayer,
                 playingIndex = playingIndex,
                 onTrailerChange = { index -> onTrailerChange(index) },
                 gameVideos = gameVideos
@@ -246,9 +191,7 @@ fun GameVideos(
         }
         else -> {
             LandscapeView(
-                playerView = playerView,
-                getVideoTitle = getVideoTitle,
-                isVisible = isVisible
+                exoPlayer = exoPlayer
             )
         }
     }
@@ -256,19 +199,17 @@ fun GameVideos(
 
 @Composable
 fun PortraitView(
-    playerView: View,
-    getVideoTitle: () -> String,
-    isVisible: () -> Boolean,
+    exoPlayer: Player,
     gameVideos: GameVideosEntity,
     playingIndex: Int,
     onTrailerChange: (Int) -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        VideoPlayer(
+    Column {
+        PlayerView(
             modifier = Modifier.weight(1f, fill = true),
-            playerView = playerView,
-            getVideoTitle = getVideoTitle,
-            isVisible = isVisible
+            exoPlayer = exoPlayer,
+            isFullScreen = false,
+            onTrailerChange = onTrailerChange
         )
         LazyColumn(
             modifier = Modifier.weight(1f, fill = true),
@@ -285,13 +226,12 @@ fun PortraitView(
 }
 
 @Composable
-fun LandscapeView(playerView: View, getVideoTitle: () -> String, isVisible: () -> Boolean) {
+fun LandscapeView(exoPlayer: Player) {
     Box(modifier = Modifier.fillMaxSize()) {
-        VideoPlayer(
+        PlayerView(
             modifier = Modifier.fillMaxSize(),
-            playerView = playerView,
-            getVideoTitle = getVideoTitle,
-            isVisible = isVisible
+            exoPlayer = exoPlayer,
+            isFullScreen = true
         )
     }
 }
@@ -399,58 +339,6 @@ fun TrailerDivider() {
             .testTag("Divider"),
         color = EpicWorldTheme.colors.surface
     )
-}
-
-@Composable
-fun VideoPlayer(
-    modifier: Modifier = Modifier,
-    playerView: View,
-    getVideoTitle: () -> String,
-    isVisible: () -> Boolean,
-) {
-    val videoTitle = remember(key1 = getVideoTitle()) {
-        getVideoTitle()
-    }
-
-    val visible = remember(key1 = isVisible()) {
-        isVisible()
-    }
-
-    ConstraintLayout(modifier = modifier.background(EpicWorldTheme.colors.background)) {
-        val (title, videoPlayer) = createRefs()
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(initialAlpha = 0.4f),
-            exit = fadeOut(animationSpec = tween(durationMillis = 250)),
-            modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        ) {
-            Text(
-                text = videoTitle,
-                style = EpicWorldTheme.typography.subTitle2,
-                color = EpicWorldTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            )
-        }
-        AndroidView(
-            modifier = Modifier
-                .testTag("VideoPlayer")
-                .constrainAs(videoPlayer) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                },
-            factory = {
-                playerView
-            })
-    }
 }
 
 @Preview(showBackground = true)
