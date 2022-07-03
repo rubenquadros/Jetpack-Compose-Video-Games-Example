@@ -38,6 +38,8 @@ import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.commonui.ScreenOrientation
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
+import com.ruben.epicworld.presentation.utility.Constants.DESCRIPTION_LINES
+import com.ruben.epicworld.presentation.utility.LogCompositions
 import com.ruben.epicworld.presentation.utility.showToast
 
 /**
@@ -49,6 +51,8 @@ fun GameDetailsScreen(
     openGameTrailer: (Int) -> Unit,
     gameDetailsViewModel: GameDetailsViewModel = hiltViewModel()
 ) {
+
+    LogCompositions(tag = "GameDetailsScreen")
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
@@ -96,17 +100,14 @@ fun GameDetailsScreen(
 }
 
 @Composable
-fun GameDetails(
+private fun GameDetails(
     gameDetails: GameDetailsEntity,
     openGameTrailer: (Int) -> Unit
 ) {
+    LogCompositions(tag = "GameDetails")
+
     val scrollState = rememberScrollState()
-    val shouldShowMore = remember {
-        mutableStateOf(DescriptionStatus.DEFAULT)
-    }
-    val maxLines = remember {
-        mutableStateOf(4)
-    }
+
     Column(modifier = Modifier
         .fillMaxWidth()
         .verticalScroll(scrollState)
@@ -227,52 +228,7 @@ fun GameDetails(
             style = EpicWorldTheme.typography.subTitle2,
             color = EpicWorldTheme.colors.background
         )
-        Text(
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = gameDetails.description,
-            style = EpicWorldTheme.typography.body2,
-            color = EpicWorldTheme.colors.background,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = maxLines.value,
-            onTextLayout = {
-                if (it.lineCount == 4 && it.isLineEllipsized(3)) {
-                    shouldShowMore.value = DescriptionStatus.SHOW_MORE
-                } else if(it.lineCount > 4) {
-                    shouldShowMore.value = DescriptionStatus.SHOW_LESS
-                }
-            }
-        )
-        when (shouldShowMore.value) {
-            DescriptionStatus.SHOW_MORE -> {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            maxLines.value = Int.MAX_VALUE
-                        },
-                    text = stringResource(id = R.string.game_details_about_show_more),
-                    style = EpicWorldTheme.typography.body2,
-                    textDecoration = TextDecoration.Underline,
-                    color = EpicWorldTheme.colors.primary
-                )
-            }
-            DescriptionStatus.SHOW_LESS -> {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            maxLines.value = 4
-                        },
-                    text = stringResource(id = R.string.game_details_about_show_less),
-                    style = EpicWorldTheme.typography.body2,
-                    textDecoration = TextDecoration.Underline,
-                    color = EpicWorldTheme.colors.primary
-                )
-            }
-            else -> {
-                //do nothing
-            }
-        }
+        ExpandableDescription(description = gameDetails.description)
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_platforms),
@@ -325,7 +281,70 @@ fun GameDetails(
 }
 
 @Composable
-fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
+private fun ExpandableDescription(modifier: Modifier = Modifier, description: String) {
+    LogCompositions(tag = "ExpandableDescription")
+
+    var shouldShowMore by remember {
+        mutableStateOf(DescriptionStatus.DEFAULT)
+    }
+    var maxLines by remember {
+        mutableStateOf(4)
+    }
+
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
+            text = description,
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines,
+            onTextLayout = {
+                if (it.lineCount == DESCRIPTION_LINES && it.isLineEllipsized(DESCRIPTION_LINES-1)) {
+                    shouldShowMore = DescriptionStatus.SHOW_MORE
+                } else if(it.lineCount > DESCRIPTION_LINES) {
+                    shouldShowMore = DescriptionStatus.SHOW_LESS
+                }
+            }
+        )
+        when (shouldShowMore) {
+            DescriptionStatus.SHOW_MORE -> {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            maxLines = Int.MAX_VALUE
+                        },
+                    text = stringResource(id = R.string.game_details_about_show_more),
+                    style = EpicWorldTheme.typography.body2,
+                    textDecoration = TextDecoration.Underline,
+                    color = EpicWorldTheme.colors.primary
+                )
+            }
+            DescriptionStatus.SHOW_LESS -> {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            maxLines = DESCRIPTION_LINES
+                        },
+                    text = stringResource(id = R.string.game_details_about_show_less),
+                    style = EpicWorldTheme.typography.body2,
+                    textDecoration = TextDecoration.Underline,
+                    color = EpicWorldTheme.colors.primary
+                )
+            }
+            else -> {
+                //do nothing
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
+    LogCompositions(tag = "PlayTrailer")
+
     Box(modifier = modifier
         .offset(0.dp, 25.dp)) {
         IconButton(onClick = openGameTrailer) {
@@ -349,10 +368,10 @@ fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun GameDetailsPreview() {
+private fun GameDetailsPreview() {
     GameDetails(
         gameDetails = GameDetailsEntity(1, "Max Payne", "The third game in a series, it holds nothing back from the player. Open world adventures of the renowned monster slayer Geralt of Rivia are now even on a larger scale. Following the source material more accurately, this time Geralt is trying to find the child of the prophecy, Ciri while making a quick coin from various contracts on the side", 4.5, "",
-            "", 8, arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf()),
+            "", 8, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
         openGameTrailer = {  }
     )
 }

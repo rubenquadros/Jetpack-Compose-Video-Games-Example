@@ -1,7 +1,6 @@
 package com.ruben.epicworld.presentation.home.ui
 
 import android.content.pm.ActivityInfo
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,7 +26,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
@@ -35,12 +33,12 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.*
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
+import com.ruben.epicworld.presentation.utility.LogCompositions
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
 
-@ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
     openSearch: () -> Unit,
@@ -48,6 +46,8 @@ fun HomeScreen(
     openGameDetails: (Int) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
+    LogCompositions(tag = "HomeScreen")
+
     val scaffoldState = rememberScaffoldState()
 
     LaunchedEffect(homeViewModel.uiSideEffect()) {
@@ -78,9 +78,10 @@ fun HomeScreen(
     )
 }
 
-@ExperimentalFoundationApi
 @Composable
-fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+private fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+    LogCompositions(tag = "GameListing")
+
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
     val action: String = stringResource(id = R.string.all_ok)
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -131,9 +132,10 @@ fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, ho
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
+private fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
+    LogCompositions(tag = "GameItem")
+
     Card(
         elevation = 20.dp,
         backgroundColor = EpicWorldTheme.colors.background,
@@ -211,7 +213,7 @@ fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun GameItemPreview() {
+private fun GameItemPreview() {
     GameItem(
         game = GameResultEntity(123, "Max Payne", "", 4.5),
         gameClick = {  }

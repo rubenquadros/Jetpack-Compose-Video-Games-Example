@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.ruben.epicworld.domain.entity.gamevideos.PlayerWrapper
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.Constants
 import com.ruben.epicworld.presentation.utility.noRippleClickable
@@ -33,7 +34,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun PlayerView(
     modifier: Modifier = Modifier,
-    exoPlayer: Player,
+    playerWrapper: PlayerWrapper,
     isFullScreen: Boolean,
     onTrailerChange: ((Int) -> Unit)? = null
 ) {
@@ -52,7 +53,7 @@ fun PlayerView(
         }
 
         var title by remember {
-            mutableStateOf(exoPlayer.currentMediaItem?.mediaMetadata?.displayTitle.toString())
+            mutableStateOf(playerWrapper.exoPlayer.currentMediaItem?.mediaMetadata?.displayTitle.toString())
         }
 
         var videoTimer by remember {
@@ -83,22 +84,22 @@ fun PlayerView(
 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     super.onMediaItemTransition(mediaItem, reason)
-                    onTrailerChange?.invoke(exoPlayer.currentPeriodIndex)
+                    onTrailerChange?.invoke(playerWrapper.exoPlayer.currentPeriodIndex)
                     isVisible = true
                     title = mediaItem?.mediaMetadata?.displayTitle.toString()
                 }
             }
 
-            exoPlayer.addListener(listener)
+            playerWrapper.exoPlayer.addListener(listener)
 
             onDispose {
-                exoPlayer.removeListener(listener)
+                playerWrapper.exoPlayer.removeListener(listener)
             }
         }
 
         VideoPlayer(
             modifier = Modifier.fillMaxSize(),
-            exoPlayer = exoPlayer,
+            playerWrapper = playerWrapper,
             onPlayerClick = {
                 shouldShowControls = shouldShowControls.not()
             }
@@ -110,19 +111,19 @@ fun PlayerView(
             isPlaying = { isPlaying },
             totalDuration = { totalDuration },
             isFullScreen = isFullScreen,
-            onPrevious = { exoPlayer.seekToPrevious() },
-            onNext = { exoPlayer.seekToNext() },
-            onReplay = { exoPlayer.seekBack() },
-            onForward = { exoPlayer.seekForward() },
+            onPrevious = { playerWrapper.exoPlayer.seekToPrevious() },
+            onNext = { playerWrapper.exoPlayer.seekToNext() },
+            onReplay = { playerWrapper.exoPlayer.seekBack() },
+            onForward = { playerWrapper.exoPlayer.seekForward() },
             onPauseToggle = {
-                if (exoPlayer.isPlaying) {
-                    exoPlayer.pause()
+                if (playerWrapper.exoPlayer.isPlaying) {
+                    playerWrapper.exoPlayer.pause()
                 } else {
-                    exoPlayer.play()
+                    playerWrapper.exoPlayer.play()
                 }
                 isPlaying = isPlaying.not()
             },
-            onSeekChanged = { position -> exoPlayer.seekTo(position.toLong()) },
+            onSeekChanged = { position -> playerWrapper.exoPlayer.seekTo(position.toLong()) },
             videoTimer = { videoTimer }
         )
 
@@ -150,7 +151,7 @@ fun PlayerView(
 @Composable
 fun VideoPlayer(
     modifier: Modifier = Modifier,
-    exoPlayer: Player,
+    playerWrapper: PlayerWrapper,
     onPlayerClick: () -> Unit
 ) {
     val context = LocalContext.current
@@ -167,7 +168,7 @@ fun VideoPlayer(
                 .testTag("VideoPlayer"),
             factory = {
                 StyledPlayerView(context).apply {
-                    player = exoPlayer
+                    player = playerWrapper.exoPlayer
                     useController = false
                     layoutParams = FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
@@ -184,7 +185,7 @@ private fun PreviewPlayerView() {
     val context = LocalContext.current
     PlayerView(
         modifier = Modifier.fillMaxSize(),
-        exoPlayer = ExoPlayer.Builder(context).build(),
+        playerWrapper = PlayerWrapper(exoPlayer = ExoPlayer.Builder(context).build()),
         isFullScreen = false
     )
 }

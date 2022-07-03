@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import com.ruben.epicworld.BuildConfig
+import com.ruben.epicworld.presentation.utility.Constants.TAG
 
 /**
  * Created by Ruben Quadros on 25/06/22
@@ -16,10 +17,10 @@ class Ref(var value: Int)
 // original call site.
 @Suppress("NOTHING_TO_INLINE")
 @Composable
-inline fun LogCompositions(tag: String, msg: String) {
+inline fun LogCompositions(tag: String) {
     if (BuildConfig.DEBUG) {
         val ref = remember { Ref(0) }
         SideEffect { ref.value++ }
-        Log.d(tag, "Compositions: $msg ${ref.value}")
+        Log.d(TAG, "Compositions: $tag: ${ref.value}")
     }
 }

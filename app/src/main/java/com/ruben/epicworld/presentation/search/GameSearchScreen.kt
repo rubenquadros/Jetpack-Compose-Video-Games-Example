@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
@@ -51,6 +50,7 @@ import com.ruben.epicworld.presentation.commonui.NoResultsView
 import com.ruben.epicworld.presentation.commonui.ScreenOrientation
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.theme.PlayFair
+import com.ruben.epicworld.presentation.utility.LogCompositions
 import com.ruben.epicworld.presentation.utility.shouldPerformSearch
 
 /**
@@ -63,6 +63,7 @@ fun GameSearchScreen(
     navigateBack: () -> Unit,
     navigateToDetails: (Int) -> Unit
 ) {
+    LogCompositions(tag = "GameSearchScreen")
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -84,10 +85,6 @@ fun GameSearchScreen(
 
     ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
 
-    fun onSearch(query: String) {
-        gameSearchViewModel.searchGame(query)
-    }
-
     val lifecycleOwner = LocalLifecycleOwner.current
     val stateFlow = gameSearchViewModel.uiState()
     val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
@@ -98,7 +95,7 @@ fun GameSearchScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         SearchBar(
             keyboardController = keyboardController,
-            onSearch = { query -> onSearch(query) },
+            onSearch = gameSearchViewModel::searchGame,
             navigateBack = navigateBack
         )
 
@@ -115,7 +112,7 @@ fun GameSearchScreen(
                 val results = (state as SearchState.SearchResultState).searchResults
                 SearchResults(
                     results = results,
-                    onSearchResultClicked = { id -> gameSearchViewModel.handleDetailsNavigation(id) }
+                    onSearchResultClicked = gameSearchViewModel::handleDetailsNavigation
                 )
             }
 
@@ -124,7 +121,7 @@ fun GameSearchScreen(
             }
 
             is SearchState.ErrorState -> {
-                GetGamesError { gameSearchViewModel.searchGame() }
+                GetGamesError(buttonClick = gameSearchViewModel::searchGame)
             }
 
             else -> {
@@ -137,13 +134,15 @@ fun GameSearchScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar(
+private fun SearchBar(
     keyboardController: SoftwareKeyboardController?,
     onSearch: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
 
-    val searchState = remember {
+    LogCompositions(tag = "SearchBar")
+
+    var searchState by remember {
         mutableStateOf(TextFieldValue())
     }
 
@@ -159,14 +158,14 @@ fun SearchBar(
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
                 .testTag("Search Bar"),
-            value = searchState.value,
+            value = searchState,
             onValueChange = {
-                if (searchState.value.text.trim() != it.text.trim() && it.text.trim()
+                if (searchState.text.trim() != it.text.trim() && it.text.trim()
                         .shouldPerformSearch()
                 ) {
                     onSearch.invoke(it.text)
                 }
-                searchState.value = it
+                searchState = it
             },
             placeholder = {
                 Text(
@@ -207,9 +206,9 @@ fun SearchBar(
                 }
             },
             trailingIcon = {
-                if (searchState.value.text.isNotEmpty()) {
+                if (searchState.text.isNotEmpty()) {
                     IconButton(onClick = {
-                        searchState.value = TextFieldValue()
+                        searchState = TextFieldValue()
                     }) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_close),
@@ -230,7 +229,9 @@ fun SearchBar(
 }
 
 @Composable
-fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
+private fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
+    LogCompositions(tag = "SearchResults")
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -244,9 +245,10 @@ fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Un
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> Unit) {
+private fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> Unit) {
+    LogCompositions(tag = "SearchItem")
+
     Column(
         modifier = Modifier
             .padding(vertical = 4.dp)
@@ -306,7 +308,7 @@ fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> U
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
-fun SearchBarPreview() {
+private fun SearchBarPreview() {
     val keyboardController = LocalSoftwareKeyboardController.current
     SearchBar(
         keyboardController = keyboardController,
@@ -317,7 +319,7 @@ fun SearchBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SearchResultPreview() {
+private fun SearchResultPreview() {
     SearchItem(
         searchResult = GameResultEntity(123, "Max Payne", "", 4.5),
         onSearchResultClicked = {}

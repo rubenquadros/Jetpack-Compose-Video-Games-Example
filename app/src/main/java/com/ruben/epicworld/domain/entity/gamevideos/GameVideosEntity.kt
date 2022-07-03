@@ -12,5 +12,5 @@ data class GameVideosEntity(
     val count: Int,
     val results: List<VideoResultEntity>
 ) {
-    constructor(): this(0, arrayListOf())
+    constructor(): this(0, emptyList())
 }
