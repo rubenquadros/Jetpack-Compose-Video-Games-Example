@@ -12,7 +12,7 @@ import dagger.hilt.android.components.ViewModelComponent
  **/
 @Module
 @InstallIn(ViewModelComponent::class)
-object HomeModule {
+internal object HomeModule {
 
     @Provides
     fun providesGamesSource(gamesRepository: GamesRepository) = GamesSource(gamesRepository = gamesRepository)

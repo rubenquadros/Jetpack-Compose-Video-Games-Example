@@ -1,11 +1,15 @@
 package com.ruben.epicworld.presentation.videos
 
-import android.content.pm.ActivityInfo
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
 import androidx.compose.material.Slider
 import androidx.compose.material.SliderDefaults
@@ -25,8 +29,9 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.ruben.epicworld.R
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
-import com.ruben.epicworld.presentation.utility.findActivity
 import com.ruben.epicworld.presentation.utility.formatMinSec
+import com.ruben.epicworld.presentation.utility.setLandscape
+import com.ruben.epicworld.presentation.utility.setPortrait
 
 /**
  * Created by Ruben Quadros on 02/07/22
@@ -44,7 +49,8 @@ fun PlayerControls(
     onNext: () -> Unit,
     onReplay: () -> Unit,
     onForward: () -> Unit,
-    onSeekChanged: (newValue: Float) -> Unit
+    onSeekChanged: (newValue: Float) -> Unit,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit
 ) {
 
     val visible = remember(isVisible()) {
@@ -89,7 +95,7 @@ fun PlayerControls(
                 constrain(seek) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, margin = 32.dp)
+                    bottom.linkTo(parent.bottom, margin = if (isFullScreen) 48.dp else 32.dp)
                     width = Dimension.fillToConstraints
                 }
 
@@ -218,10 +224,12 @@ fun PlayerControls(
             IconButton(
                 modifier = Modifier.layoutId("full_screen_toggle"),
                 onClick = {
-                    context.findActivity()?.requestedOrientation = if (isFullScreen.not()) {
-                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    if (isFullScreen.not()) {
+                        context.setLandscape()
                     } else {
-                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        context.setPortrait()
+                    }.also {
+                        onFullScreenToggle.invoke(isFullScreen.not())
                     }
                 }
             ) {
@@ -259,6 +267,7 @@ private fun PreviewPlayerControls() {
         onPauseToggle = {},
         onPrevious = {},
         onReplay = {},
-        onSeekChanged = {}
+        onSeekChanged = {},
+         onFullScreenToggle = {}
     )
 }

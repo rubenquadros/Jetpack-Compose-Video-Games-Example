@@ -3,13 +3,27 @@ package com.ruben.epicworld.presentation.videos
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -55,6 +69,7 @@ import com.ruben.epicworld.presentation.utility.showToast
 @Composable
 fun GameVideosScreen(
     navigateBack: () -> Unit,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
     gameVideosViewModel: GameVideosViewModel = hiltViewModel()
 ) {
     LogCompositions(tag = "GameVideosScreen")
@@ -91,7 +106,7 @@ fun GameVideosScreen(
 
     when (state.screenState) {
         ScreenState.Loading -> {
-            LoadingView(modifier = Modifier.fillMaxSize())
+            LoadingView(modifier = Modifier.fillMaxSize().systemBarsPadding())
         }
         ScreenState.Error -> {
             //navigate back
@@ -104,7 +119,9 @@ fun GameVideosScreen(
                     return
                 }
                 ShowGameVideos(
-                    getGameVideosEntity = { it }
+                    getGameVideosEntity = { it },
+                    onFullScreenToggle = onFullScreenToggle,
+                    navigateBack = navigateBack
                 )
             }
         }
@@ -113,7 +130,9 @@ fun GameVideosScreen(
 
 @Composable
 private fun ShowGameVideos(
-    getGameVideosEntity: () -> GameVideosEntity
+    getGameVideosEntity: () -> GameVideosEntity,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
 ) {
     LogCompositions(tag = "ShowGameVideos")
 
@@ -170,7 +189,9 @@ private fun ShowGameVideos(
 
     GameVideos(
         playerWrapper = PlayerWrapper(exoPlayer),
-        gameVideos = gameVideos
+        gameVideos = gameVideos,
+        onFullScreenToggle = onFullScreenToggle,
+        navigateBack = navigateBack
     )
 }
 
@@ -178,6 +199,8 @@ private fun ShowGameVideos(
 private fun GameVideos(
     playerWrapper: PlayerWrapper,
     gameVideos: GameVideosEntity,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
 ) {
     LogCompositions(tag = "GameVideos")
 
@@ -199,12 +222,15 @@ private fun GameVideos(
                 playerWrapper = playerWrapper,
                 playingIndex = playingIndex,
                 onTrailerChange = { index -> onTrailerChange(index) },
-                gameVideos = gameVideos
+                gameVideos = gameVideos,
+                onFullScreenToggle = onFullScreenToggle,
+                navigateBack = navigateBack
             )
         }
         else -> {
             LandscapeView(
                 playerWrapper = playerWrapper,
+                onFullScreenToggle = onFullScreenToggle
             )
         }
     }
@@ -215,16 +241,20 @@ private fun PortraitView(
     playerWrapper: PlayerWrapper,
     gameVideos: GameVideosEntity,
     playingIndex: Int,
-    onTrailerChange: (Int) -> Unit
+    onTrailerChange: (Int) -> Unit,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
 ) {
     LogCompositions(tag = "PortraitView")
 
-    Column {
+    Column(modifier = Modifier.systemBarsPadding()) {
         PlayerView(
             modifier = Modifier.weight(1f, fill = true),
             playerWrapper = playerWrapper,
             isFullScreen = false,
-            onTrailerChange = onTrailerChange
+            onTrailerChange = onTrailerChange,
+            onFullScreenToggle = onFullScreenToggle,
+            navigateBack = navigateBack
         )
         LazyColumn(
             modifier = Modifier.weight(1f, fill = true),
@@ -241,14 +271,18 @@ private fun PortraitView(
 }
 
 @Composable
-private fun LandscapeView(playerWrapper: PlayerWrapper,) {
+private fun LandscapeView(
+    playerWrapper: PlayerWrapper,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit
+) {
     LogCompositions(tag = "LandscapeView")
 
     Box(modifier = Modifier.fillMaxSize()) {
         PlayerView(
             modifier = Modifier.fillMaxSize(),
             playerWrapper = playerWrapper,
-            isFullScreen = true
+            isFullScreen = true,
+            onFullScreenToggle = onFullScreenToggle
         )
     }
 }
@@ -372,6 +406,8 @@ private fun ShowTrailerPreview() {
 @Composable
 private fun ShowGameVideosPreview() {
     ShowGameVideos(
-        getGameVideosEntity = { GameVideosEntity(3, emptyList()) }
+        getGameVideosEntity = { GameVideosEntity(3, emptyList()) },
+        onFullScreenToggle = {},
+        navigateBack = {}
     )
 }

@@ -1,7 +1,16 @@
 package com.ruben.epicworld.compose
 
 import androidx.paging.PagingData
-import com.ruben.epicworld.domain.entity.gamedetails.*
+import com.ruben.epicworld.domain.entity.gamedetails.DevelopersEntity
+import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
+import com.ruben.epicworld.domain.entity.gamedetails.GenresEntity
+import com.ruben.epicworld.domain.entity.gamedetails.ParentPlatformsEntity
+import com.ruben.epicworld.domain.entity.gamedetails.PlatformEntity
+import com.ruben.epicworld.domain.entity.gamedetails.PlatformsEntity
+import com.ruben.epicworld.domain.entity.gamedetails.PublishersEntity
+import com.ruben.epicworld.domain.entity.gamedetails.RequirementsEntity
+import com.ruben.epicworld.domain.entity.gamedetails.StoreEntity
+import com.ruben.epicworld.domain.entity.gamedetails.StoresEntity
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
 import com.ruben.epicworld.domain.entity.games.GamesEntity

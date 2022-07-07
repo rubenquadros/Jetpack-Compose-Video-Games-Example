@@ -2,7 +2,14 @@ package com.ruben.epicworld.remote.model.response.allgames
 
 import com.google.gson.annotations.SerializedName
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
-import com.ruben.epicworld.remote.model.response.common.*
+import com.ruben.epicworld.remote.model.response.common.AddedByStatus
+import com.ruben.epicworld.remote.model.response.common.EsrbRating
+import com.ruben.epicworld.remote.model.response.common.Genres
+import com.ruben.epicworld.remote.model.response.common.ParentPlatforms
+import com.ruben.epicworld.remote.model.response.common.Platforms
+import com.ruben.epicworld.remote.model.response.common.Ratings
+import com.ruben.epicworld.remote.model.response.common.Stores
+import com.ruben.epicworld.remote.model.response.common.Tags
 
 /**
  * Created by Ruben Quadros on 01/08/21

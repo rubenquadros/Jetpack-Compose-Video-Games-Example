@@ -22,7 +22,9 @@ import com.ruben.epicworld.presentation.videos.GameVideosScreen
  * Created by Ruben Quadros on 05/08/21
  **/
 @Composable
-fun EpicWorldApp() {
+fun EpicWorldApp(
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit
+) {
     val navController = rememberNavController()
     val actions = remember(navController) { Actions(navController) }
     NavHost(navController = navController, startDestination = Home) {
@@ -51,7 +53,8 @@ fun EpicWorldApp() {
             )
         ) {
             GameVideosScreen(
-                navigateBack = actions.navigateBack
+                navigateBack = actions.navigateBack,
+                onFullScreenToggle = onFullScreenToggle
             )
         }
         composable(Search) {

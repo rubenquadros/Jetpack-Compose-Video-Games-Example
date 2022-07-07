@@ -1,16 +1,35 @@
 package com.ruben.epicworld.presentation.details
 
-import android.content.pm.ActivityInfo
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -35,11 +54,11 @@ import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
-import com.ruben.epicworld.presentation.commonui.ScreenOrientation
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.Constants.DESCRIPTION_LINES
 import com.ruben.epicworld.presentation.utility.LogCompositions
+import com.ruben.epicworld.presentation.utility.setPortrait
 import com.ruben.epicworld.presentation.utility.showToast
 
 /**
@@ -65,6 +84,10 @@ fun GameDetailsScreen(
     val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
     val genericError = stringResource(id = R.string.all_generic_error)
 
+    LaunchedEffect(key1 = true) {
+        context.setPortrait()
+    }
+
     LaunchedEffect(gameDetailsViewModel.uiSideEffect()) {
         gameDetailsViewModel.uiSideEffect().collect { uiSideEffect ->
             when (uiSideEffect) {
@@ -79,11 +102,11 @@ fun GameDetailsScreen(
         }
     }
 
-    ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
     when (state.screenState) {
         is ScreenState.Loading -> {
-           LoadingView(modifier = Modifier.fillMaxSize())
+           LoadingView(modifier = Modifier
+               .fillMaxSize()
+               .systemBarsPadding())
         }
         is ScreenState.Error -> {
             navigateBack.invoke()
@@ -91,6 +114,7 @@ fun GameDetailsScreen(
         is ScreenState.Success -> {
             state.gameDetails?.let {
                 GameDetails(
+                    modifier = Modifier.systemBarsPadding(),
                     gameDetails = it,
                     openGameTrailer = openGameTrailer
                 )
@@ -101,6 +125,7 @@ fun GameDetailsScreen(
 
 @Composable
 private fun GameDetails(
+    modifier: Modifier = Modifier,
     gameDetails: GameDetailsEntity,
     openGameTrailer: (Int) -> Unit
 ) {
@@ -108,7 +133,7 @@ private fun GameDetails(
 
     val scrollState = rememberScrollState()
 
-    Column(modifier = Modifier
+    Column(modifier = modifier
         .fillMaxWidth()
         .verticalScroll(scrollState)
         .testTag("GameDetailsParent")) {

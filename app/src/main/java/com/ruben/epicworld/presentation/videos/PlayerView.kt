@@ -2,14 +2,25 @@ package com.ruben.epicworld.presentation.videos
 
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +37,7 @@ import com.ruben.epicworld.domain.entity.gamevideos.PlayerWrapper
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.Constants
 import com.ruben.epicworld.presentation.utility.noRippleClickable
+import com.ruben.epicworld.presentation.utility.setPortrait
 import kotlinx.coroutines.delay
 
 /**
@@ -36,8 +48,21 @@ fun PlayerView(
     modifier: Modifier = Modifier,
     playerWrapper: PlayerWrapper,
     isFullScreen: Boolean,
-    onTrailerChange: ((Int) -> Unit)? = null
+    onTrailerChange: ((Int) -> Unit)? = null,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
+
+    BackHandler {
+        if (isFullScreen) {
+            context.setPortrait()
+            onFullScreenToggle.invoke(false)
+        } else {
+            navigateBack?.invoke()
+        }
+    }
+
     Box(modifier = modifier) {
 
         var shouldShowControls by remember {
@@ -124,7 +149,8 @@ fun PlayerView(
                 isPlaying = isPlaying.not()
             },
             onSeekChanged = { position -> playerWrapper.exoPlayer.seekTo(position.toLong()) },
-            videoTimer = { videoTimer }
+            videoTimer = { videoTimer },
+            onFullScreenToggle = onFullScreenToggle
         )
 
         AnimatedVisibility(
@@ -149,7 +175,7 @@ fun PlayerView(
 }
 
 @Composable
-fun VideoPlayer(
+private fun VideoPlayer(
     modifier: Modifier = Modifier,
     playerWrapper: PlayerWrapper,
     onPlayerClick: () -> Unit
@@ -186,6 +212,7 @@ private fun PreviewPlayerView() {
     PlayerView(
         modifier = Modifier.fillMaxSize(),
         playerWrapper = PlayerWrapper(exoPlayer = ExoPlayer.Builder(context).build()),
-        isFullScreen = false
+        isFullScreen = false,
+        onFullScreenToggle = {}
     )
 }

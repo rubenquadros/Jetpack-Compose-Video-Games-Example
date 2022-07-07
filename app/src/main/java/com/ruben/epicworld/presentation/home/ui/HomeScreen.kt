@@ -1,9 +1,13 @@
 package com.ruben.epicworld.presentation.home.ui
 
-import android.content.pm.ActivityInfo
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,10 +15,15 @@ import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,10 +39,14 @@ import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
-import com.ruben.epicworld.presentation.commonui.*
+import com.ruben.epicworld.presentation.commonui.GetGamesError
+import com.ruben.epicworld.presentation.commonui.HomeAppBar
+import com.ruben.epicworld.presentation.commonui.LoadingItem
+import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.LogCompositions
+import com.ruben.epicworld.presentation.utility.setPortrait
 
 /**
  * Created by Ruben Quadros on 01/08/21
@@ -49,6 +62,11 @@ fun HomeScreen(
     LogCompositions(tag = "HomeScreen")
 
     val scaffoldState = rememberScaffoldState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        context.setPortrait()
+    }
 
     LaunchedEffect(homeViewModel.uiSideEffect()) {
         val messageHost = SnackbarView(this)
@@ -64,17 +82,23 @@ fun HomeScreen(
         }
     }
 
-    ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-
-    Scaffold(topBar = {
-        HomeAppBar(
-            title = stringResource(id = R.string.home_app_bar_title),
-            searchClick = { openSearch.invoke() },
-            filterClick = {  }
-        )
-    },
+    Scaffold(
+        modifier = Modifier.systemBarsPadding(),
+        topBar = {
+            HomeAppBar(
+                title = stringResource(id = R.string.home_app_bar_title),
+                searchClick = { openSearch.invoke() },
+                filterClick = { }
+            )
+        },
         scaffoldState = scaffoldState,
-        content = { paddingValues ->  GameListing(paddingValues = paddingValues, openGameDetails = openGameDetails, homeViewModel = homeViewModel) }
+        content = { paddingValues ->
+            GameListing(
+                paddingValues = paddingValues,
+                openGameDetails = openGameDetails,
+                homeViewModel = homeViewModel
+            )
+        }
     )
 }
 
