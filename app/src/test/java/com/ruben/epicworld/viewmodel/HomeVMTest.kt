@@ -6,7 +6,11 @@ import com.ruben.epicworld.domain.interactor.GamesSource
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.home.ui.HomeState
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest

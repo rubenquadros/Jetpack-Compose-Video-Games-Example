@@ -33,4 +33,10 @@
     <string name="game_videos_now_playing">Now Playing</string>
     <string name="game_search_suggestion">Search here…</string>
     <string name="game_search_no_matches">No matching results</string>
+    <string name="toggle_full_screen">Toggle full screen</string>
+    <string name="play_previous">Play previous</string>
+    <string name="play_next">Play next</string>
+    <string name="toggle_play">Toggle play/pause</string>
+    <string name="rewind_5">Rewind 5 secs</string>
+    <string name="forward_10">Forward 10 secs</string>
 </resources>

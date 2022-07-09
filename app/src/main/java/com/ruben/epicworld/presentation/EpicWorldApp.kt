@@ -1,7 +1,5 @@
 package com.ruben.epicworld.presentation
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavType
@@ -23,10 +21,10 @@ import com.ruben.epicworld.presentation.videos.GameVideosScreen
 /**
  * Created by Ruben Quadros on 05/08/21
  **/
-@ExperimentalAnimationApi
-@ExperimentalFoundationApi
 @Composable
-fun EpicWorldApp() {
+fun EpicWorldApp(
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit
+) {
     val navController = rememberNavController()
     val actions = remember(navController) { Actions(navController) }
     NavHost(navController = navController, startDestination = Home) {
@@ -55,7 +53,8 @@ fun EpicWorldApp() {
             )
         ) {
             GameVideosScreen(
-                navigateBack = actions.navigateBack
+                navigateBack = actions.navigateBack,
+                onFullScreenToggle = onFullScreenToggle
             )
         }
         composable(Search) {

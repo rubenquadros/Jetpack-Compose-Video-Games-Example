@@ -10,6 +10,7 @@ import com.ruben.epicworld.remote.retrofit.RetrofitInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit
  **/
 @Module
 @InstallIn(SingletonComponent::class)
-object RetrofitModule {
+internal object RetrofitModule {
 
     @Provides
     fun providesGson(): Gson {
@@ -36,7 +37,7 @@ object RetrofitModule {
     fun providesRetrofitInterceptor() = RetrofitInterceptor()
 
     @Provides
-    fun providesCache(context: Context): Cache {
+    fun providesCache(@ApplicationContext context: Context): Cache {
         val cacheSize = (10 * 1024 * 1024).toLong() //10 MB
         val httpCacheDirectory = File(context.cacheDir, "http-cache")
         return Cache(httpCacheDirectory, cacheSize)

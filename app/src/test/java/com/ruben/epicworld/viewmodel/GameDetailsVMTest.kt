@@ -10,7 +10,13 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.details.GameDetailsSideEffect
 import com.ruben.epicworld.presentation.details.GameDetailsState
 import com.ruben.epicworld.presentation.details.GameDetailsViewModel
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.confirmVerified
+import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest

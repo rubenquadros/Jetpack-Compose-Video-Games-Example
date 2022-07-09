@@ -3,7 +3,15 @@ package com.ruben.epicworld.presentation.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +21,14 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -22,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
@@ -39,7 +55,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
@@ -49,6 +64,8 @@ import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.commonui.NoResultsView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.theme.PlayFair
+import com.ruben.epicworld.presentation.utility.LogCompositions
+import com.ruben.epicworld.presentation.utility.setPortrait
 import com.ruben.epicworld.presentation.utility.shouldPerformSearch
 
 /**
@@ -61,7 +78,9 @@ fun GameSearchScreen(
     navigateBack: () -> Unit,
     navigateToDetails: (Int) -> Unit
 ) {
+    LogCompositions(tag = "GameSearchScreen")
 
+    val context = LocalContext.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(gameSearchViewModel.uiSideEffect()) {
@@ -75,13 +94,10 @@ fun GameSearchScreen(
     }
 
     DisposableEffect(true) {
+        context.setPortrait()
         onDispose {
             keyboardController?.hide()
         }
-    }
-
-    fun onSearch(query: String) {
-        gameSearchViewModel.searchGame(query)
     }
 
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -91,10 +107,10 @@ fun GameSearchScreen(
     }
     val state by stateFlowLifecycleAware.collectAsState(initial = gameSearchViewModel.createInitialState())
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
         SearchBar(
             keyboardController = keyboardController,
-            onSearch = { query -> onSearch(query) },
+            onSearch = gameSearchViewModel::searchGame,
             navigateBack = navigateBack
         )
 
@@ -111,7 +127,7 @@ fun GameSearchScreen(
                 val results = (state as SearchState.SearchResultState).searchResults
                 SearchResults(
                     results = results,
-                    onSearchResultClicked = { id -> gameSearchViewModel.handleDetailsNavigation(id) }
+                    onSearchResultClicked = gameSearchViewModel::handleDetailsNavigation
                 )
             }
 
@@ -120,7 +136,7 @@ fun GameSearchScreen(
             }
 
             is SearchState.ErrorState -> {
-                GetGamesError { gameSearchViewModel.searchGame() }
+                GetGamesError(buttonClick = gameSearchViewModel::searchGame)
             }
 
             else -> {
@@ -133,13 +149,15 @@ fun GameSearchScreen(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar(
+private fun SearchBar(
     keyboardController: SoftwareKeyboardController?,
     onSearch: (String) -> Unit,
     navigateBack: () -> Unit
 ) {
 
-    val searchState = remember {
+    LogCompositions(tag = "SearchBar")
+
+    var searchState by remember {
         mutableStateOf(TextFieldValue())
     }
 
@@ -155,14 +173,14 @@ fun SearchBar(
                 .fillMaxWidth()
                 .focusRequester(focusRequester)
                 .testTag("Search Bar"),
-            value = searchState.value,
+            value = searchState,
             onValueChange = {
-                if (searchState.value.text.trim() != it.text.trim() && it.text.trim()
+                if (searchState.text.trim() != it.text.trim() && it.text.trim()
                         .shouldPerformSearch()
                 ) {
                     onSearch.invoke(it.text)
                 }
-                searchState.value = it
+                searchState = it
             },
             placeholder = {
                 Text(
@@ -203,9 +221,9 @@ fun SearchBar(
                 }
             },
             trailingIcon = {
-                if (searchState.value.text.isNotEmpty()) {
+                if (searchState.text.isNotEmpty()) {
                     IconButton(onClick = {
-                        searchState.value = TextFieldValue()
+                        searchState = TextFieldValue()
                     }) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_close),
@@ -226,7 +244,9 @@ fun SearchBar(
 }
 
 @Composable
-fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
+private fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Unit) {
+    LogCompositions(tag = "SearchResults")
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -240,9 +260,10 @@ fun SearchResults(results: GameResultsEntity, onSearchResultClicked: (Int) -> Un
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> Unit) {
+private fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> Unit) {
+    LogCompositions(tag = "SearchItem")
+
     Column(
         modifier = Modifier
             .padding(vertical = 4.dp)
@@ -302,7 +323,7 @@ fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (Int) -> U
 @OptIn(ExperimentalComposeUiApi::class)
 @Preview
 @Composable
-fun SearchBarPreview() {
+private fun SearchBarPreview() {
     val keyboardController = LocalSoftwareKeyboardController.current
     SearchBar(
         keyboardController = keyboardController,
@@ -313,7 +334,7 @@ fun SearchBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SearchResultPreview() {
+private fun SearchResultPreview() {
     SearchItem(
         searchResult = GameResultEntity(123, "Max Payne", "", 4.5),
         onSearchResultClicked = {}

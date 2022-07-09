@@ -9,7 +9,11 @@ import com.ruben.epicworld.domain.repository.GamesRepository
 import com.ruben.epicworld.presentation.search.GameSearchViewModel
 import com.ruben.epicworld.presentation.search.SearchSideEffect
 import com.ruben.epicworld.presentation.search.SearchState
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
+import io.mockk.coEvery
+import io.mockk.mockk
+import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher

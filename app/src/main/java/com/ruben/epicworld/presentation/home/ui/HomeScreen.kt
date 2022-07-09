@@ -1,9 +1,13 @@
 package com.ruben.epicworld.presentation.home.ui
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,10 +15,15 @@ import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -26,7 +35,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
@@ -37,12 +45,13 @@ import com.ruben.epicworld.presentation.commonui.LoadingItem
 import com.ruben.epicworld.presentation.commonui.SnackbarView
 import com.ruben.epicworld.presentation.home.HomeViewModel
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
+import com.ruben.epicworld.presentation.utility.LogCompositions
+import com.ruben.epicworld.presentation.utility.setPortrait
 
 /**
  * Created by Ruben Quadros on 01/08/21
  **/
 
-@ExperimentalFoundationApi
 @Composable
 fun HomeScreen(
     openSearch: () -> Unit,
@@ -50,7 +59,14 @@ fun HomeScreen(
     openGameDetails: (Int) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
+    LogCompositions(tag = "HomeScreen")
+
     val scaffoldState = rememberScaffoldState()
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = true) {
+        context.setPortrait()
+    }
 
     LaunchedEffect(homeViewModel.uiSideEffect()) {
         val messageHost = SnackbarView(this)
@@ -66,21 +82,30 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(topBar = {
-        HomeAppBar(
-            title = stringResource(id = R.string.home_app_bar_title),
-            searchClick = { openSearch.invoke() },
-            filterClick = {  }
-        )
-    },
+    Scaffold(
+        modifier = Modifier.systemBarsPadding(),
+        topBar = {
+            HomeAppBar(
+                title = stringResource(id = R.string.home_app_bar_title),
+                searchClick = { openSearch.invoke() },
+                filterClick = { }
+            )
+        },
         scaffoldState = scaffoldState,
-        content = { paddingValues ->  GameListing(paddingValues = paddingValues, openGameDetails = openGameDetails, homeViewModel = homeViewModel) }
+        content = { paddingValues ->
+            GameListing(
+                paddingValues = paddingValues,
+                openGameDetails = openGameDetails,
+                homeViewModel = homeViewModel
+            )
+        }
     )
 }
 
-@ExperimentalFoundationApi
 @Composable
-fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+private fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, homeViewModel: HomeViewModel) {
+    LogCompositions(tag = "GameListing")
+
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
     val action: String = stringResource(id = R.string.all_ok)
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -131,9 +156,10 @@ fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> Unit, ho
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
+private fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
+    LogCompositions(tag = "GameItem")
+
     Card(
         elevation = 20.dp,
         backgroundColor = EpicWorldTheme.colors.background,
@@ -211,7 +237,7 @@ fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun GameItemPreview() {
+private fun GameItemPreview() {
     GameItem(
         game = GameResultEntity(123, "Max Payne", "", 4.5),
         gameClick = {  }

@@ -1,6 +1,5 @@
 package com.ruben.epicworld.injection
 
-import android.content.Context
 import com.ruben.epicworld.data.DataSource
 import com.ruben.epicworld.data.DataSourceImpl
 import com.ruben.epicworld.remote.rest.RestApi
@@ -9,7 +8,6 @@ import com.ruben.epicworld.remote.retrofit.RetrofitApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 
@@ -18,10 +16,7 @@ import kotlinx.coroutines.Dispatchers
  **/
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Provides
-    fun providesContext(@ApplicationContext context: Context) = context
+internal object AppModule {
 
     @Provides
     fun providesRestApi(retrofitApi: RetrofitApi): RestApi = RestApiImpl(retrofitApi = retrofitApi)

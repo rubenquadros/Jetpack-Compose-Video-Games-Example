@@ -1,27 +1,36 @@
 package com.ruben.epicworld.presentation.videos
 
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
@@ -30,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,17 +46,21 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.flowWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.C
+import com.google.android.exoplayer2.ExoPlayer
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
+import com.ruben.epicworld.domain.entity.gamevideos.PlayerWrapper
 import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
+import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_BACK_INCREMENT
+import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_FORWARD_INCREMENT
+import com.ruben.epicworld.presentation.utility.LogCompositions
 import com.ruben.epicworld.presentation.utility.showToast
+import com.ruben.epicworld.presentation.utility.toMediaItems
 
 /**
  * Created by Ruben Quadros on 09/08/21
@@ -56,8 +68,11 @@ import com.ruben.epicworld.presentation.utility.showToast
 @Composable
 fun GameVideosScreen(
     navigateBack: () -> Unit,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
     gameVideosViewModel: GameVideosViewModel = hiltViewModel()
 ) {
+    LogCompositions(tag = "GameVideosScreen")
+
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val stateFlow = gameVideosViewModel.uiState()
@@ -73,15 +88,15 @@ fun GameVideosScreen(
     LaunchedEffect(gameVideosViewModel.uiSideEffect()) {
         gameVideosViewModel.uiSideEffect().collect { uiSideEffect ->
             when (uiSideEffect) {
-                is GameVideosSideEffect.ShowGameIdErrorToast -> {
+                GameVideosSideEffect.ShowGameIdErrorToast -> {
                     context.showToast(gameIdError)
                     navigateBack.invoke()
                 }
-                is GameVideosSideEffect.GameVideosError -> {
+                GameVideosSideEffect.GameVideosError -> {
                     context.showToast(gameVideosError)
                     navigateBack.invoke()
                 }
-                is GameVideosSideEffect.ShowNoGameVideosToast -> {
+                GameVideosSideEffect.ShowNoGameVideosToast -> {
                     context.showToast(noGameVideos)
                 }
             }
@@ -90,7 +105,7 @@ fun GameVideosScreen(
 
     when (state.screenState) {
         ScreenState.Loading -> {
-            LoadingView(modifier = Modifier.fillMaxSize())
+            LoadingView(modifier = Modifier.fillMaxSize().systemBarsPadding())
         }
         ScreenState.Error -> {
             //navigate back
@@ -102,55 +117,183 @@ fun GameVideosScreen(
                     navigateBack.invoke()
                     return
                 }
-                ShowGameVideos(it)
+                ShowGameVideos(
+                    getGameVideosEntity = { it },
+                    onFullScreenToggle = onFullScreenToggle,
+                    navigateBack = navigateBack
+                )
             }
         }
     }
 }
 
 @Composable
-fun ShowGameVideos(gameVideos: GameVideosEntity) {
-    val playingIndex = remember {
+private fun ShowGameVideos(
+    getGameVideosEntity: () -> GameVideosEntity,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
+) {
+    LogCompositions(tag = "ShowGameVideos")
+
+    val context = LocalContext.current
+
+    val gameVideos = remember(getGameVideosEntity()) {
+        getGameVideosEntity()
+    }
+
+    val mediaItems = gameVideos.results.toMediaItems()
+
+    val exoPlayer = remember {
+        ExoPlayer.Builder(context)
+            .setSeekBackIncrementMs(PLAYER_SEEK_BACK_INCREMENT)
+            .setSeekForwardIncrementMs(PLAYER_SEEK_FORWARD_INCREMENT)
+            .build().apply {
+                this.setMediaItems(mediaItems)
+                this.prepare()
+                this.playWhenReady = true
+            }
+    }
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+
+    DisposableEffect(key1 = Unit) {
+        val observer = object : DefaultLifecycleObserver {
+            override fun onStart(owner: LifecycleOwner) {
+                super.onStart(owner)
+                if (exoPlayer.isPlaying.not()) {
+                    exoPlayer.play()
+                }
+            }
+
+            override fun onStop(owner: LifecycleOwner) {
+                exoPlayer.pause()
+                super.onStop(owner)
+            }
+        }
+
+        lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycle.removeObserver(observer)
+            exoPlayer.release()
+        }
+    }
+
+    GameVideos(
+        playerWrapper = PlayerWrapper(exoPlayer),
+        gameVideos = gameVideos,
+        onFullScreenToggle = onFullScreenToggle,
+        navigateBack = navigateBack
+    )
+}
+
+@Composable
+private fun GameVideos(
+    playerWrapper: PlayerWrapper,
+    gameVideos: GameVideosEntity,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
+) {
+    LogCompositions(tag = "GameVideos")
+
+    val configuration = LocalConfiguration.current
+
+    var playingIndex by remember {
         mutableStateOf(0)
     }
 
     fun onTrailerChange(index: Int) {
-        playingIndex.value = index
+        playingIndex = index
+        playerWrapper.exoPlayer.seekTo(playingIndex, C.TIME_UNSET)
+        playerWrapper.exoPlayer.playWhenReady = true
     }
 
-    Column {
-        VideoPlayer(
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_PORTRAIT -> {
+            PortraitView(
+                playerWrapper = playerWrapper,
+                playingIndex = playingIndex,
+                onTrailerChange = { index -> onTrailerChange(index) },
+                gameVideos = gameVideos,
+                onFullScreenToggle = onFullScreenToggle,
+                navigateBack = navigateBack
+            )
+        }
+        else -> {
+            LandscapeView(
+                playerWrapper = playerWrapper,
+                onFullScreenToggle = onFullScreenToggle
+            )
+        }
+    }
+}
+
+@Composable
+private fun PortraitView(
+    playerWrapper: PlayerWrapper,
+    gameVideos: GameVideosEntity,
+    playingIndex: Int,
+    onTrailerChange: (Int) -> Unit,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit,
+    navigateBack: () -> Unit
+) {
+    LogCompositions(tag = "PortraitView")
+
+    Column(modifier = Modifier.systemBarsPadding()) {
+        PlayerView(
             modifier = Modifier.weight(1f, fill = true),
-            gameVideos = gameVideos,
-            playingIndex = playingIndex,
-            onTrailerChange = { newIndex -> onTrailerChange(newIndex) }
+            playerWrapper = playerWrapper,
+            isFullScreen = false,
+            onTrailerChange = onTrailerChange,
+            onFullScreenToggle = onFullScreenToggle,
+            navigateBack = navigateBack
         )
         LazyColumn(
             modifier = Modifier.weight(1f, fill = true),
             content = {
-            itemsIndexed(gameVideos.results) { index, trailer ->
-                ShowTrailers(
-                    index = index,
-                    trailer = trailer,
-                    playingIndex = playingIndex,
-                    onTrailerClicked = { newIndex -> onTrailerChange(newIndex) })
-            }
-        })
+                itemsIndexed(gameVideos.results) { index, trailer ->
+                    ShowTrailers(
+                        index = index,
+                        trailer = trailer,
+                        playingIndex = playingIndex,
+                        onTrailerClicked = { newIndex -> onTrailerChange(newIndex) })
+                }
+            })
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun ShowTrailers(
+private fun LandscapeView(
+    playerWrapper: PlayerWrapper,
+    onFullScreenToggle: (isFullScreen: Boolean) -> Unit
+) {
+    LogCompositions(tag = "LandscapeView")
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        PlayerView(
+            modifier = Modifier.fillMaxSize(),
+            playerWrapper = playerWrapper,
+            isFullScreen = true,
+            onFullScreenToggle = onFullScreenToggle
+        )
+    }
+}
+
+@Composable
+private fun ShowTrailers(
     index: Int,
     trailer: VideoResultEntity,
-    playingIndex: State<Int>,
+    playingIndex: Int,
     onTrailerClicked: (Int) -> Unit
 ) {
-    val currentlyPlaying = remember {
+    LogCompositions(tag = "ShowTrailers")
+
+    var currentlyPlaying by remember {
         mutableStateOf(false)
     }
-    currentlyPlaying.value = index == playingIndex.value
+
+    currentlyPlaying = index == playingIndex
+
     ConstraintLayout(modifier = Modifier
         .testTag("TrailerParent")
         .padding(8.dp)
@@ -177,7 +320,7 @@ fun ShowTrailers(
                     bottom.linkTo(parent.bottom)
                 }
         )
-        if (currentlyPlaying.value) {
+        if (currentlyPlaying) {
             Image(
                 contentScale = ContentScale.Crop,
                 colorFilter = if (trailer.preview.isEmpty()) ColorFilter.tint(EpicWorldTheme.colors.onBackground) else ColorFilter.tint(
@@ -199,23 +342,7 @@ fun ShowTrailers(
                         bottom.linkTo(thumbnail.bottom)
                     }
             )
-        }
-        Text(
-            text = trailer.name,
-            modifier = Modifier
-                .constrainAs(title) {
-                    top.linkTo(thumbnail.top, margin = 8.dp)
-                    start.linkTo(thumbnail.end, margin = 8.dp)
-                    end.linkTo(parent.end, margin = 8.dp)
-                    width = Dimension.preferredWrapContent
-                    height = Dimension.wrapContent
-            },
-            color = EpicWorldTheme.colors.background,
-            textAlign = TextAlign.Center,
-            softWrap = true,
-            style = EpicWorldTheme.typography.subTitle1
-        )
-        if (currentlyPlaying.value) {
+
             Text(
                 text = stringResource(id = R.string.game_videos_now_playing),
                 color = EpicWorldTheme.colors.primary,
@@ -231,139 +358,48 @@ fun ShowTrailers(
                 }
             )
         }
-        TrailerDivider()
-    }
-}
-
-@Composable
-fun TrailerDivider() {
-    Divider(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .testTag("Divider"),
-        color = EpicWorldTheme.colors.surface
-    )
-}
-
-@Composable
-fun VideoPlayer(
-    gameVideos: GameVideosEntity,
-    playingIndex: State<Int>,
-    onTrailerChange: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    var visible by remember {
-        mutableStateOf(true)
-    }
-    var videoTitle by remember {
-        mutableStateOf(gameVideos.results[playingIndex.value].name)
-    }
-    val mediaItems = arrayListOf<MediaItem>()
-    gameVideos.results.forEach {
-        mediaItems.add(
-            MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString()).setTag(it)
-                .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
-                .build()
+        Text(
+            text = trailer.name,
+            modifier = Modifier
+                .constrainAs(title) {
+                    top.linkTo(thumbnail.top, margin = 8.dp)
+                    start.linkTo(thumbnail.end, margin = 8.dp)
+                    end.linkTo(parent.end, margin = 8.dp)
+                    width = Dimension.preferredWrapContent
+                    height = Dimension.wrapContent
+                },
+            color = EpicWorldTheme.colors.background,
+            textAlign = TextAlign.Center,
+            softWrap = true,
+            style = EpicWorldTheme.typography.subTitle1
         )
-    }
-    val exoPlayer = remember {
-        ExoPlayer.Builder(context).build().apply {
-            this.setMediaItems(mediaItems)
-            this.prepare()
-            this.addListener(object : Player.Listener {
-                override fun onEvents(player: Player, events: Player.Events) {
-                    super.onEvents(player, events)
-                    if (player.contentPosition >= 200) visible = false
-                }
 
-                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                    super.onMediaItemTransition(mediaItem, reason)
-                    onTrailerChange(this@apply.currentPeriodIndex)
-                    visible = true
-                    videoTitle = mediaItem?.mediaMetadata?.displayTitle.toString()
-                }
-            })
-        }
-    }
-
-    exoPlayer.seekTo(playingIndex.value, C.TIME_UNSET)
-    exoPlayer.playWhenReady = true
-
-    LocalLifecycleOwner.current.lifecycle.addObserver(object : DefaultLifecycleObserver {
-
-        override fun onStart(owner: LifecycleOwner) {
-            super.onStart(owner)
-            if (exoPlayer.isPlaying.not()) {
-                exoPlayer.play()
-            }
-        }
-
-        override fun onStop(owner: LifecycleOwner) {
-            exoPlayer.pause()
-            super.onStop(owner)
-        }
-    })
-
-    ConstraintLayout(modifier = modifier.background(EpicWorldTheme.colors.background)) {
-        val (title, videoPlayer) = createRefs()
-        AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(initialAlpha = 0.4f),
-            exit = fadeOut(animationSpec = tween(durationMillis = 250)),
-            modifier = Modifier.constrainAs(title) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        ) {
-            Text(
-                text = videoTitle,
-                style = EpicWorldTheme.typography.subTitle2,
-                color = EpicWorldTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            )
-        }
-        DisposableEffect(
-            AndroidView(
-                modifier = modifier
-                    .testTag("VideoPlayer")
-                    .constrainAs(videoPlayer) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(parent.bottom)
-                    },
-                factory = {
-                    StyledPlayerView(context).apply {
-                        player = exoPlayer
-                        layoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                    }
-                })
-        ) {
-            onDispose {
-                exoPlayer.release()
-            }
-        }
+        Divider(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .testTag("Divider"),
+            color = EpicWorldTheme.colors.surface
+        )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ShowTrailerPreview() {
+private fun ShowTrailerPreview() {
     ShowTrailers(
         index = 0,
         trailer = VideoResultEntity(1, "", "GTA Online: DeadLine GTA Online: DeadLine", ""),
-        playingIndex = remember { mutableStateOf(0) },
+        playingIndex = 0,
         onTrailerClicked = { }
     )
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ShowGameVideosPreview() {
-    ShowGameVideos(gameVideos = GameVideosEntity(3, arrayListOf()))
+private fun ShowGameVideosPreview() {
+    ShowGameVideos(
+        getGameVideosEntity = { GameVideosEntity(3, emptyList()) },
+        onFullScreenToggle = {},
+        navigateBack = {}
+    )
 }

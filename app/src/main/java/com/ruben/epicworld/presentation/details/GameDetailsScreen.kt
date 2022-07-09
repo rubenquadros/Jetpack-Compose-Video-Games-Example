@@ -1,15 +1,35 @@
 package com.ruben.epicworld.presentation.details
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.Update
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -28,7 +48,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
-import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
@@ -37,6 +56,9 @@ import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.ApplicationUtility
+import com.ruben.epicworld.presentation.utility.Constants.DESCRIPTION_LINES
+import com.ruben.epicworld.presentation.utility.LogCompositions
+import com.ruben.epicworld.presentation.utility.setPortrait
 import com.ruben.epicworld.presentation.utility.showToast
 
 /**
@@ -49,6 +71,8 @@ fun GameDetailsScreen(
     gameDetailsViewModel: GameDetailsViewModel = hiltViewModel()
 ) {
 
+    LogCompositions(tag = "GameDetailsScreen")
+
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val stateFlow = gameDetailsViewModel.uiState()
@@ -59,6 +83,10 @@ fun GameDetailsScreen(
 
     val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
     val genericError = stringResource(id = R.string.all_generic_error)
+
+    LaunchedEffect(key1 = true) {
+        context.setPortrait()
+    }
 
     LaunchedEffect(gameDetailsViewModel.uiSideEffect()) {
         gameDetailsViewModel.uiSideEffect().collect { uiSideEffect ->
@@ -74,10 +102,11 @@ fun GameDetailsScreen(
         }
     }
 
-
     when (state.screenState) {
         is ScreenState.Loading -> {
-           LoadingView(modifier = Modifier.fillMaxSize())
+           LoadingView(modifier = Modifier
+               .fillMaxSize()
+               .systemBarsPadding())
         }
         is ScreenState.Error -> {
             navigateBack.invoke()
@@ -85,6 +114,7 @@ fun GameDetailsScreen(
         is ScreenState.Success -> {
             state.gameDetails?.let {
                 GameDetails(
+                    modifier = Modifier.systemBarsPadding(),
                     gameDetails = it,
                     openGameTrailer = openGameTrailer
                 )
@@ -93,20 +123,17 @@ fun GameDetailsScreen(
     }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
-fun GameDetails(
+private fun GameDetails(
+    modifier: Modifier = Modifier,
     gameDetails: GameDetailsEntity,
     openGameTrailer: (Int) -> Unit
 ) {
+    LogCompositions(tag = "GameDetails")
+
     val scrollState = rememberScrollState()
-    val shouldShowMore = remember {
-        mutableStateOf(DescriptionStatus.DEFAULT)
-    }
-    val maxLines = remember {
-        mutableStateOf(4)
-    }
-    Column(modifier = Modifier
+
+    Column(modifier = modifier
         .fillMaxWidth()
         .verticalScroll(scrollState)
         .testTag("GameDetailsParent")) {
@@ -226,52 +253,7 @@ fun GameDetails(
             style = EpicWorldTheme.typography.subTitle2,
             color = EpicWorldTheme.colors.background
         )
-        Text(
-            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = gameDetails.description,
-            style = EpicWorldTheme.typography.body2,
-            color = EpicWorldTheme.colors.background,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = maxLines.value,
-            onTextLayout = {
-                if (it.lineCount == 4 && it.isLineEllipsized(3)) {
-                    shouldShowMore.value = DescriptionStatus.SHOW_MORE
-                } else if(it.lineCount > 4) {
-                    shouldShowMore.value = DescriptionStatus.SHOW_LESS
-                }
-            }
-        )
-        when (shouldShowMore.value) {
-            DescriptionStatus.SHOW_MORE -> {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            maxLines.value = Int.MAX_VALUE
-                        },
-                    text = stringResource(id = R.string.game_details_about_show_more),
-                    style = EpicWorldTheme.typography.body2,
-                    textDecoration = TextDecoration.Underline,
-                    color = EpicWorldTheme.colors.primary
-                )
-            }
-            DescriptionStatus.SHOW_LESS -> {
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .clickable {
-                            maxLines.value = 4
-                        },
-                    text = stringResource(id = R.string.game_details_about_show_less),
-                    style = EpicWorldTheme.typography.body2,
-                    textDecoration = TextDecoration.Underline,
-                    color = EpicWorldTheme.colors.primary
-                )
-            }
-            else -> {
-                //do nothing
-            }
-        }
+        ExpandableDescription(description = gameDetails.description)
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_platforms),
@@ -324,7 +306,70 @@ fun GameDetails(
 }
 
 @Composable
-fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
+private fun ExpandableDescription(modifier: Modifier = Modifier, description: String) {
+    LogCompositions(tag = "ExpandableDescription")
+
+    var shouldShowMore by remember {
+        mutableStateOf(DescriptionStatus.DEFAULT)
+    }
+    var maxLines by remember {
+        mutableStateOf(4)
+    }
+
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
+            text = description,
+            style = EpicWorldTheme.typography.body2,
+            color = EpicWorldTheme.colors.background,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = maxLines,
+            onTextLayout = {
+                if (it.lineCount == DESCRIPTION_LINES && it.isLineEllipsized(DESCRIPTION_LINES-1)) {
+                    shouldShowMore = DescriptionStatus.SHOW_MORE
+                } else if(it.lineCount > DESCRIPTION_LINES) {
+                    shouldShowMore = DescriptionStatus.SHOW_LESS
+                }
+            }
+        )
+        when (shouldShowMore) {
+            DescriptionStatus.SHOW_MORE -> {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            maxLines = Int.MAX_VALUE
+                        },
+                    text = stringResource(id = R.string.game_details_about_show_more),
+                    style = EpicWorldTheme.typography.body2,
+                    textDecoration = TextDecoration.Underline,
+                    color = EpicWorldTheme.colors.primary
+                )
+            }
+            DescriptionStatus.SHOW_LESS -> {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            maxLines = DESCRIPTION_LINES
+                        },
+                    text = stringResource(id = R.string.game_details_about_show_less),
+                    style = EpicWorldTheme.typography.body2,
+                    textDecoration = TextDecoration.Underline,
+                    color = EpicWorldTheme.colors.primary
+                )
+            }
+            else -> {
+                //do nothing
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
+    LogCompositions(tag = "PlayTrailer")
+
     Box(modifier = modifier
         .offset(0.dp, 25.dp)) {
         IconButton(onClick = openGameTrailer) {
@@ -348,10 +393,10 @@ fun PlayTrailer(modifier: Modifier = Modifier, openGameTrailer: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-fun GameDetailsPreview() {
+private fun GameDetailsPreview() {
     GameDetails(
         gameDetails = GameDetailsEntity(1, "Max Payne", "The third game in a series, it holds nothing back from the player. Open world adventures of the renowned monster slayer Geralt of Rivia are now even on a larger scale. Following the source material more accurately, this time Geralt is trying to find the child of the prophecy, Ciri while making a quick coin from various contracts on the side", 4.5, "",
-            "", 8, arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf(), arrayListOf()),
+            "", 8, emptyList(), emptyList(), emptyList(), emptyList(), emptyList(), emptyList()),
         openGameTrailer = {  }
     )
 }
