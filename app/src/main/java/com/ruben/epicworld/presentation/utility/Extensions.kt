@@ -10,6 +10,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.MediaMetadata
+import com.ruben.epicworld.domain.entity.gamevideos.VideoResultEntity
 import java.util.concurrent.TimeUnit
 
 /**
@@ -52,5 +55,13 @@ fun Long.formatMinSec(): String {
                 TimeUnit.MILLISECONDS.toMinutes(this)
             )
         )
+    }
+}
+
+fun List<VideoResultEntity>.toMediaItems(): List<MediaItem> {
+    return this.map {
+        MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString()).setTag(it)
+            .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
+            .build()
     }
 }

@@ -49,8 +49,6 @@ import androidx.lifecycle.flowWithLifecycle
 import coil.compose.rememberImagePainter
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.MediaMetadata
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamevideos.GameVideosEntity
 import com.ruben.epicworld.domain.entity.gamevideos.PlayerWrapper
@@ -62,6 +60,7 @@ import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_BACK_INCRE
 import com.ruben.epicworld.presentation.utility.Constants.PLAYER_SEEK_FORWARD_INCREMENT
 import com.ruben.epicworld.presentation.utility.LogCompositions
 import com.ruben.epicworld.presentation.utility.showToast
+import com.ruben.epicworld.presentation.utility.toMediaItems
 
 /**
  * Created by Ruben Quadros on 09/08/21
@@ -142,14 +141,7 @@ private fun ShowGameVideos(
         getGameVideosEntity()
     }
 
-    val mediaItems = arrayListOf<MediaItem>()
-    gameVideos.results.forEach {
-        mediaItems.add(
-            MediaItem.Builder().setUri(it.video).setMediaId(it.id.toString()).setTag(it)
-                .setMediaMetadata(MediaMetadata.Builder().setDisplayTitle(it.name).build())
-                .build()
-        )
-    }
+    val mediaItems = gameVideos.results.toMediaItems()
 
     val exoPlayer = remember {
         ExoPlayer.Builder(context)

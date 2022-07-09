@@ -150,6 +150,7 @@ private fun VideoPlayer(
     Box(
         modifier = modifier
             .background(EpicWorldTheme.colors.background)
+            .testTag("VideoPlayerParent")
             .noRippleClickable {
                 onPlayerClick.invoke()
             }

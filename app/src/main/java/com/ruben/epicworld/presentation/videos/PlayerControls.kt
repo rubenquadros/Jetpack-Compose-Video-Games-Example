@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -88,6 +89,7 @@ fun PlayerControls(
         exit = fadeOut()
     ) {
         ConstraintLayout(
+            modifier = Modifier.testTag("PlayerControlsParent"),
             constraintSet = ConstraintSet {
                 val videoTitle = createRefFor("video_title")
                 val centerControls = createRefFor("center_controls")
@@ -142,7 +144,9 @@ fun PlayerControls(
             }
 
             Row(
-                modifier = Modifier.layoutId("center_controls"),
+                modifier = Modifier
+                    .layoutId("center_controls")
+                    .testTag("VideoControlParent"),
                 horizontalArrangement = if (isFullScreen) {
                     Arrangement.Center
                 } else {
@@ -220,6 +224,7 @@ fun PlayerControls(
             Box(
                 modifier = Modifier
                     .layoutId("seek")
+                    .testTag("VideoSeek")
                     .animateEnterExit(
                         enter = slideInVertically(
                             initialOffsetY = { fullHeight: Int -> fullHeight }
@@ -246,6 +251,7 @@ fun PlayerControls(
             Text(
                 modifier = Modifier
                     .layoutId("video_title")
+                    .testTag("VideoTitle")
                     .animateEnterExit(
                         enter = slideInVertically(
                             initialOffsetY = { fullHeight: Int -> -fullHeight }
@@ -260,6 +266,7 @@ fun PlayerControls(
             Text(
                 modifier = Modifier
                     .layoutId("timing")
+                    .testTag("VideoTime")
                     .animateEnterExit(
                         enter = slideInVertically(
                             initialOffsetY = { fullHeight: Int -> fullHeight }
@@ -276,6 +283,7 @@ fun PlayerControls(
             IconButton(
                 modifier = Modifier
                     .layoutId("full_screen_toggle")
+                    .testTag("FullScreenToggleButton")
                     .animateEnterExit(
                         enter = slideInVertically(
                             initialOffsetY = { fullHeight: Int -> fullHeight }
