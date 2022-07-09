@@ -1,8 +1,12 @@
 package com.ruben.epicworld.presentation.videos
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,12 +40,14 @@ import com.ruben.epicworld.presentation.utility.setPortrait
 /**
  * Created by Ruben Quadros on 02/07/22
  **/
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun PlayerControls(
     modifier: Modifier = Modifier,
     isVisible: () -> Boolean,
     isPlaying: () -> Boolean,
     videoTimer: () -> Long,
+    getTitle: () -> String,
     totalDuration: () -> Long,
     isFullScreen: Boolean,
     onPauseToggle: () -> Unit,
@@ -69,6 +75,10 @@ fun PlayerControls(
         videoTimer()
     }
 
+    val title = remember(getTitle()) {
+        getTitle()
+    }
+
     val context = LocalContext.current
 
     AnimatedVisibility(
@@ -79,10 +89,18 @@ fun PlayerControls(
     ) {
         ConstraintLayout(
             constraintSet = ConstraintSet {
+                val videoTitle = createRefFor("video_title")
                 val centerControls = createRefFor("center_controls")
                 val seek = createRefFor("seek")
                 val timing = createRefFor("timing")
                 val fullScreenToggle = createRefFor("full_screen_toggle")
+
+                constrain(videoTitle) {
+                    top.linkTo(parent.top, margin = 16.dp)
+                    start.linkTo(parent.start, margin = 16.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                    width = Dimension.fillToConstraints
+                }
 
                 constrain(centerControls) {
                     top.linkTo(parent.top)
@@ -199,7 +217,18 @@ fun PlayerControls(
                 }
             }
 
-            Box(modifier = Modifier.layoutId("seek")) {
+            Box(
+                modifier = Modifier
+                    .layoutId("seek")
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight: Int -> fullHeight }
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { fullHeight: Int -> fullHeight }
+                        )
+                    )
+            ) {
                 Slider(
                     modifier = Modifier.padding(vertical = 4.dp),
                     value = timer.toFloat(),
@@ -215,14 +244,46 @@ fun PlayerControls(
             }
 
             Text(
-                modifier = Modifier.layoutId("timing"),
+                modifier = Modifier
+                    .layoutId("video_title")
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight: Int -> -fullHeight }
+                        ),
+                        exit = shrinkVertically()
+                    ),
+                text = title,
+                style = EpicWorldTheme.typography.subTitle2,
+                color = EpicWorldTheme.colors.onBackground
+            )
+
+            Text(
+                modifier = Modifier
+                    .layoutId("timing")
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight: Int -> fullHeight }
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { fullHeight: Int -> fullHeight }
+                        )
+                    ),
                 text = duration.formatMinSec(),
                 color = EpicWorldTheme.colors.onBackground,
                 style = EpicWorldTheme.typography.subTitle2
             )
 
             IconButton(
-                modifier = Modifier.layoutId("full_screen_toggle"),
+                modifier = Modifier
+                    .layoutId("full_screen_toggle")
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight: Int -> fullHeight }
+                        ),
+                        exit = slideOutVertically(
+                            targetOffsetY = { fullHeight: Int -> fullHeight }
+                        )
+                    ),
                 onClick = {
                     if (isFullScreen.not()) {
                         context.setLandscape()
@@ -268,6 +329,7 @@ private fun PreviewPlayerControls() {
         onPrevious = {},
         onReplay = {},
         onSeekChanged = {},
-         onFullScreenToggle = {}
+        onFullScreenToggle = {},
+        getTitle = { "" }
     )
 }

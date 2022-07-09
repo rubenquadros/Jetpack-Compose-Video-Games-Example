@@ -3,17 +3,9 @@ package com.ruben.epicworld.presentation.videos
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -21,14 +13,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.zIndex
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -73,10 +62,6 @@ fun PlayerView(
             mutableStateOf(true)
         }
 
-        var isVisible by remember {
-            mutableStateOf(true)
-        }
-
         var title by remember {
             mutableStateOf(playerWrapper.exoPlayer.currentMediaItem?.mediaMetadata?.displayTitle.toString())
         }
@@ -104,13 +89,11 @@ fun PlayerView(
                     super.onEvents(player, events)
                     totalDuration = player.duration
                     videoTimer = player.contentPosition
-                    if (player.contentPosition >= 200) isVisible = false
                 }
 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                     super.onMediaItemTransition(mediaItem, reason)
                     onTrailerChange?.invoke(playerWrapper.exoPlayer.currentPeriodIndex)
-                    isVisible = true
                     title = mediaItem?.mediaMetadata?.displayTitle.toString()
                 }
             }
@@ -135,6 +118,7 @@ fun PlayerView(
             isVisible = { shouldShowControls },
             isPlaying = { isPlaying },
             totalDuration = { totalDuration },
+            getTitle = { title },
             isFullScreen = isFullScreen,
             onPrevious = { playerWrapper.exoPlayer.seekToPrevious() },
             onNext = { playerWrapper.exoPlayer.seekToNext() },
@@ -152,25 +136,6 @@ fun PlayerView(
             videoTimer = { videoTimer },
             onFullScreenToggle = onFullScreenToggle
         )
-
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = fadeIn(initialAlpha = 0.4f),
-            exit = fadeOut(animationSpec = tween(durationMillis = 250)),
-            modifier = Modifier
-                .zIndex(2f)
-                .align(Alignment.TopStart)
-        ) {
-            Text(
-                text = title,
-                style = EpicWorldTheme.typography.subTitle2,
-                color = EpicWorldTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            )
-        }
     }
 }
 
