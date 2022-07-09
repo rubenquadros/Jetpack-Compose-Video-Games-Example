@@ -17,10 +17,6 @@ Once you get your API key, edit your `local.properties` file and add the key as 
 ## Future scope :crystal_ball: :soon:
 
  - Add filter functionality
- 
- - Custom ExoPlayer controls
- 
- - Full screen ExoPlayer
 
 ## Different components used in the project :musical_score: :book: :sparkles:
 
@@ -43,6 +39,10 @@ Once you get your API key, edit your `local.properties` file and add the key as 
  - [Coil][coil] For displaying images
  
  - [ExoPlayer][player] For playing videos
+
+ - [Full screen ExoPlayer][playerView] Option to play videos in full screen landscape mode
+
+ - [Custom ExoPlayer controls][customControls] To add custom functionality
 
  - [Coroutines][coroutines] For handling async work
  
@@ -68,3 +68,5 @@ Once you get your API key, edit your `local.properties` file and add the key as 
 [retrofit]: https://square.github.io/retrofit/
 [mockserver]: https://github.com/square/okhttp/tree/master/mockwebserver
 [mockk]: https://mockk.io/ANDROID.html
+[playerView]: https://github.com/rubenquadros/Jetpack-Compose-Video-Games-Example/blob/full_screen_exo_player/app/src/main/java/com/ruben/epicworld/presentation/videos/PlayerView.kt
+[customControls]: https://github.com/rubenquadros/Jetpack-Compose-Video-Games-Example/blob/full_screen_exo_player/app/src/main/java/com/ruben/epicworld/presentation/videos/PlayerControls.kt
