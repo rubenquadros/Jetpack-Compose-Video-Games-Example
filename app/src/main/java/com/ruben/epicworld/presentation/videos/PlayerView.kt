@@ -21,6 +21,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.Player.STATE_ENDED
 import com.google.android.exoplayer2.ui.StyledPlayerView
 import com.ruben.epicworld.domain.entity.gamevideos.PlayerWrapper
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
@@ -54,25 +55,21 @@ fun PlayerView(
 
     Box(modifier = modifier) {
 
-        var shouldShowControls by remember {
-            mutableStateOf(false)
-        }
+        var shouldShowControls by remember { mutableStateOf(false) }
 
-        var isPlaying by remember {
-            mutableStateOf(true)
-        }
+        var isPlaying by remember { mutableStateOf(playerWrapper.exoPlayer.isPlaying) }
+
+        var playbackState by remember { mutableStateOf(playerWrapper.exoPlayer.playbackState) }
 
         var title by remember {
             mutableStateOf(playerWrapper.exoPlayer.currentMediaItem?.mediaMetadata?.displayTitle.toString())
         }
 
-        var videoTimer by remember {
-            mutableStateOf(0L)
-        }
+        var videoTimer by remember { mutableStateOf(0L) }
 
-        var totalDuration by remember {
-            mutableStateOf(0L)
-        }
+        var totalDuration by remember { mutableStateOf(0L) }
+
+        var bufferedPercentage by remember { mutableStateOf(0) }
 
         LaunchedEffect(key1 = shouldShowControls) {
             if (shouldShowControls) {
@@ -87,8 +84,11 @@ fun PlayerView(
             val listener = object : Player.Listener {
                 override fun onEvents(player: Player, events: Player.Events) {
                     super.onEvents(player, events)
+                    isPlaying = player.isPlaying
                     totalDuration = player.duration
                     videoTimer = player.contentPosition
+                    bufferedPercentage = player.bufferedPercentage
+                    playbackState = player.playbackState
                 }
 
                 override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
@@ -117,7 +117,9 @@ fun PlayerView(
             modifier = Modifier.fillMaxSize(),
             isVisible = { shouldShowControls },
             isPlaying = { isPlaying },
+            playbackState = { playbackState },
             totalDuration = { totalDuration },
+            bufferedPercentage = { bufferedPercentage },
             getTitle = { title },
             isFullScreen = isFullScreen,
             onPrevious = { playerWrapper.exoPlayer.seekToPrevious() },
@@ -125,10 +127,17 @@ fun PlayerView(
             onReplay = { playerWrapper.exoPlayer.seekBack() },
             onForward = { playerWrapper.exoPlayer.seekForward() },
             onPauseToggle = {
-                if (playerWrapper.exoPlayer.isPlaying) {
-                    playerWrapper.exoPlayer.pause()
-                } else {
-                    playerWrapper.exoPlayer.play()
+                when {
+                    playerWrapper.exoPlayer.isPlaying -> {
+                        playerWrapper.exoPlayer.pause()
+                    }
+                    playerWrapper.exoPlayer.isPlaying.not() && playbackState == STATE_ENDED -> {
+                        playerWrapper.exoPlayer.seekTo(0, 0)
+                        playerWrapper.exoPlayer.playWhenReady = true
+                    }
+                    else -> {
+                        playerWrapper.exoPlayer.play()
+                    }
                 }
                 isPlaying = isPlaying.not()
             },

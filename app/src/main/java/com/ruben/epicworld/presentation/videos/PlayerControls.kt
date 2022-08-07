@@ -8,10 +8,13 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.IconButton
@@ -20,18 +23,17 @@ import androidx.compose.material.SliderDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
-import androidx.constraintlayout.compose.Dimension
+import com.google.android.exoplayer2.Player.STATE_ENDED
 import com.ruben.epicworld.R
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
 import com.ruben.epicworld.presentation.utility.formatMinSec
@@ -48,6 +50,8 @@ fun PlayerControls(
     isVisible: () -> Boolean,
     isPlaying: () -> Boolean,
     videoTimer: () -> Long,
+    bufferedPercentage: () -> Int,
+    playbackState: () -> Int,
     getTitle: () -> String,
     totalDuration: () -> Long,
     isFullScreen: Boolean,
@@ -60,24 +64,20 @@ fun PlayerControls(
     onFullScreenToggle: (isFullScreen: Boolean) -> Unit
 ) {
 
-    val visible = remember(isVisible()) {
-        isVisible()
-    }
+    val visible = remember(isVisible()) { isVisible() }
 
-    val playing = remember(isPlaying()) {
-        isPlaying()
-    }
+    val playing = remember(isPlaying()) { isPlaying() }
 
-    val duration = remember(totalDuration()) {
-        totalDuration().coerceAtLeast(0)
-    }
+    val duration = remember(totalDuration()) { totalDuration().coerceAtLeast(0) }
 
-    val timer = remember(videoTimer()) {
-        videoTimer()
-    }
+    val timer = remember(videoTimer()) { videoTimer() }
 
-    val title = remember(getTitle()) {
-        getTitle()
+    val title = remember(getTitle()) { getTitle() }
+
+    val buffer = remember(bufferedPercentage()) { bufferedPercentage() }
+
+    val playerState = remember(playbackState()) {
+        playbackState()
     }
 
     val context = LocalContext.current
@@ -88,50 +88,27 @@ fun PlayerControls(
         enter = fadeIn(),
         exit = fadeOut()
     ) {
-        ConstraintLayout(
-            modifier = Modifier.testTag("PlayerControlsParent"),
-            constraintSet = ConstraintSet {
-                val videoTitle = createRefFor("video_title")
-                val centerControls = createRefFor("center_controls")
-                val seek = createRefFor("seek")
-                val timing = createRefFor("timing")
-                val fullScreenToggle = createRefFor("full_screen_toggle")
-
-                constrain(videoTitle) {
-                    top.linkTo(parent.top, margin = 16.dp)
-                    start.linkTo(parent.start, margin = 16.dp)
-                    end.linkTo(parent.end, margin = 16.dp)
-                    width = Dimension.fillToConstraints
-                }
-
-                constrain(centerControls) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom)
-                    width = Dimension.fillToConstraints
-                }
-
-                constrain(seek) {
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    bottom.linkTo(parent.bottom, margin = if (isFullScreen) 48.dp else 32.dp)
-                    width = Dimension.fillToConstraints
-                }
-
-                constrain(timing) {
-                    top.linkTo(seek.bottom)
-                    start.linkTo(parent.start, margin = 16.dp)
-                }
-
-                constrain(fullScreenToggle) {
-                    top.linkTo(seek.bottom)
-                    end.linkTo(parent.end, margin = 16.dp)
-                    width = Dimension.value(24.dp)
-                    height = Dimension.value(24.dp)
-                }
-            }
+        Box(
+            modifier = Modifier
+                .testTag("PlayerControlsParent")
+                .background(EpicWorldTheme.colors.background.copy(alpha = 0.6f))
         ) {
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(16.dp)
+                    .testTag("VideoTitle")
+                    .animateEnterExit(
+                        enter = slideInVertically(
+                            initialOffsetY = { fullHeight: Int -> -fullHeight }
+                        ),
+                        exit = shrinkVertically()
+                    ),
+                text = title,
+                style = EpicWorldTheme.typography.subTitle2,
+                color = EpicWorldTheme.colors.onBackground
+            )
 
             val controlButtonModifier: Modifier = remember(isFullScreen) {
                 if (isFullScreen) {
@@ -145,7 +122,8 @@ fun PlayerControls(
 
             Row(
                 modifier = Modifier
-                    .layoutId("center_controls")
+                    .align(Alignment.Center)
+                    .fillMaxWidth()
                     .testTag("VideoControlParent"),
                 horizontalArrangement = if (isFullScreen) {
                     Arrangement.Center
@@ -186,10 +164,16 @@ fun PlayerControls(
                         contentScale = ContentScale.Crop,
                         painter = painterResource(
                             id =
-                            if (playing) {
-                                com.google.android.exoplayer2.ui.R.drawable.exo_ic_pause_circle_filled
-                            } else {
-                                com.google.android.exoplayer2.ui.R.drawable.exo_ic_play_circle_filled
+                            when {
+                                playing -> {
+                                    com.google.android.exoplayer2.ui.R.drawable.exo_ic_pause_circle_filled
+                                }
+                                playing.not() && playerState == STATE_ENDED -> {
+                                    R.drawable.ic_replay
+                                }
+                                else -> {
+                                    com.google.android.exoplayer2.ui.R.drawable.exo_ic_play_circle_filled
+                                }
                             }
                         ),
                         contentDescription = stringResource(id = R.string.toggle_play)
@@ -221,9 +205,11 @@ fun PlayerControls(
                 }
             }
 
-            Box(
+            Column(
                 modifier = Modifier
-                    .layoutId("seek")
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(bottom = if (isFullScreen) 32.dp else 16.dp)
                     .testTag("VideoSeek")
                     .animateEnterExit(
                         enter = slideInVertically(
@@ -234,88 +220,93 @@ fun PlayerControls(
                         )
                     )
             ) {
-                Slider(
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    value = timer.toFloat(),
-                    onValueChange = {
-                        onSeekChanged.invoke(it)
-                    },
-                    valueRange = 0f..duration.toFloat(),
-                    colors = SliderDefaults.colors(
-                        thumbColor = EpicWorldTheme.colors.onBackground,
-                        activeTrackColor = EpicWorldTheme.colors.onBackground
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Slider(
+                        value = buffer.toFloat(),
+                        enabled = false,
+                        onValueChange = { /*do nothing*/ },
+                        valueRange = 0f..100f,
+                        colors =
+                        SliderDefaults.colors(
+                            disabledThumbColor = Color.Transparent,
+                            disabledActiveTrackColor = EpicWorldTheme.colors.onDisabled
+                        )
                     )
-                )
-            }
 
-            Text(
-                modifier = Modifier
-                    .layoutId("video_title")
-                    .testTag("VideoTitle")
-                    .animateEnterExit(
-                        enter = slideInVertically(
-                            initialOffsetY = { fullHeight: Int -> -fullHeight }
-                        ),
-                        exit = shrinkVertically()
-                    ),
-                text = title,
-                style = EpicWorldTheme.typography.subTitle2,
-                color = EpicWorldTheme.colors.onBackground
-            )
-
-            Text(
-                modifier = Modifier
-                    .layoutId("timing")
-                    .testTag("VideoTime")
-                    .animateEnterExit(
-                        enter = slideInVertically(
-                            initialOffsetY = { fullHeight: Int -> fullHeight }
-                        ),
-                        exit = slideOutVertically(
-                            targetOffsetY = { fullHeight: Int -> fullHeight }
+                    Slider(
+                        value = timer.toFloat(),
+                        onValueChange = {
+                            onSeekChanged.invoke(it)
+                        },
+                        valueRange = 0f..duration.toFloat(),
+                        colors = SliderDefaults.colors(
+                            thumbColor = EpicWorldTheme.colors.onBackground,
+                            activeTrackColor = EpicWorldTheme.colors.onBackground
                         )
-                    ),
-                text = duration.formatMinSec(),
-                color = EpicWorldTheme.colors.onBackground,
-                style = EpicWorldTheme.typography.subTitle2
-            )
+                    )
+                }
 
-            IconButton(
-                modifier = Modifier
-                    .layoutId("full_screen_toggle")
-                    .testTag("FullScreenToggleButton")
-                    .animateEnterExit(
-                        enter = slideInVertically(
-                            initialOffsetY = { fullHeight: Int -> fullHeight }
-                        ),
-                        exit = slideOutVertically(
-                            targetOffsetY = { fullHeight: Int -> fullHeight }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .testTag("VideoTime")
+                            .padding(start = 16.dp)
+                            .animateEnterExit(
+                                enter = slideInVertically(
+                                    initialOffsetY = { fullHeight: Int -> fullHeight }
+                                ),
+                                exit = slideOutVertically(
+                                    targetOffsetY = { fullHeight: Int -> fullHeight }
+                                )
+                            ),
+                        text = duration.formatMinSec(),
+                        color = EpicWorldTheme.colors.onBackground,
+                        style = EpicWorldTheme.typography.subTitle2
+                    )
+
+                    IconButton(
+                        modifier = Modifier
+                            .testTag("FullScreenToggleButton")
+                            .padding(end = 16.dp)
+                            .size(24.dp)
+                            .animateEnterExit(
+                                enter = slideInVertically(
+                                    initialOffsetY = { fullHeight: Int -> fullHeight }
+                                ),
+                                exit = slideOutVertically(
+                                    targetOffsetY = { fullHeight: Int -> fullHeight }
+                                )
+                            ),
+                        onClick = {
+                            if (isFullScreen.not()) {
+                                context.setLandscape()
+                            } else {
+                                context.setPortrait()
+                            }.also {
+                                onFullScreenToggle.invoke(isFullScreen.not())
+                            }
+                        }
+                    ) {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop,
+                            painter = painterResource(
+                                id = if (isFullScreen) {
+                                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_fullscreen_exit
+                                } else {
+                                    com.google.android.exoplayer2.ui.R.drawable.exo_controls_fullscreen_enter
+                                }
+                            ),
+                            contentDescription = stringResource(id = R.string.toggle_full_screen)
                         )
-                    ),
-                onClick = {
-                    if (isFullScreen.not()) {
-                        context.setLandscape()
-                    } else {
-                        context.setPortrait()
-                    }.also {
-                        onFullScreenToggle.invoke(isFullScreen.not())
                     }
                 }
-            ) {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop,
-                    painter = painterResource(
-                        id = if (isFullScreen) {
-                            com.google.android.exoplayer2.ui.R.drawable.exo_controls_fullscreen_exit
-                        } else {
-                            com.google.android.exoplayer2.ui.R.drawable.exo_controls_fullscreen_enter
-                        }
-                    ),
-                    contentDescription = stringResource(id = R.string.toggle_full_screen)
-                )
             }
-
         }
     }
 
@@ -330,6 +321,7 @@ private fun PreviewPlayerControls() {
         isPlaying = { true },
         videoTimer = { 0L },
         totalDuration = { 0 },
+        bufferedPercentage = { 50 },
         isFullScreen = false,
         onForward = {},
         onNext = {},
@@ -338,6 +330,7 @@ private fun PreviewPlayerControls() {
         onReplay = {},
         onSeekChanged = {},
         onFullScreenToggle = {},
-        getTitle = { "" }
+        getTitle = { "" },
+        playbackState = { 1 }
     )
 }

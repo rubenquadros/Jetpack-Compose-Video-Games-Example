@@ -55,7 +55,6 @@ import com.ruben.epicworld.presentation.base.ScreenState
 import com.ruben.epicworld.presentation.commonui.BottomRoundedArcShape
 import com.ruben.epicworld.presentation.commonui.LoadingView
 import com.ruben.epicworld.presentation.theme.EpicWorldTheme
-import com.ruben.epicworld.presentation.utility.ApplicationUtility
 import com.ruben.epicworld.presentation.utility.Constants.DESCRIPTION_LINES
 import com.ruben.epicworld.presentation.utility.LogCompositions
 import com.ruben.epicworld.presentation.utility.setPortrait
@@ -182,7 +181,7 @@ private fun GameDetails(
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = ApplicationUtility.getGenres(gameDetails.genresEntity),
+            text = gameDetails.genresEntity.joinToString(separator = " ") { it.name },
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )
@@ -262,19 +261,19 @@ private fun GameDetails(
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = ApplicationUtility.getPlatforms(gameDetails.platformsEntity),
+            text = gameDetails.platformsEntity.joinToString { it.platform.name },
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
             text = stringResource(id = R.string.game_details_stores),
-            style = EpicWorldTheme.typography.body2,
+            style = EpicWorldTheme.typography.subTitle2,
             color = EpicWorldTheme.colors.background
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = ApplicationUtility.getStores(gameDetails.storesEntity),
+            text = gameDetails.storesEntity.joinToString { it.store.name },
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )
@@ -286,7 +285,7 @@ private fun GameDetails(
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp),
-            text = ApplicationUtility.getDevelopers(gameDetails.developersEntity),
+            text = gameDetails.developersEntity.joinToString { it.name },
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )
@@ -298,7 +297,7 @@ private fun GameDetails(
         )
         Text(
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp, bottom = 16.dp),
-            text = ApplicationUtility.getPublishers(gameDetails.publishersEntity),
+            text = gameDetails.publishersEntity.joinToString { it.name },
             style = EpicWorldTheme.typography.body2,
             color = EpicWorldTheme.colors.background
         )
