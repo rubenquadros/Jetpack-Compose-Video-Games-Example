@@ -25,7 +25,6 @@ import androidx.compose.material.icons.filled.StarRate
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,9 +44,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import coil.compose.rememberImagePainter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.gamedetails.GameDetailsEntity
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -72,13 +69,8 @@ fun GameDetailsScreen(
 
     LogCompositions(tag = "GameDetailsScreen")
 
-    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-    val stateFlow = gameDetailsViewModel.uiState()
-    val stateLifecycleAware = remember(lifecycleOwner, stateFlow) {
-        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-    }
-    val state by stateLifecycleAware.collectAsState(initial = gameDetailsViewModel.createInitialState())
+    val state by gameDetailsViewModel.uiState().collectAsStateWithLifecycle()
 
     val gameIdError = stringResource(id = R.string.game_details_invalid_game_id)
     val genericError = stringResource(id = R.string.all_generic_error)
@@ -153,12 +145,9 @@ private fun GameDetails(
                         end.linkTo(parent.end)
                     },
                 contentScale = ContentScale.Crop,
-                painter = rememberImagePainter(
-                    data = gameDetails.backgroundImage,
-                    builder = {
-                        placeholder(R.drawable.app_logo)
-                        crossfade(true)
-                    }
+                painter = rememberAsyncImagePainter(
+                    model = gameDetails.backgroundImage,
+                    placeholder = painterResource(id = R.drawable.app_logo)
                 ),
                 contentDescription = stringResource(id = R.string.game_details_screenshots)
             )

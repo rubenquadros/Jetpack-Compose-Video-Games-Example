@@ -19,7 +19,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,10 +42,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.flowWithLifecycle
-import coil.compose.rememberImagePainter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.ruben.epicworld.R
@@ -73,13 +71,8 @@ fun GameVideosScreen(
 ) {
     LogCompositions(tag = "GameVideosScreen")
 
-    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
-    val stateFlow = gameVideosViewModel.uiState()
-    val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
-        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-    }
-    val state by stateFlowLifecycleAware.collectAsState(initial = gameVideosViewModel.createInitialState())
+    val state by gameVideosViewModel.uiState().collectAsStateWithLifecycle()
 
     val gameIdError = stringResource(id = R.string.game_videos_invalid_game_id)
     val gameVideosError = stringResource(id = R.string.all_generic_error)
@@ -304,10 +297,10 @@ private fun ShowTrailers(
         val (thumbnail, play, title, nowPlaying) = createRefs()
         Image(
             contentScale = ContentScale.Crop,
-            painter = rememberImagePainter(data = trailer.preview, builder = {
-                placeholder(R.drawable.app_logo)
-                crossfade(true)
-            }),
+            painter = rememberAsyncImagePainter(
+                model = trailer.preview,
+                placeholder = painterResource(R.drawable.app_logo)
+            ),
             contentDescription = stringResource(id = R.string.game_videos_trailer),
             modifier = Modifier
                 .height(120.dp)

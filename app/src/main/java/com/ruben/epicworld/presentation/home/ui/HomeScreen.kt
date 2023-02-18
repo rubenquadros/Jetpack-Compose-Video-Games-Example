@@ -17,25 +17,21 @@ import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.presentation.base.ScreenState
@@ -108,12 +104,7 @@ private fun GameListing(paddingValues: PaddingValues, openGameDetails: (Int) -> 
 
     val errorMessage: String = stringResource(id = R.string.home_screen_scroll_error)
     val action: String = stringResource(id = R.string.all_ok)
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val stateFlow = homeViewModel.uiState()
-    val stateLifecycleAware = remember(lifecycleOwner, stateFlow) {
-        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-    }
-    val state by stateLifecycleAware.collectAsState(initial = homeViewModel.createInitialState())
+    val state by homeViewModel.uiState().collectAsStateWithLifecycle()
 
     when (state.screenState) {
         is ScreenState.Loading -> {
@@ -178,12 +169,9 @@ private fun GameItem(game: GameResultEntity, gameClick: (Int) -> Unit) {
             val (image, title, rating) = createRefs()
             Image(
                 contentScale = ContentScale.Crop,
-                painter = rememberImagePainter(
-                    data = game.backgroundImage,
-                    builder = {
-                        placeholder(R.drawable.ic_esports_placeholder_white)
-                        crossfade(true)
-                    }
+                painter = rememberAsyncImagePainter(
+                    model = game.backgroundImage,
+                    placeholder = painterResource(id = R.drawable.ic_esports_placeholder_white)
                 ),
                 contentDescription = stringResource(id = R.string.all_game_image_description),
                 modifier = Modifier

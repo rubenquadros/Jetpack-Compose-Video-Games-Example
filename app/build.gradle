@@ -10,12 +10,12 @@ apply from: './gradleScript/dependencies.gradle'
 android {
     def file = rootProject.file("local.properties")
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.ruben.epicworld"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -34,6 +34,11 @@ android {
         }
     }
 
+    kapt {
+        correctErrorTypes true
+    }
+
+
     buildTypes {
         release {
             minifyEnabled false
@@ -46,14 +51,13 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
-        useIR = true
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.0-alpha06'
-        kotlinCompilerVersion '1.5.31'
+        kotlinCompilerExtensionVersion '1.4.0'
+        kotlinCompilerVersion '1.8.0'
     }
     testOptions {
         unitTests {

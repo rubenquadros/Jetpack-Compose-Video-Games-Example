@@ -24,7 +24,6 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,7 +37,6 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
@@ -53,9 +51,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.flowWithLifecycle
-import coil.compose.rememberImagePainter
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.rememberAsyncImagePainter
 import com.ruben.epicworld.R
 import com.ruben.epicworld.domain.entity.games.GameResultEntity
 import com.ruben.epicworld.domain.entity.games.GameResultsEntity
@@ -100,14 +97,11 @@ fun GameSearchScreen(
         }
     }
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val stateFlow = gameSearchViewModel.uiState()
-    val stateFlowLifecycleAware = remember(lifecycleOwner, stateFlow) {
-        stateFlow.flowWithLifecycle(lifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-    }
-    val state by stateFlowLifecycleAware.collectAsState(initial = gameSearchViewModel.createInitialState())
+    val state by gameSearchViewModel.uiState().collectAsStateWithLifecycle()
 
-    Column(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .systemBarsPadding()) {
         SearchBar(
             keyboardController = keyboardController,
             onSearch = gameSearchViewModel::searchGame,
@@ -281,12 +275,9 @@ private fun SearchItem(searchResult: GameResultEntity, onSearchResultClicked: (I
             Image(
                 contentScale = ContentScale.Crop,
                 painter = if (searchResult.backgroundImage.isEmpty()) painterResource(id = R.drawable.ic_esports_placeholder_black)
-                else rememberImagePainter(
-                    data = searchResult.backgroundImage,
-                    builder = {
-                        placeholder(R.drawable.ic_esports_placeholder_black)
-                        crossfade(true)
-                    }
+                else rememberAsyncImagePainter(
+                    model = searchResult.backgroundImage,
+                    placeholder = painterResource(id = R.drawable.ic_esports_placeholder_black)
                 ),
                 contentDescription = stringResource(id = R.string.all_game_image_description),
                 modifier = Modifier
