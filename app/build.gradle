@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlinx.kover'
 }
 
 apply from: './gradleScript/dependencies.gradle'
@@ -78,5 +79,22 @@ android {
         kotlinOptions {
             freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn", "-Xjvm-default=enable"]
         }
+    }
+}
+
+kover {
+    filters {
+        classes {
+            excludes.add "dagger.hilt.*"
+            excludes.add "hilt_*"
+        }
+    }
+
+    xmlReport {
+        reportFile.set(layout.buildDirectory.file("kover-report/coverage.xml"))
+    }
+
+    htmlReport {
+        reportDir.set(layout.buildDirectory.dir("kover-report/html-report"))
     }
 }
